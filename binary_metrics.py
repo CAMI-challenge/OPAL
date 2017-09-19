@@ -7,6 +7,7 @@ This script computes the following binary metrics
   * fn
   * precision
   * recall
+  * Jaccard index
 
 Tests can be executed by running
 > python binary_metrics.py
@@ -100,7 +101,7 @@ def compute_rank_metrics(rank_query, rank_truth):
     tp = __get_tp(rank_query, rank_truth)
     fn = __get_fn(rank_query, rank_truth)
     fp = __get_fp(rank_query, rank_truth)
-    return precision(tp, fp), recall(tp, fn), tp, fn, fp
+    return precision(tp, fp), recall(tp, fn), tp, fn, fp, jaccard_index(rank_query, rank_truth)
 
 
 def compute_tree_metrics(query, truth):
