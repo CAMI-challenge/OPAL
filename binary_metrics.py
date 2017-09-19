@@ -26,7 +26,7 @@ def __get_existing_taxa(rank):
 
 
 def __get_non_existing_taxa(rank):
-  """Return set of taxids with abundance < 0
+  """Return set of taxids with abundance <= 0
   >>> __get_non_existing_taxa(query_rank)
   [1232]
 
@@ -77,6 +77,18 @@ def precision(tp, fp):
 
 def recall(tp, fn):
     return tp/(tp+fn)
+
+def jaccard_index(rank_query, rank_truth):
+    """ Returns the Jaccard index
+    >>> jaccard_index(test_query_rank, test_truth_rank)
+    1
+
+    """
+    rank_query = __get_existing_taxa(rank_query)
+    rank_truth = __get_existing_taxa(rank_truth)
+    intersection = len(list(set(rank_query).intersection(rank_truth)))
+    union = len(list(set(rank_query).union(rank_truth)))
+    return intersection/union
 
 
 def compute_rank_metrics(rank_query, rank_truth):
