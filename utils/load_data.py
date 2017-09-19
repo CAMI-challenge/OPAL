@@ -50,5 +50,5 @@ def open_profile(file_path):
         for rank, taxid, percentage in read_rows(read_handler, index_rank, index_taxid, index_percentage):
             if rank not in rank_to_taxid_to_percentage:
                 rank_to_taxid_to_percentage[rank] = {}
-            rank_to_taxid_to_percentage[rank][taxid] = percentage
+            rank_to_taxid_to_percentage[rank][taxid] = float(percentage)
     return rank_to_taxid_to_percentage
