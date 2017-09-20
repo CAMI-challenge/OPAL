@@ -33,6 +33,15 @@ def unweighted_unifrac(pf1, pf2):
     return val
 
 
+def print_list_unifrac(unifrac_list, labels, stream=sys.stdout):
+    labels_iterator = iter(labels)
+    stream.write("tool\tweighted\tunweighted\n")
+    for unifrac in unifrac_list:
+        stream.write("{}\t".format(next(labels_iterator)))
+        stream.write("\t".join([format(unifrac[0], '.3f'), format(unifrac[1], '.3f')]))
+        stream.write("\n")
+
+
 def read_params(args):
 	parser = argparse.ArgumentParser(description='')
 	arg = parser.add_argument

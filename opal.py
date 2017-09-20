@@ -6,7 +6,9 @@ import argparse
 import os.path
 import l1norm as l1
 import binary_metrics as bm
+import unifrac_distance as uf
 from utils import load_data
+from utils import ProfilingTools as PF
 
 
 def make_sure_path_exists(path):
@@ -37,17 +39,23 @@ def compute_binary_metrics(query_profile, query_truth, path):
 def evaluate(gold_standard_file, profiles_files, labels, output_dir):
     # L1 Norm
     l1norm_list = []
+    weighted_unifrac_list = []
     gs_rank_to_taxid_to_percentage = load_data.open_profile(gold_standard_file)
+    gs_profile = PF.Profile(input_file_name=gold_standard_file)
     for profile_file, label in zip(profiles_files, labels):
         rank_to_taxid_to_percentage = load_data.open_profile(profile_file)
+        pf_profile = PF.Profile(input_file_name=profile_file)
         l1norm_list.append(l1.compute_l1norm(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage))
-        compute_binary_metrics(rank_to_taxid_to_percentage, gs_rank_to_taxid_to_percentage, os.path.join(output_dir, label))
+        #compute_binary_metrics(rank_to_taxid_to_percentage, gs_rank_to_taxid_to_percentage, os.path.join(output_dir, label))
+        weighted_unifrac_list.append(uf.compute_unifrac(gs_profile, pf_profile))
 
     f = open(output_dir + "/l1_norm.tsv", 'w')
     l1.print_list_l1norm(l1norm_list, labels, f)
     f.close()
 
-    # Other metrics here
+    f = open(output_dir + "/weighted_unifrac.tsv", 'w')
+    uf.print_list_unifrac(weighted_unifrac_list, labels, f)
+    f.close()
 
 
 def main():
