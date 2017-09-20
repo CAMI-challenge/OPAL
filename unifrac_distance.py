@@ -76,5 +76,5 @@ if __name__ == '__main__':
 			D[i, j] = wu
 			D[j, i] = uu
 
-    # Save results in tsv
+	# Save results in tsv
 	np.savetxt(output_file, D, delimiter='\t', newline='\n')
