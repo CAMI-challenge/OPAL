@@ -3,7 +3,9 @@
 import os
 import errno
 import argparse
+import os.path
 import l1norm as l1
+import binary_metrics as bm
 from utils import load_data
 
 
@@ -27,13 +29,20 @@ def get_labels(labels, profiles_files):
     return tool_id
 
 
+def compute_binary_metrics(query_profile, query_truth, path):
+    all_metrics = bm.compute_tree_metrics(query_profile, query_truth)
+    bm.print_all_metrics(all_metrics, path)
+
+
 def evaluate(gold_standard_file, profiles_files, labels, output_dir):
     # L1 Norm
     l1norm_list = []
     gs_rank_to_taxid_to_percentage = load_data.open_profile(gold_standard_file)
-    for profile_file in profiles_files:
+    for profile_file, label in zip(profiles_files, labels):
         rank_to_taxid_to_percentage = load_data.open_profile(profile_file)
         l1norm_list.append(l1.compute_l1norm(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage))
+        compute_binary_metrics(rank_to_taxid_to_percentage, gs_rank_to_taxid_to_percentage, os.path.join(output_dir, label))
+
     f = open(output_dir + "/l1_norm.tsv", 'w')
     l1.print_list_l1norm(l1norm_list, labels, f)
     f.close()

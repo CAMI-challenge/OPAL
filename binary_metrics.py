@@ -198,7 +198,7 @@ def compute_tree_metrics(query, truth):
     return {rank: compute_rank_metrics(check_for_rank(query, rank), taxids) for rank, taxids in truth.items()}
 
 
-def print_all_ranks(tree_metrics, path):
+def print_all_metrics(tree_metrics, path):
     import csv
     def get_header(tree):
         not_empty_ranks = [metrics.get_pretty_dict() for rank, metrics in tree.items() if bool(metrics.get_pretty_dict())]
