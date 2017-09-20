@@ -1,5 +1,8 @@
+[![CircleCI](https://circleci.com/gh/CAMI-challenge/OPAL.svg?style=svg)](https://circleci.com/gh/CAMI-challenge/OPAL)
+
 # OPAL
 something Profiling Assessment something
+
 
 # Developer Guide
 
