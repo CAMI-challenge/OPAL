@@ -18,8 +18,12 @@ class RankMetrics:
     """Class for saving metrics per rank
     """
 
-    def __init__(self):
-        self.__tp = 0
+    def __init__(self, rank):
+        self.__rank = rank
+
+    @property
+    def rank(self):
+        return self.__rank
 
     @property
     def tp(self):
@@ -44,6 +48,10 @@ class RankMetrics:
     @property
     def jaccard(self):
         return self.__jaccard
+
+    @fn.setter
+    def rank(self, rank):
+        self.__rank = rank
 
     @fn.setter
     def fn(self, fn):
@@ -166,16 +174,16 @@ def jaccard_index(rank_query, rank_truth):
     return intersection / union
 
 
-def compute_rank_metrics(rank_query, rank_truth):
+def compute_rank_metrics(rank_query, rank_truth, rank):
     """ Returns metrics for one rank
-    >>> compute_rank_metrics(test_query_rank, test_truth_rank).get_ordered_dict()
-    OrderedDict([('_RankMetrics__fn', 0), ('_RankMetrics__fp', 0), ('_RankMetrics__jaccard', 1.0), ('_RankMetrics__precision', 1.0), ('_RankMetrics__recall', 1.0), ('_RankMetrics__tp', 1)])
+    >>> compute_rank_metrics(test_query_rank, test_truth_rank, "species").get_ordered_dict()
+    OrderedDict([('_RankMetrics__fn', 0), ('_RankMetrics__fp', 0), ('_RankMetrics__jaccard', 1.0), ('_RankMetrics__precision', 1.0), ('_RankMetrics__rank', 'species'), ('_RankMetrics__recall', 1.0), ('_RankMetrics__tp', 1)])
 
     """
     tp = __get_tp(rank_query, rank_truth)
     fn = __get_fn(rank_query, rank_truth)
     fp = __get_fp(rank_query, rank_truth)
-    rank_metrics = RankMetrics()
+    rank_metrics = RankMetrics(rank)
     rank_metrics.tp = tp
     rank_metrics.fn = fn
     rank_metrics.fp = fp
@@ -188,7 +196,7 @@ def compute_rank_metrics(rank_query, rank_truth):
 def compute_tree_metrics(query, truth):
     """ Return metrics for tree
     >>> compute_tree_metrics(query_tree, truth_tree)["species"].get_ordered_dict()
-    OrderedDict([('_RankMetrics__fn', 1), ('_RankMetrics__fp', 3), ('_RankMetrics__jaccard', 0.3333333333333333), ('_RankMetrics__precision', 0.4), ('_RankMetrics__recall', 0.6666666666666666), ('_RankMetrics__tp', 2)])
+    OrderedDict([('_RankMetrics__fn', 1), ('_RankMetrics__fp', 3), ('_RankMetrics__jaccard', 0.3333333333333333), ('_RankMetrics__precision', 0.4), ('_RankMetrics__rank', 'species'), ('_RankMetrics__recall', 0.6666666666666666), ('_RankMetrics__tp', 2)])
     """
 
     def check_for_rank(query, rank):
@@ -199,7 +207,7 @@ def compute_tree_metrics(query, truth):
         else:
             return {}
 
-    return {rank: compute_rank_metrics(check_for_rank(query, rank), taxids) for rank, taxids in truth.items()}
+    return {rank: compute_rank_metrics(check_for_rank(query, rank), taxids, rank) for rank, taxids in truth.items()}
 
 
 def print_all_metrics(tree_metrics, path):
@@ -247,7 +255,7 @@ if __name__ == "__main__":
                                   "F": 0.2}
 
     tree_metrics = dict()
-    rank_metrics = RankMetrics()
+    rank_metrics = RankMetrics("species")
     rank_metrics.tp = 0
     rank_metrics.fn = 0
     rank_metrics.fp = 1
