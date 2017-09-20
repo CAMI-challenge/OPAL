@@ -126,6 +126,9 @@ class Profile(object):
 							ancestor = tax_path[i]
 							_data[tax_id]["branch_length"] += 1
 							i -= 1
+							if i+len(tax_path) < 0: # no ancestor available, manually set to -1 (the root)
+								ancestor = "-1"
+								break
 						_data[tax_id]["ancestor"] = ancestor
 				# Create a placeholder descendant key initialized to [], just so each tax_id has a descendant key associated to it
 				if "descendants" not in _data[tax_id]:  # if this tax_id doesn't have a descendant list,
