@@ -53,7 +53,7 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
     l1.print_list_l1norm(l1norm_list, labels, f)
     f.close()
 
-    f = open(output_dir + "/weighted_unifrac.tsv", 'w')
+    f = open(output_dir + "/unifrac.tsv", 'w')
     uf.print_list_unifrac(weighted_unifrac_list, labels, f)
     f.close()
 
