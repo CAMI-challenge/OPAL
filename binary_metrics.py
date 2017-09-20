@@ -110,35 +110,35 @@ def __get_non_existing_taxa(rank_query, rank_truth):
 def __get_tp(rank_query, rank_truth):
     """ Returns true positive
     >>> __get_tp(test_query_rank, test_truth_rank)
-    1.0
+    1
 
     """
     rank_query_taxids = __get_existing_taxa(rank_query)
     rank_truth_taxids = __get_existing_taxa(rank_truth)
-    return float(len(list(set(rank_query_taxids).intersection(rank_truth_taxids))))
+    return len(list(set(rank_query_taxids).intersection(rank_truth_taxids)))
 
 
 def __get_fp(rank_query, rank_truth):
     """ Returns false positive
     >>> __get_fp(test_query_rank, test_truth_rank)
-    0.0
+    0
 
     """
 
     rank_query_taxids = __get_existing_taxa(rank_query)
     rank_truth_taxids = __get_non_existing_taxa(rank_query, rank_truth)
-    return float(len(list(set(rank_query_taxids).intersection(rank_truth_taxids))))
+    return len(list(set(rank_query_taxids).intersection(rank_truth_taxids)))
 
 
 def __get_fn(rank_query, rank_truth):
     """ Returns false negative
     >>> __get_fn(test_query_rank, test_truth_rank)
-    0.0
+    0
 
     """
     rank_query_taxids = __get_non_existing_taxa(rank_truth, rank_query)
     rank_truth_taxids = __get_existing_taxa(rank_truth)
-    return float(len(list(set(rank_query_taxids).intersection(rank_truth_taxids))))
+    return len(list(set(rank_query_taxids).intersection(rank_truth_taxids)))
 
 
 def precision(tp, fp):
@@ -169,7 +169,7 @@ def jaccard_index(rank_query, rank_truth):
 def compute_rank_metrics(rank_query, rank_truth):
     """ Returns metrics for one rank
     >>> compute_rank_metrics(test_query_rank, test_truth_rank).get_ordered_dict()
-    OrderedDict([('_RankMetrics__fn', 0.0), ('_RankMetrics__fp', 0.0), ('_RankMetrics__jaccard', 1.0), ('_RankMetrics__precision', 1.0), ('_RankMetrics__recall', 1.0), ('_RankMetrics__tp', 1.0)])
+    OrderedDict([('_RankMetrics__fn', 0), ('_RankMetrics__fp', 0), ('_RankMetrics__jaccard', 1.0), ('_RankMetrics__precision', 1.0), ('_RankMetrics__recall', 1.0), ('_RankMetrics__tp', 1)])
 
     """
     tp = __get_tp(rank_query, rank_truth)
@@ -188,7 +188,7 @@ def compute_rank_metrics(rank_query, rank_truth):
 def compute_tree_metrics(query, truth):
     """ Return metrics for tree
     >>> compute_tree_metrics(query_tree, truth_tree)["species"].get_ordered_dict()
-    OrderedDict([('_RankMetrics__fn', 1.0), ('_RankMetrics__fp', 3.0), ('_RankMetrics__jaccard', 0.3333333333333333), ('_RankMetrics__precision', 0.4), ('_RankMetrics__recall', 0.6666666666666666), ('_RankMetrics__tp', 2.0)])
+    OrderedDict([('_RankMetrics__fn', 1), ('_RankMetrics__fp', 3), ('_RankMetrics__jaccard', 0.3333333333333333), ('_RankMetrics__precision', 0.4), ('_RankMetrics__recall', 0.6666666666666666), ('_RankMetrics__tp', 2)])
     """
 
     def check_for_rank(query, rank):
