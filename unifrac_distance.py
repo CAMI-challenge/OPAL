@@ -8,6 +8,14 @@ import sys
 import os
 
 
+def compute_unifrac(pf1, pf2):
+    P1 = copy.deepcopy(pf1)
+    P2 = copy.deepcopy(pf2)
+    (Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_and_normalize(P2)
+    (val, _) = EMDU.EMDUnifrac_weighted(Tint, lint, nodes_in_order, P, Q)
+    return val
+
+
 def read_params(args):
 	parser = argparse.ArgumentParser(description='')
 	arg = parser.add_argument
@@ -19,6 +27,7 @@ def read_params(args):
 					help="Value to threshold profiles to before computing EMDUnifrac. "
 					"NOTE THIS VALUE IS IN PERCENTAGES so if you want 1% use 1")
 	return vars(parser.parse_args())
+
 
 if __name__ == '__main__':
 	par = read_params(sys.argv)
@@ -46,12 +55,9 @@ if __name__ == '__main__':
 	D = np.zeros((len(profiles), len(profiles)))
 	for i in xrange(len(profiles)):
 		for j in xrange(i+1, len(profiles)):
-			P1 = copy.deepcopy(profiles[i])
-			P2 = copy.deepcopy(profiles[j])
-			(Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_and_normalize(P2)
-			(val, _) = EMDU.EMDUnifrac_weighted(Tint, lint, nodes_in_order, P, Q)
+			val = compute_unifrac(profiles[i], profiles[j])
 			D[i, j] = val
 			D[j, i] = val
 
-
+    # Save results in tsv
 	np.savetxt(output_file, D, delimiter='\t', newline='\n')
