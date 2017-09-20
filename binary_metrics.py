@@ -14,6 +14,72 @@ Tests can be executed by running
 """
 
 
+class RankMetrics:
+    """Class for saving metrics per rank
+    """
+
+    def __init__(self):
+        self.__tp = 0
+
+    @property
+    def tp(self):
+        return self.__tp
+
+    @property
+    def fn(self):
+        return self.__fn
+
+    @property
+    def fp(self):
+        return self.__fp
+
+    @property
+    def precision(self):
+        return self.__precision
+
+    @property
+    def recall(self):
+        return self.__recall
+
+    @property
+    def jaccard(self):
+        return self.__jaccard
+
+    @fn.setter
+    def fn(self, fn):
+        self.__fn = fn
+
+    @tp.setter
+    def tp(self, tp):
+        self.__tp = tp
+
+    @fp.setter
+    def fp(self, fp):
+        self.__fp = fp
+
+    @precision.setter
+    def precision(self, precision):
+        self.__precision = precision
+
+    @recall.setter
+    def recall(self, recall):
+        self.__recall = recall
+
+    @jaccard.setter
+    def jaccard(self, jaccard):
+        self.__jaccard = jaccard
+
+    def get_ordered_dict(self):
+        from collections import OrderedDict
+        return OrderedDict(sorted(self.__dict__.items()))
+
+    def get_dict(self):
+        return self.__dict__
+
+    def get_pretty_dict(self):
+        return {metric.split("_")[3]: value for metric, value in self.__dict__.items()}
+
+
 def __get_existing_taxa(rank):
     """ Return set of taxids with abundance > 0
 
@@ -98,21 +164,29 @@ def jaccard_index(rank_query, rank_truth):
 
 def compute_rank_metrics(rank_query, rank_truth):
     """ Returns metrics for one rank
-    >>> compute_rank_metrics(test_query_rank, test_truth_rank)
-    (1.0, 1.0, 1.0, 0.0, 0.0, 1.0)
+    >>> compute_rank_metrics(test_query_rank, test_truth_rank).get_ordered_dict()
+    OrderedDict([('_RankMetrics__fn', 0.0), ('_RankMetrics__fp', 0.0), ('_RankMetrics__jaccard', 1.0), ('_RankMetrics__precision', 1.0), ('_RankMetrics__recall', 1.0), ('_RankMetrics__tp', 1.0)])
 
     """
     tp = __get_tp(rank_query, rank_truth)
     fn = __get_fn(rank_query, rank_truth)
     fp = __get_fp(rank_query, rank_truth)
-    return precision(tp, fp), recall(tp, fn), tp, fn, fp, jaccard_index(rank_query, rank_truth)
+    rank_metrics = RankMetrics()
+    rank_metrics.tp = tp
+    rank_metrics.fn = fn
+    rank_metrics.fp = fp
+    rank_metrics.precision = precision(tp, fp)
+    rank_metrics.recall = recall(tp, fn)
+    rank_metrics.jaccard = jaccard_index(rank_query, rank_truth)
+    return rank_metrics
 
 
 def compute_tree_metrics(query, truth):
     """ Return metrics for tree
-    >>> compute_tree_metrics(query_tree, truth_tree)
-    {'species': (0.4, 0.6666666666666666, 2.0, 1.0, 3.0, 0.3333333333333333)}
+    >>> compute_tree_metrics(query_tree, truth_tree)["species"].get_ordered_dict()
+    OrderedDict([('_RankMetrics__fn', 1.0), ('_RankMetrics__fp', 3.0), ('_RankMetrics__jaccard', 0.3333333333333333), ('_RankMetrics__precision', 0.4), ('_RankMetrics__recall', 0.6666666666666666), ('_RankMetrics__tp', 2.0)])
     """
+
     def check_for_rank(query, rank):
         """Make sure that empty level is produced
         """
@@ -120,8 +194,24 @@ def compute_tree_metrics(query, truth):
             return query[rank]
         else:
             return {}
+
     return {rank: compute_rank_metrics(check_for_rank(query, rank), taxids) for rank, taxids in truth.items()}
 
+
+def print_all_ranks(tree_metrics, path):
+    import csv
+    def get_header(tree):
+        not_empty_ranks = [metrics.get_pretty_dict() for rank, metrics in tree.items() if bool(metrics.get_pretty_dict())]
+        if(len(not_empty_ranks)>0):
+            return not_empty_ranks[0].keys()
+        else:
+            return []
+
+    with open(path, 'w') as metrcs_out:
+        writer = csv.DictWriter(metrcs_out, fieldnames=get_header(tree_metrics),
+                                restval='ignore', delimiter='\t')
+        writer.writeheader()
+        {rank: writer.writerow(metrics.get_pretty_dict()) for rank, metrics in tree_metrics.items()}
 
 if __name__ == "__main__":
     import doctest
@@ -139,22 +229,30 @@ if __name__ == "__main__":
     test_query_rank2[122] = 4.0
 
     test_truth_tree = dict()
-    test_truth_tree["species"] = { "A" : 0.5,
-                                   "B" : 0.3,
-                                   "E" : 0.7}
+    test_truth_tree["species"] = {"A": 0.5,
+                                  "B": 0.3,
+                                  "E": 0.7}
 
     test_query_tree = dict()
-    test_query_tree["species"] = { "A" : 0.5,
-                                   "B" : 0.9,
-                                   "C" : 0.4,
-                                   "D" : 0.2,
-                                   "F" : 0.2}
+    test_query_tree["species"] = {"A": 0.5,
+                                  "B": 0.9,
+                                  "C": 0.4,
+                                  "D": 0.2,
+                                  "F": 0.2}
 
-
-
+    tree_metrics = dict()
+    rank_metrics = RankMetrics()
+    rank_metrics.tp = 0
+    rank_metrics.fn = 0
+    rank_metrics.fp = 1
+    rank_metrics.precision = 1
+    rank_metrics.recall = 1
+    rank_metrics.jaccard = 1
+    tree_metrics["species"] = rank_metrics
 
     doctest.testmod(extraglobs={'query_rank': test_query_rank,
                                 'query_rank2': test_query_rank2,
                                 'truth_rank': test_truth_rank,
                                 'truth_tree': test_truth_tree,
+                                'tree_metrics': tree_metrics,
                                 'query_tree': test_query_tree})
