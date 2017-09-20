@@ -148,7 +148,7 @@ class Profile(object):
 		# many missing internal nodes, just delete the tax_id (make them "") and adjust branch lengths accordingly
 		_data = self._data
 		_good_keys = self._all_keys
-		current_keys = _data.keys()
+		current_keys = list(_data) #.keys()
 		bad_keys = []
 		# Remove the bad keys from the dictionary
 		for key in current_keys:  # go through the current keys
@@ -282,7 +282,7 @@ class Profile(object):
 
 		# Loop over length of tax_path and write data
 		# always make the output tax_id, rank, tax_path, tax_path_sn, abundance in that order
-		for path_length in xrange(1, tax_path_lengths + 1):
+		for path_length in range(1, tax_path_lengths + 1):
 			for key in keys:
 				if len(_data[key]["tax_path"]) == path_length and _data[key]["abundance"] > self._eps:
 					line_data = _data[key]
@@ -446,7 +446,7 @@ class Profile(object):
 			if total_abundance > 0:
 				_data[key]["abundance"] /= total_abundance  # Should be a fraction, summing to 1
 		P = np.zeros(len(nodes_in_order))
-		for key_ind in xrange(len(nodes_in_order)):
+		for key_ind in range(len(nodes_in_order)):
 			key = nodes_in_order[key_ind]
 			if key in _data:
 				P[key_ind] = _data[key]["abundance"]
@@ -468,7 +468,7 @@ class Profile(object):
 			if total_abundance > 0:
 				_other_data[key]["abundance"] /= total_abundance  # should be a fraction, summing to 1
 		Q = np.zeros(len(nodes_in_order))
-		for key_ind in xrange(len(nodes_in_order)):
+		for key_ind in range(len(nodes_in_order)):
 			key = nodes_in_order[key_ind]
 			if key in _other_data:
 				Q[key_ind] = _other_data[key]["abundance"]
@@ -536,4 +536,3 @@ def test_real_data():
 	print(diffab2)
 	print(diffab3)
 	#return profile1, profile2
-
