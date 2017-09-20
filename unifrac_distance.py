@@ -70,8 +70,8 @@ if __name__ == '__main__':
 
 	# Compute EMDUnifrac
 	D = np.zeros((len(profiles), len(profiles)))
-	for i in xrange(len(profiles)):
-		for j in xrange(i+1, len(profiles)):
+	for i in range(len(profiles)):
+		for j in range(i+1, len(profiles)):
 			(wu, uu) = compute_unifrac(profiles[i], profiles[j])
 			D[i, j] = wu
 			D[j, i] = uu
