@@ -2,7 +2,7 @@ Feature: Run Scripts without error
 
   Background: Initial Setup
 
-  Scenario: Run html_plots.py
+  Scenario: Run OPAL with basic command
     Given I create the directory "input"
     And I create the directory "output"
     And I copy the example data files
