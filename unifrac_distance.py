@@ -8,11 +8,19 @@ import sys
 import os
 
 
-def compute_unifrac(pf1, pf2):
+def weighted_unifrac(pf1, pf2):
     P1 = copy.deepcopy(pf1)
     P2 = copy.deepcopy(pf2)
     (Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_and_normalize(P2)
     (val, _) = EMDU.EMDUnifrac_weighted(Tint, lint, nodes_in_order, P, Q)
+    return val
+
+
+def unweighted_unifrac(pf1, pf2):
+    P1 = copy.deepcopy(pf1)
+    P2 = copy.deepcopy(pf2)
+    (Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_and_normalize(P2)
+    (val, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, Q)
     return val
 
 
@@ -55,9 +63,8 @@ if __name__ == '__main__':
 	D = np.zeros((len(profiles), len(profiles)))
 	for i in xrange(len(profiles)):
 		for j in xrange(i+1, len(profiles)):
-			val = compute_unifrac(profiles[i], profiles[j])
-			D[i, j] = val
-			D[j, i] = val
+			D[i, j] = weighted_unifrac(profiles[i], profiles[j])
+			D[j, i] = unweighted_unifrac(profiles[i], profiles[j])
 
     # Save results in tsv
 	np.savetxt(output_file, D, delimiter='\t', newline='\n')
