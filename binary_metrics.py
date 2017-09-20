@@ -142,10 +142,14 @@ def __get_fn(rank_query, rank_truth):
 
 
 def precision(tp, fp):
+    if ((tp + fp) == 0):
+        return 0
     return tp / (tp + fp)
 
 
 def recall(tp, fn):
+    if ((tp + fn) == 0):
+        return 0
     return tp / (tp + fn)
 
 
@@ -201,8 +205,9 @@ def compute_tree_metrics(query, truth):
 def print_all_metrics(tree_metrics, path):
     import csv
     def get_header(tree):
-        not_empty_ranks = [metrics.get_pretty_dict() for rank, metrics in tree.items() if bool(metrics.get_pretty_dict())]
-        if(len(not_empty_ranks)>0):
+        not_empty_ranks = [metrics.get_pretty_dict() for rank, metrics in tree.items() if
+                           bool(metrics.get_pretty_dict())]
+        if (len(not_empty_ranks) > 0):
             return not_empty_ranks[0].keys()
         else:
             return []
@@ -212,6 +217,7 @@ def print_all_metrics(tree_metrics, path):
                                 restval='ignore', delimiter='\t')
         writer.writeheader()
         {rank: writer.writerow(metrics.get_pretty_dict()) for rank, metrics in tree_metrics.items()}
+
 
 if __name__ == "__main__":
     import doctest
