@@ -29,15 +29,16 @@ def __get_existing_taxa(rank):
 def __get_non_existing_taxa(rank_query, rank_truth):
     """Return set of taxids with abundance <= 0
     >>> __get_non_existing_taxa(query_rank, truth_rank)
-    [1232]
+    []
     >>> __get_non_existing_taxa(query_rank2, truth_rank)
     [122]
 
     :param rank: Set of taxids of specific rank
     :return: list of taxids
     """
-    rank_taxids = rank_truth.keys()
-    return list(k for k, v in rank_query.items() if v <= 0 or k not in rank_taxids)
+    rank_truth_taxids = set(k for k, v in rank_truth.items() if v > 0)
+    rank_query_taxids = set(k for k, v in rank_query.items() if v > 0)
+    return list(rank_query_taxids.difference(rank_truth_taxids))
 
 
 def __get_tp(rank_query, rank_truth):
@@ -58,8 +59,8 @@ def __get_fp(rank_query, rank_truth):
 
     """
 
-    rank_query_taxids = __get_non_existing_taxa(rank_query, rank_truth)
-    rank_truth_taxids = __get_existing_taxa(rank_truth)
+    rank_query_taxids = __get_existing_taxa(rank_query)
+    rank_truth_taxids = __get_non_existing_taxa(rank_query, rank_truth)
     return float(len(list(set(rank_query_taxids).intersection(rank_truth_taxids))))
 
 
@@ -69,8 +70,8 @@ def __get_fn(rank_query, rank_truth):
     0.0
 
     """
-    rank_query_taxids = __get_existing_taxa(rank_query)
-    rank_truth_taxids = __get_non_existing_taxa(rank_truth, rank_query)
+    rank_query_taxids = __get_non_existing_taxa(rank_truth, rank_query)
+    rank_truth_taxids = __get_existing_taxa(rank_truth)
     return float(len(list(set(rank_query_taxids).intersection(rank_truth_taxids))))
 
 
@@ -110,9 +111,16 @@ def compute_rank_metrics(rank_query, rank_truth):
 def compute_tree_metrics(query, truth):
     """ Return metrics for tree
     >>> compute_tree_metrics(query_tree, truth_tree)
-    {'species': (1.0, 1.0, 1.0, 0.0, 0.0, 1.0)}
+    {'species': (0.4, 0.6666666666666666, 2.0, 1.0, 3.0, 0.3333333333333333)}
     """
-    return {rank: compute_rank_metrics(taxids, truth[rank]) for rank, taxids in query.items()}
+    def check_for_rank(query, rank):
+        """Make sure that empty level is produced
+        """
+        if rank in query:
+            return query[rank]
+        else:
+            return {}
+    return {rank: compute_rank_metrics(check_for_rank(query, rank), taxids) for rank, taxids in truth.items()}
 
 
 if __name__ == "__main__":
@@ -131,10 +139,19 @@ if __name__ == "__main__":
     test_query_rank2[122] = 4.0
 
     test_truth_tree = dict()
-    test_truth_tree["species"] = test_truth_rank
+    test_truth_tree["species"] = { "A" : 0.5,
+                                   "B" : 0.3,
+                                   "E" : 0.7}
 
     test_query_tree = dict()
-    test_query_tree["species"] = test_query_rank
+    test_query_tree["species"] = { "A" : 0.5,
+                                   "B" : 0.9,
+                                   "C" : 0.4,
+                                   "D" : 0.2,
+                                   "F" : 0.2}
+
+
+
 
     doctest.testmod(extraglobs={'query_rank': test_query_rank,
                                 'query_rank2': test_query_rank2,
