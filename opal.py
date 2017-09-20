@@ -46,7 +46,7 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
         rank_to_taxid_to_percentage = load_data.open_profile(profile_file)
         pf_profile = PF.Profile(input_file_name=profile_file)
         l1norm_list.append(l1.compute_l1norm(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage))
-        #compute_binary_metrics(rank_to_taxid_to_percentage, gs_rank_to_taxid_to_percentage, os.path.join(output_dir, label))
+        compute_binary_metrics(rank_to_taxid_to_percentage, gs_rank_to_taxid_to_percentage, os.path.join(output_dir, label))
         weighted_unifrac_list.append(uf.compute_unifrac(gs_profile, pf_profile))
 
     f = open(output_dir + "/l1_norm.tsv", 'w')
