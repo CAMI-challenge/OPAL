@@ -150,13 +150,13 @@ def __get_fn(rank_query, rank_truth):
 
 
 def precision(tp, fp):
-    if ((tp + fp) == 0):
+    if (tp + fp) == 0:
         return 0
     return tp / (tp + fp)
 
 
 def recall(tp, fn):
-    if ((tp + fn) == 0):
+    if (tp + fn) == 0:
         return 0
     return tp / (tp + fn)
 
@@ -212,10 +212,11 @@ def compute_tree_metrics(query, truth):
 
 def print_all_metrics(tree_metrics, path):
     import csv
+
     def get_header(tree):
         not_empty_ranks = [metrics.get_pretty_dict() for rank, metrics in tree.items() if
                            bool(metrics.get_pretty_dict())]
-        if (len(not_empty_ranks) > 0):
+        if len(not_empty_ranks) > 0:
             return not_empty_ranks[0].keys()
         else:
             return []
