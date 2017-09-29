@@ -47,6 +47,8 @@ def compute_binary_metrics(query_profile, query_truth, path):
 
 def plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir):
     N = len(labels)
+    if N < 3:
+        return
     theta = pf.radar_factory(N, frame='polygon')
     fig, axes = plt.subplots(figsize=(9, 9), nrows=2, ncols=3, subplot_kw=dict(projection='radar'))
     fig.subplots_adjust(wspace=0.25, hspace=0.1, top=0.85, bottom=0.3)
