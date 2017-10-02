@@ -12,6 +12,8 @@ from utils import plot_functions as pl
 from utils import load_data
 from utils import ProfilingTools as PF
 from utils import constants as c
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
