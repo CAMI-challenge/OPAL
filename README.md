@@ -6,7 +6,6 @@ Profiling Assessment
 # Requirements
 
 * python &ge; 3.5
-* python-tk
 * numpy &ge; 1.13.0
 * matplotlib &ge; 2.0.2
 * dendropy &ge; 4.3.0
