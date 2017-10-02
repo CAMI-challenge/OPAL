@@ -8,15 +8,11 @@ from collections import defaultdict
 import l1norm as l1
 import binary_metrics as bm
 import unifrac_distance as uf
-from utils import plot_functions as pf
+from utils import plot_functions as pl
 from utils import load_data
 from utils import ProfilingTools as PF
+from utils import constants as c
 import matplotlib.pyplot as plt
-
-UNIFRAC = 'Unifrac error'
-L1NORM = 'L1 norm error'
-PRECISION = 'Precision'
-RECALL = 'Recall'
 
 
 def make_sure_path_exists(path):
@@ -49,20 +45,31 @@ def plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir):
     N = len(labels)
     if N < 3:
         return
-    theta = pf.radar_factory(N, frame='polygon')
+    theta = pl.radar_factory(N, frame='polygon')
     fig, axes = plt.subplots(figsize=(9, 9), nrows=2, ncols=3, subplot_kw=dict(projection='radar'))
-    fig.subplots_adjust(wspace=0.25, hspace=0.1, top=0.85, bottom=0.3)
+    fig.subplots_adjust(wspace=0.35, hspace=0.1, top=0.87, bottom=0.3)
     colors = ['b', 'r', 'g', 'm', 'y']
 
-    for ax, rank in zip(axes.flatten(), rank_to_metric_to_toolvalues):
-        ax.set_rgrids([0.2, 0.4, 0.6, 0.8])
+    for ax, rank in zip(axes.flatten(), c.PHYLUM_SPECIES):
+        ax.set_rgrids([0.2, 0.4, 0.6, 0.8], ('', '', '', '')) # get rid of the labels of the grid points
         ax.set_title(rank, weight='bold', size='medium', position=(0.5, 1.1),
                      horizontalalignment='center', verticalalignment='center')
         it = 1
+        metric_to_toolindex = []
         for d, color in zip(rank_to_metric_to_toolvalues[rank].values(), colors):
+            # store index of tools without a value for the current metric
+            metric_to_toolindex.append([i for i, x in enumerate(d) if x is None])
+            d = [0 if x is None else x for x in d]
+
             ax.plot(theta, d, '--', color=color, linewidth=3, dashes=(it, 1))
             it += 1
         ax.set_varlabels(labels)
+
+        # color red label of tools without a value for at least one metric
+        xticklabels = ax.get_xticklabels()
+        for metric in metric_to_toolindex:
+            for toolindex in metric:
+                xticklabels[toolindex].set_color([1, 0, 0])
 
     ax = axes[0, 0]
     ax.legend(metrics, loc=(0.7, 1.3), labelspacing=0.1, fontsize='small', ncol=4)
@@ -76,7 +83,7 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
     weighted_unifrac_list = []
     gs_rank_to_taxid_to_percentage = load_data.open_profile(gold_standard_file)
     gs_profile = PF.Profile(input_file_name=gold_standard_file)
-    metrics = [UNIFRAC, L1NORM, PRECISION, RECALL]
+    metrics = [c.UNIFRAC, c.L1NORM, c.PRECISION, c.RECALL]
 
     for profile_file, label in zip(profiles_files, labels):
         rank_to_taxid_to_percentage = load_data.open_profile(profile_file)
@@ -95,14 +102,14 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
         weighted_unifrac_list.append(unifrac)
 
     rank_to_metric_to_toolvalues = defaultdict(dict)
-    for rank in l1norm:
+    for rank in c.PHYLUM_SPECIES:
         for metric in metrics:
             rank_to_metric_to_toolvalues[rank][metric] = []
         for unifrac, l1norm, binary_metrics in zip(weighted_unifrac_list, l1norm_list, binary_metrics_list):
-            rank_to_metric_to_toolvalues[rank][UNIFRAC].append(unifrac[0] / 16)
-            rank_to_metric_to_toolvalues[rank][L1NORM].append(l1norm[rank] / 2.0 if rank in l1norm else None)
-            rank_to_metric_to_toolvalues[rank][PRECISION].append(binary_metrics[rank].precision if rank in binary_metrics else None)
-            rank_to_metric_to_toolvalues[rank][RECALL].append(binary_metrics[rank].recall if rank in binary_metrics else None)
+            rank_to_metric_to_toolvalues[rank][c.UNIFRAC].append(unifrac[0] / 16)
+            rank_to_metric_to_toolvalues[rank][c.L1NORM].append(l1norm[rank] / 2.0 if rank in l1norm else None)
+            rank_to_metric_to_toolvalues[rank][c.PRECISION].append(binary_metrics[rank].precision if rank in binary_metrics else None)
+            rank_to_metric_to_toolvalues[rank][c.RECALL].append(binary_metrics[rank].recall if rank in binary_metrics else None)
 
     plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir)
 
@@ -116,7 +123,7 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Compute all metrics for one or more profiles")
+    parser = argparse.ArgumentParser(description="Compute all metrics for one or more taxonomic profiles")
     parser.add_argument("-g", "--gold_standard_file", help="Gold standard file", required=True)
     parser.add_argument("profiles_files", nargs='+', help="Files of profiles")
     parser.add_argument('-l', '--labels', help="Comma-separated profiles names", required=False)

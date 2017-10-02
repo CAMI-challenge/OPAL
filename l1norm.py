@@ -3,6 +3,7 @@
 import sys
 import argparse
 from utils import load_data
+from utils import constants as c
 
 
 def compute_l1norm(f1_rank_to_taxid_to_percentage, f2_rank_to_taxid_to_percentage):
@@ -30,14 +31,14 @@ def print_list_l1norm(l1norm_list, labels, stream=sys.stdout):
     stream.write("tool\tsuperkingdom\tphylum\tclass\torder\tfamily\tgenus\tspecies\tstrain\n")
     for l1norm in l1norm_list:
         stream.write("{}\t".format(next(labels_iterator)))
-        stream.write("\t".join([format(l1norm["superkingdom"], '.3f') if "superkingdom" in l1norm else "na",
-                      format(l1norm["phylum"], '.3f') if "phylum" in l1norm else "na",
-                      format(l1norm["class"], '.3f') if "class" in l1norm else "na",
-                      format(l1norm["order"], '.3f') if "order" in l1norm else "na",
-                      format(l1norm["family"], '.3f') if "family" in l1norm else "na",
-                      format(l1norm["genus"], '.3f') if "genus" in l1norm else "na",
-                      format(l1norm["species"], '.3f') if "species" in l1norm else "na",
-                      format(l1norm["strain"], '.3f') if "strain" in l1norm else "na"]))
+        stream.write("\t".join([format(l1norm[c.SUPERKINGDOM], '.3f') if c.SUPERKINGDOM in l1norm else "na",
+                      format(l1norm[c.PHYLUM], '.3f') if c.PHYLUM in l1norm else "na",
+                      format(l1norm[c.CLASS], '.3f') if c.CLASS in l1norm else "na",
+                      format(l1norm[c.ORDER], '.3f') if c.ORDER in l1norm else "na",
+                      format(l1norm[c.FAMILY], '.3f') if c.FAMILY in l1norm else "na",
+                      format(l1norm[c.GENUS], '.3f') if c.GENUS in l1norm else "na",
+                      format(l1norm[c.SPECIES], '.3f') if c.SPECIES in l1norm else "na",
+                      format(l1norm[c.STRAIN], '.3f') if c.STRAIN in l1norm else "na"]))
         stream.write("\n")
 
 
