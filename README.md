@@ -41,7 +41,7 @@ Files must be in the [CAMI profiling Bioboxes format](https://github.com/bioboxe
 
 ## Computed metrics
 
-* Unifrac eror
+* Unifrac error
 * L1 norm error
 * True positives, false positives, false negatives
 * Precision
