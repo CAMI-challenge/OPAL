@@ -123,7 +123,10 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
             rank_to_metric_to_toolvalues[rank][c.L1NORM].append(l1norm[rank] / 2.0 if rank in l1norm else None)
             rank_to_metric_to_toolvalues[rank][c.RECALL].append(binary_metrics[rank].recall if rank in binary_metrics else None)
             rank_to_metric_to_toolvalues[rank][c.PRECISION].append(binary_metrics[rank].precision if rank in binary_metrics else None)
-            rank_to_metric_to_toolvalues[rank][c.FP].append(binary_metrics[rank].fp / max_fp if rank in binary_metrics else None)
+            if max_fp > 0:
+                rank_to_metric_to_toolvalues[rank][c.FP].append(binary_metrics[rank].fp / max_fp if rank in binary_metrics else None)
+            else:
+                rank_to_metric_to_toolvalues[rank][c.FP].append(binary_metrics[rank].fp if rank in binary_metrics else None)
 
     plot(metrics,
          labels,
