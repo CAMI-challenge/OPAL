@@ -27,7 +27,7 @@ Install dependencies as follows (tested on Linux Ubuntu 16.04):
 
 ~~~BASH
 sudo apt-get install python3-pip
-sudo apt-get install python3-tk
+cd OPAL/
 pip3 install -r requirements/default.txt --user
 ~~~
 
@@ -69,7 +69,7 @@ optional arguments:
 ~~~
 **Example:**
 ~~~BASH
-python opal.py -g data/goldstandard_low_1.bin \
+python3 opal.py -g data/goldstandard_low_1.bin \
 data/cranky_wozniak_13 \
 data/grave_wright_13 \
 data/furious_elion_13 \
