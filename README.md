@@ -49,8 +49,7 @@ Files must be in the [CAMI profiling Bioboxes format](https://github.com/bioboxe
 
 ## Running _opal.py_
 ~~~BASH
-
-usage: opal.py [-h] -g GOLD_STANDARD_FILE [-l LABELS] -o OUTPUT_DIR
+usage: opal.py [-h] -g GOLD_STANDARD_FILE [-l LABELS] -o OUTPUT_DIR [-r]
                profiles_files [profiles_files ...]
 
 Compute all metrics for one or more taxonomic profiles
@@ -66,6 +65,7 @@ optional arguments:
                         Comma-separated profiles names
   -o OUTPUT_DIR, --output_dir OUTPUT_DIR
                         Directory to write the results to
+  -r, --by_rank         Create a results file per rank
 ~~~
 **Example:**
 ~~~BASH

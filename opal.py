@@ -38,10 +38,45 @@ def get_labels(labels, profiles_files):
     return tool_id
 
 
-def compute_binary_metrics(query_profile, query_truth, path):
+def compute_binary_metrics(query_profile, query_truth):
     all_metrics = bm.compute_tree_metrics(query_profile, query_truth)
-    bm.print_all_metrics(all_metrics, path)
     return all_metrics
+
+
+def print_by_rank(output_dir, labels, weighted_unifrac_list, l1norm_list, binary_metrics_list):
+    for rank in c.ALL_RANKS:
+        with open(os.path.join(output_dir, rank + ".tsv"), 'w') as f:
+            f.write("\t".join(("tool", c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.TP, c.FP, c.FN, c.JACCARD)) + "\n")
+            for label, unifrac, l1norm, binary_metrics in zip(labels, weighted_unifrac_list, l1norm_list, binary_metrics_list):
+                f.write("\t".join((label,
+                                   str(unifrac[0]),
+                                   str(unifrac[1]),
+                                   str(l1norm[rank]) if rank in l1norm else "na",
+                                   str(binary_metrics[rank].recall) if rank in binary_metrics else "na",
+                                   str(binary_metrics[rank].precision) if rank in binary_metrics else "na",
+                                   str(binary_metrics[rank].tp) if rank in binary_metrics else "na",
+                                   str(binary_metrics[rank].fp) if rank in binary_metrics else "na",
+                                   str(binary_metrics[rank].fn) if rank in binary_metrics else "na",
+                                   str(binary_metrics[rank].jaccard) if rank in binary_metrics else "na"
+                                   )) + "\n")
+
+
+def print_by_tool(output_dir, labels, weighted_unifrac_list, l1norm_list, binary_metrics_list):
+    for label, unifrac, l1norm, binary_metrics in zip(labels, weighted_unifrac_list, l1norm_list, binary_metrics_list):
+        with open(os.path.join(output_dir, label + ".tsv"), 'w') as f:
+            f.write("\t".join(("rank", c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.TP, c.FP, c.FN, c.JACCARD)) + "\n")
+            for rank in c.ALL_RANKS:
+                f.write("\t".join((rank,
+                                   str(unifrac[0]),
+                                   str(unifrac[1]),
+                                   str(l1norm[rank]) if rank in l1norm else "na",
+                                   str(binary_metrics[rank].recall) if rank in binary_metrics else "na",
+                                   str(binary_metrics[rank].precision) if rank in binary_metrics else "na",
+                                   str(binary_metrics[rank].tp) if rank in binary_metrics else "na",
+                                   str(binary_metrics[rank].fp) if rank in binary_metrics else "na",
+                                   str(binary_metrics[rank].fn) if rank in binary_metrics else "na",
+                                   str(binary_metrics[rank].jaccard) if rank in binary_metrics else "na"
+                                   )) + "\n")
 
 
 def plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_name, colors, grid_points=None, fill=False):
@@ -106,7 +141,7 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
         l1norm_list.append(l1norm)
 
         # Binary metrics
-        binary_metrics = compute_binary_metrics(rank_to_taxid_to_percentage, gs_rank_to_taxid_to_percentage, os.path.join(output_dir, label))
+        binary_metrics = compute_binary_metrics(rank_to_taxid_to_percentage, gs_rank_to_taxid_to_percentage)
         binary_metrics_list.append(binary_metrics)
 
         # Unifrac
@@ -144,13 +179,7 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
          grid_points=[0.2, 0.4, 0.6, 0.8, 1.0],
          fill=True)
 
-    f = open(output_dir + "/l1_norm.tsv", 'w')
-    l1.print_list_l1norm(l1norm_list, labels, f)
-    f.close()
-
-    f = open(output_dir + "/unifrac.tsv", 'w')
-    uf.print_list_unifrac(weighted_unifrac_list, labels, f)
-    f.close()
+    return binary_metrics_list, l1norm_list, weighted_unifrac_list
 
 
 def main():
@@ -159,11 +188,18 @@ def main():
     parser.add_argument("profiles_files", nargs='+', help="Files of profiles")
     parser.add_argument('-l', '--labels', help="Comma-separated profiles names", required=False)
     parser.add_argument('-o', '--output_dir', help="Directory to write the results to", required=True)
+    parser.add_argument('-r', '--by_rank', help="Create a results file per rank", action='store_true')
     args = parser.parse_args()
     labels = get_labels(args.labels, args.profiles_files)
     output_dir = os.path.abspath(args.output_dir)
     make_sure_path_exists(output_dir)
-    evaluate(args.gold_standard_file, args.profiles_files, labels, output_dir)
+    binary_metrics_list, l1norm_list, weighted_unifrac_list = evaluate(args.gold_standard_file,
+                                                                       args.profiles_files,
+                                                                       labels,
+                                                                       output_dir)
+    print_by_tool(output_dir, labels, weighted_unifrac_list, l1norm_list, binary_metrics_list)
+    if args.by_rank:
+        print_by_rank(output_dir, labels, weighted_unifrac_list, l1norm_list, binary_metrics_list)
 
 
 if __name__ == "__main__":

@@ -7,9 +7,14 @@ GENUS = 'genus'
 SPECIES = 'species'
 STRAIN = 'strain'
 PHYLUM_SPECIES = [PHYLUM, CLASS, ORDER, FAMILY, GENUS, SPECIES]
+ALL_RANKS = [SUPERKINGDOM, PHYLUM, CLASS, ORDER, FAMILY, GENUS, SPECIES, STRAIN]
 
 UNIFRAC = 'Unifrac error'
+UNW_UNIFRAC = 'Unweighted Unifrac error'
 L1NORM = 'L1 norm error'
 PRECISION = 'Precision'
 RECALL = 'Recall'
+TP = "True positives"
 FP = 'False positives'
+FN = "False negatives"
+JACCARD = "Jaccard index"
