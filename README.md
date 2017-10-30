@@ -80,6 +80,16 @@ data/jolly_pasteur_3 \
 -l "TIPP, Quikr, MP2.0, MetaPhyler, mOTU, CLARK, FOCUS" \
 -o output_dir
 ~~~
+**Output:**
+Directory _output_dir_ will contain:
+* a .tsv file for each profile (CLARK.tsv, FOCUS.tsv, MetaPhyler.tsv, mOTU.tsv, MP2.0.tsv, Quikr.tsv, and TIPP.tsv)
+* spider_plot.pdf
+* spider_plot_recall_precision.pdf
+* plot_shannon.pdf
+
+__Note 1__: spider plots will only be generated if at least 3 profiles are provided, so that the plot can form a triangle.
+
+__Note 2__: _output_dir_ will will also contain a .tsv file per taxonomic rank if option -r is used.
 
 # Developer Guide
 

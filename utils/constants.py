@@ -18,3 +18,5 @@ TP = "True positives"
 FP = 'False positives'
 FN = "False negatives"
 JACCARD = "Jaccard index"
+SHANNON_DIVERSITY = 'Shannon diversity'
+SHANNON_EQUIT = 'Shannon equitability'

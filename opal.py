@@ -9,6 +9,7 @@ from collections import OrderedDict
 import l1norm as l1
 import binary_metrics as bm
 import unifrac_distance as uf
+import shannon as sh
 from utils import plot_functions as pl
 from utils import load_data
 from utils import ProfilingTools as PF
@@ -43,11 +44,11 @@ def compute_binary_metrics(query_profile, query_truth):
     return all_metrics
 
 
-def print_by_rank(output_dir, labels, weighted_unifrac_list, l1norm_list, binary_metrics_list):
+def print_by_rank(output_dir, labels, shannon_list, weighted_unifrac_list, l1norm_list, binary_metrics_list):
     for rank in c.ALL_RANKS:
         with open(os.path.join(output_dir, rank + ".tsv"), 'w') as f:
-            f.write("\t".join(("tool", c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.TP, c.FP, c.FN, c.JACCARD)) + "\n")
-            for label, unifrac, l1norm, binary_metrics in zip(labels, weighted_unifrac_list, l1norm_list, binary_metrics_list):
+            f.write("\t".join(("tool", c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.TP, c.FP, c.FN, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT)) + "\n")
+            for label, shannon, unifrac, l1norm, binary_metrics in zip(labels, shannon_list, weighted_unifrac_list, l1norm_list, binary_metrics_list):
                 f.write("\t".join((label,
                                    str(unifrac[0]),
                                    str(unifrac[1]),
@@ -57,14 +58,16 @@ def print_by_rank(output_dir, labels, weighted_unifrac_list, l1norm_list, binary
                                    str(binary_metrics[rank].tp) if rank in binary_metrics else "na",
                                    str(binary_metrics[rank].fp) if rank in binary_metrics else "na",
                                    str(binary_metrics[rank].fn) if rank in binary_metrics else "na",
-                                   str(binary_metrics[rank].jaccard) if rank in binary_metrics else "na"
+                                   str(binary_metrics[rank].jaccard) if rank in binary_metrics else "na",
+                                   str(shannon[rank].diversity),
+                                   str(shannon[rank].equitability)
                                    )) + "\n")
 
 
-def print_by_tool(output_dir, labels, weighted_unifrac_list, l1norm_list, binary_metrics_list):
-    for label, unifrac, l1norm, binary_metrics in zip(labels, weighted_unifrac_list, l1norm_list, binary_metrics_list):
+def print_by_tool(output_dir, labels, shannon_list, weighted_unifrac_list, l1norm_list, binary_metrics_list):
+    for label, shannon, unifrac, l1norm, binary_metrics in zip(labels, shannon_list, weighted_unifrac_list, l1norm_list, binary_metrics_list):
         with open(os.path.join(output_dir, label + ".tsv"), 'w') as f:
-            f.write("\t".join(("rank", c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.TP, c.FP, c.FN, c.JACCARD)) + "\n")
+            f.write("\t".join(("rank", c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.TP, c.FP, c.FN, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT)) + "\n")
             for rank in c.ALL_RANKS:
                 f.write("\t".join((rank,
                                    str(unifrac[0]),
@@ -75,7 +78,9 @@ def print_by_tool(output_dir, labels, weighted_unifrac_list, l1norm_list, binary
                                    str(binary_metrics[rank].tp) if rank in binary_metrics else "na",
                                    str(binary_metrics[rank].fp) if rank in binary_metrics else "na",
                                    str(binary_metrics[rank].fn) if rank in binary_metrics else "na",
-                                   str(binary_metrics[rank].jaccard) if rank in binary_metrics else "na"
+                                   str(binary_metrics[rank].jaccard) if rank in binary_metrics else "na",
+                                   str(shannon[rank].diversity),
+                                   str(shannon[rank].equitability)
                                    )) + "\n")
 
 
@@ -125,6 +130,7 @@ def plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_name, c
 
 
 def evaluate(gold_standard_file, profiles_files, labels, output_dir):
+    shannon_list = []
     l1norm_list = []
     binary_metrics_list = []
     weighted_unifrac_list = []
@@ -135,6 +141,10 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
     for profile_file, label in zip(profiles_files, labels):
         rank_to_taxid_to_percentage = load_data.open_profile(profile_file)
         pf_profile = PF.Profile(input_file_name=profile_file)
+
+        # Shannon
+        shannon = sh.compute_shannon_index(rank_to_taxid_to_percentage)
+        shannon_list.append(shannon)
 
         # L1 Norm
         l1norm = l1.compute_l1norm(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage)
@@ -167,19 +177,21 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
          labels,
          rank_to_metric_to_toolvalues,
          output_dir,
-         'plot.pdf',
+         'spider_plot.pdf',
          ['b', 'g', 'r', 'k', 'm'])
 
     plot([c.RECALL, c.PRECISION],
          labels,
          rank_to_metric_to_toolvalues,
          output_dir,
-         'plot_recall_precision.pdf',
+         'spider_plot_recall_precision.pdf',
          ['r', 'k'],
          grid_points=[0.2, 0.4, 0.6, 0.8, 1.0],
          fill=True)
 
-    return binary_metrics_list, l1norm_list, weighted_unifrac_list
+    sh.plot_shannon(shannon_list, labels, output_dir)
+
+    return shannon_list, binary_metrics_list, l1norm_list, weighted_unifrac_list
 
 
 def main():
@@ -193,13 +205,13 @@ def main():
     labels = get_labels(args.labels, args.profiles_files)
     output_dir = os.path.abspath(args.output_dir)
     make_sure_path_exists(output_dir)
-    binary_metrics_list, l1norm_list, weighted_unifrac_list = evaluate(args.gold_standard_file,
-                                                                       args.profiles_files,
-                                                                       labels,
-                                                                       output_dir)
-    print_by_tool(output_dir, labels, weighted_unifrac_list, l1norm_list, binary_metrics_list)
+    shannon_list, binary_metrics_list, l1norm_list, weighted_unifrac_list = evaluate(args.gold_standard_file,
+                                                                                     args.profiles_files,
+                                                                                     labels,
+                                                                                     output_dir)
+    print_by_tool(output_dir, labels, shannon_list, weighted_unifrac_list, l1norm_list, binary_metrics_list)
     if args.by_rank:
-        print_by_rank(output_dir, labels, weighted_unifrac_list, l1norm_list, binary_metrics_list)
+        print_by_rank(output_dir, labels, shannon_list, weighted_unifrac_list, l1norm_list, binary_metrics_list)
 
 
 if __name__ == "__main__":
