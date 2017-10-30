@@ -46,6 +46,7 @@ Files must be in the [CAMI profiling Bioboxes format](https://github.com/bioboxe
 * Precision
 * Recall
 * Jaccard index
+* Shannon diversity and equitability indices
 
 ## Running _opal.py_
 ~~~BASH
@@ -87,7 +88,7 @@ Directory _output_dir_ will contain:
 * spider_plot_recall_precision.pdf
 * plot_shannon.pdf
 
-__Note 1__: spider plots will only be generated if at least 3 profiles are provided, so that the plot can form a triangle.
+__Note 1__: spider plots will only be generated if at least 3 profiles are provided, so that the plots can form a triangle.
 
 __Note 2__: _output_dir_ will will also contain a .tsv file per taxonomic rank if option -r is used.
 
