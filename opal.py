@@ -16,6 +16,8 @@ from utils import constants as c
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
 
 def make_sure_path_exists(path):
@@ -43,40 +45,35 @@ def compute_binary_metrics(query_profile, query_truth):
     return all_metrics
 
 
-def print_by_rank(output_dir, labels, weighted_unifrac_list, l1norm_list, binary_metrics_list):
+def print_by_rank(output_dir, labels, pd_metrics):
     for rank in c.ALL_RANKS:
-        with open(os.path.join(output_dir, rank + ".tsv"), 'w') as f:
-            f.write("\t".join(("tool", c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.TP, c.FP, c.FN, c.JACCARD)) + "\n")
-            for label, unifrac, l1norm, binary_metrics in zip(labels, weighted_unifrac_list, l1norm_list, binary_metrics_list):
-                f.write("\t".join((label,
-                                   str(unifrac[0]),
-                                   str(unifrac[1]),
-                                   str(l1norm[rank]) if rank in l1norm else "na",
-                                   str(binary_metrics[rank].recall) if rank in binary_metrics else "na",
-                                   str(binary_metrics[rank].precision) if rank in binary_metrics else "na",
-                                   str(binary_metrics[rank].tp) if rank in binary_metrics else "na",
-                                   str(binary_metrics[rank].fp) if rank in binary_metrics else "na",
-                                   str(binary_metrics[rank].fn) if rank in binary_metrics else "na",
-                                   str(binary_metrics[rank].jaccard) if rank in binary_metrics else "na"
-                                   )) + "\n")
+        # define ordering of rows, which is given my order of tool labels
+        order_rows = labels
+        # define ordering of columns, hard coded
+        order_columns = ['Unifrac error', 'Unweighted Unifrac error', 'L1 norm error', 'Recall', 'Precision', 'True positives', 'False positives', 'False negatives', 'Jaccard index']
+        
+        # subset to those information that either belong to the given rank or are rank independent, i.e. are unifrac values
+        table = pd_metrics[(pd_metrics['rank'] == rank) | (pd_metrics['metric'].isin(['Unifrac error', 'Unweighted Unifrac error']))]
+        # reformat the table with a pivot_table
+        table = table.pivot_table(index='tool', columns='metric', values='value')
+        # order table
+        table = table.loc[order_rows, order_columns]  
+        # replace np.NaN with string "na" and write resulting table into a file
+        table.fillna('na').to_csv(os.path.join(output_dir, rank + ".tsv"), sep='\t')
 
 
-def print_by_tool(output_dir, labels, weighted_unifrac_list, l1norm_list, binary_metrics_list):
-    for label, unifrac, l1norm, binary_metrics in zip(labels, weighted_unifrac_list, l1norm_list, binary_metrics_list):
-        with open(os.path.join(output_dir, label + ".tsv"), 'w') as f:
-            f.write("\t".join(("rank", c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.TP, c.FP, c.FN, c.JACCARD)) + "\n")
-            for rank in c.ALL_RANKS:
-                f.write("\t".join((rank,
-                                   str(unifrac[0]),
-                                   str(unifrac[1]),
-                                   str(l1norm[rank]) if rank in l1norm else "na",
-                                   str(binary_metrics[rank].recall) if rank in binary_metrics else "na",
-                                   str(binary_metrics[rank].precision) if rank in binary_metrics else "na",
-                                   str(binary_metrics[rank].tp) if rank in binary_metrics else "na",
-                                   str(binary_metrics[rank].fp) if rank in binary_metrics else "na",
-                                   str(binary_metrics[rank].fn) if rank in binary_metrics else "na",
-                                   str(binary_metrics[rank].jaccard) if rank in binary_metrics else "na"
-                                   )) + "\n")
+def print_by_tool(output_dir, pd_metrics):
+    # define ordering of columns, hard coded
+    order_columns = ['Unifrac error', 'Unweighted Unifrac error', 'L1 norm error', 'Recall', 'Precision', 'True positives', 'False positives', 'False negatives', 'Jaccard index']
+    for toolname, pd_metrics_tool in pd_metrics.groupby('tool'):
+        table = pd_metrics_tool.pivot_table(index='rank', columns='metric', values='value')
+        # little hack to carry unifrac over to every rank
+        for unifrac_col in order_columns[:2]:
+            table[unifrac_col] = pd_metrics_tool[pd_metrics_tool['metric'] == unifrac_col]['value'].values[0]             
+        # order table
+        table = table.loc[c.ALL_RANKS, order_columns]
+        # replace np.NaN with string "na" and write resulting table into a file
+        table.fillna('na').to_csv(os.path.join(output_dir, toolname + ".tsv"), sep='\t')
 
 
 def plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_name, colors, grid_points=None, fill=False):
@@ -182,6 +179,58 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
     return binary_metrics_list, l1norm_list, weighted_unifrac_list
 
 
+def reformat_pandas(labels, binary_metrics_list, l1norm_list, weighted_unifrac_list):
+    """Reformats metrics data into one unified pandas DataFrame.
+    
+    Parameters
+    ----------
+    labels : [str]
+        List of str for tool names.
+    binary_metrics_list : ?
+    l1norm_list : ?
+    weighted_unifrac_list : ?
+    
+    Returns
+    -------
+    Pandas.DataFrame with following columns: metric, rank, tool, value
+    """
+    # convert unifrac
+    pd_weighted_unifrac_list = pd.DataFrame(index=labels, data=weighted_unifrac_list, columns=['Unifrac error', 'Unweighted Unifrac error'])
+    pd_weighted_unifrac_list = pd_weighted_unifrac_list.stack().reset_index()
+    pd_weighted_unifrac_list.columns = ['tool', 'metric', 'value']
+    pd_weighted_unifrac_list['rank'] = np.nan
+
+    # convert l1norm
+    pd_l1norm_list = pd.DataFrame(l1norm_list, index=labels).stack().reset_index()
+    pd_l1norm_list.columns = ['tool', 'rank', 'value']
+    pd_l1norm_list['metric'] = 'L1 norm error'
+
+    # convert binary metrics
+    pd_binary_metrics_list = []
+    for i, tool in enumerate(labels):
+        x = pd.DataFrame([binary_metrics_list[i][rank].get_pretty_dict() for rank in binary_metrics_list[i].keys()]).set_index('rank').stack().reset_index().rename(columns={'level_1': 'metric', 0: 'value'})
+        x['tool'] = tool
+        pd_binary_metrics_list.append(x)
+    pd_binary_metrics_list = pd.concat(pd_binary_metrics_list)
+    pd_binary_metrics_list['metric'].replace(['fp', 
+                                              'tp', 
+                                              "fn",
+                                              "jaccard",
+                                              "precision",
+                                              "recall"], 
+                                             ['False positives', 
+                                              "True positives", 
+                                              "False negatives",
+                                              "Jaccard index",
+                                              "Precision",
+                                              "Recall"], inplace=True)
+
+    # combine metric
+    pd_metrics = pd.concat([pd_weighted_unifrac_list, pd_l1norm_list, pd_binary_metrics_list])
+    
+    return pd_metrics
+
+
 def main():
     parser = argparse.ArgumentParser(description="Compute all metrics for one or more taxonomic profiles")
     parser.add_argument("-g", "--gold_standard_file", help="Gold standard file", required=True)
@@ -197,9 +246,10 @@ def main():
                                                                        args.profiles_files,
                                                                        labels,
                                                                        output_dir)
-    print_by_tool(output_dir, labels, weighted_unifrac_list, l1norm_list, binary_metrics_list)
+    pd_metrics = reformat_pandas(labels, binary_metrics_list, l1norm_list, weighted_unifrac_list)
+    print_by_tool(output_dir, pd_metrics)
     if args.by_rank:
-        print_by_rank(output_dir, labels, weighted_unifrac_list, l1norm_list, binary_metrics_list)
+        print_by_rank(output_dir, labels, pd_metrics)
 
 
 if __name__ == "__main__":
