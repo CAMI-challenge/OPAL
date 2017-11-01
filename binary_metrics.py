@@ -49,7 +49,7 @@ class RankMetrics:
     def jaccard(self):
         return self.__jaccard
 
-    @fn.setter
+    @rank.setter
     def rank(self, rank):
         self.__rank = rank
 

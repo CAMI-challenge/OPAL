@@ -9,6 +9,7 @@ Profiling Assessment
 * numpy &ge; 1.13.0
 * matplotlib &ge; 2.0.2
 * dendropy &ge; 4.3.0
+* pandas &ge; 0.20.3
 
 # User Guide
 
