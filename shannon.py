@@ -64,13 +64,14 @@ def plot_shannon(rank_to_shannon_list, labels, output_dir):
     # force axis to be from 0 to 100%
     axs.set_ylim([0.0, 1.0])
 
-    x = list(range(1, len(c.ALL_RANKS) + 1))
-
-    i = 0
-    for rank_to_shannon in rank_to_shannon_list:
-        y = [rank_to_shannon[rank].equitability for rank in c.ALL_RANKS]
+    for i, rank_to_shannon in enumerate(rank_to_shannon_list):
+        x = []
+        y = []
+        for j, rank in enumerate(c.ALL_RANKS, start=1):
+            if rank in rank_to_shannon:
+                x.append(j)
+                y.append(rank_to_shannon[rank].equitability)
         axs.plot(x, y, color=colors_list[i], marker='o', markersize=10)
-        i += 1
 
     axs.set_xticklabels([''] + c.ALL_RANKS)
     plt.setp(axs.get_xticklabels(), fontsize=9, rotation=25)
@@ -86,11 +87,11 @@ def plot_shannon(rank_to_shannon_list, labels, output_dir):
 def compute_shannon_index(rank_to_taxid_to_percentage):
     rank_to_shannon = OrderedDict()
     for rank in c.ALL_RANKS:
+        if rank not in rank_to_taxid_to_percentage:
+            continue
         rank_to_shannon[rank] = Shannon(rank)
         rank_to_shannon[rank].diversity = .0
         rank_to_shannon[rank].equitability = .0
-        if rank not in rank_to_taxid_to_percentage:
-            continue
         for taxid in rank_to_taxid_to_percentage[rank]:
             percentage = rank_to_taxid_to_percentage[rank][taxid] / 100.0
             if percentage > .0:
