@@ -181,7 +181,8 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
          grid_points=[0.2, 0.4, 0.6, 0.8, 1.0],
          fill=True)
 
-    sh.plot_shannon(shannon_list, labels, output_dir)
+    rank_to_shannon_gs = sh.compute_shannon_index(gs_rank_to_taxid_to_percentage)
+    sh.plot_shannon(shannon_list, rank_to_shannon_gs, labels, output_dir)
 
     return shannon_list, binary_metrics_list, l1norm_list, weighted_unifrac_list
 

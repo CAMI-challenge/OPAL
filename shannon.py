@@ -56,7 +56,7 @@ def create_colors_list():
     return colors_list
 
 
-def plot_shannon(rank_to_shannon_list, labels, output_dir):
+def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir):
     colors_list = create_colors_list()
 
     fig, axs = plt.subplots(figsize=(6, 5))
@@ -64,7 +64,10 @@ def plot_shannon(rank_to_shannon_list, labels, output_dir):
     # force axis to be from 0 to 100%
     axs.set_ylim([0.0, 1.0])
 
-    for i, rank_to_shannon in enumerate(rank_to_shannon_list):
+    # turn on grid
+    axs.grid(which='major', linestyle='-', linewidth='0.5', color='lightgrey')
+
+    for i, rank_to_shannon in enumerate([rank_to_shannon_gs] + rank_to_shannon_list):
         x = []
         y = []
         for j, rank in enumerate(c.ALL_RANKS, start=1):
@@ -78,7 +81,7 @@ def plot_shannon(rank_to_shannon_list, labels, output_dir):
 
     axs.set_ylabel('Shannon equitability')
 
-    lgd = plt.legend(labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handlelength=0, frameon=False)
+    lgd = plt.legend(['Gold standard'] + labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handlelength=0, frameon=False)
     fig.savefig(output_dir + '/plot_shannon.pdf', dpi=100, format='pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')
 
 
