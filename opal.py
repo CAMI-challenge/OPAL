@@ -5,18 +5,14 @@ import errno
 import argparse
 import os.path
 from collections import defaultdict
-from collections import OrderedDict
 import l1norm as l1
 import binary_metrics as bm
 import unifrac_distance as uf
 import shannon as sh
-from utils import plot_functions as pl
+import plots as pl
 from utils import load_data
 from utils import ProfilingTools as PF
 from utils import constants as c
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
@@ -76,51 +72,6 @@ def print_by_tool(output_dir, pd_metrics):
         table.fillna('na').to_csv(os.path.join(output_dir, toolname + ".tsv"), sep='\t')
 
 
-def plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_name, colors, grid_points=None, fill=False):
-    N = len(labels)
-    if N < 3:
-        return
-    theta = pl.radar_factory(N, frame='polygon')
-    fig, axes = plt.subplots(figsize=(9, 9), nrows=2, ncols=3, subplot_kw=dict(projection='radar'))
-    fig.subplots_adjust(wspace=0.35, hspace=0.05, top=0.87, bottom=0.3)
-
-    for ax, rank in zip(axes.flatten(), c.PHYLUM_SPECIES):
-        if grid_points:
-            ax.set_rgrids(grid_points, fontsize='xx-small')
-        else:
-            ax.set_rgrids([0.2, 0.4, 0.6, 0.8], ('', '', '', ''))  # get rid of the labels of the grid points
-        ax.set_title(rank, weight='bold', size='medium', position=(0.5, 1.1),
-                     horizontalalignment='center', verticalalignment='center')
-
-        # select only metrics in metrics list
-        metrics_subdict = OrderedDict((metric, rank_to_metric_to_toolvalues[rank][metric]) for metric in metrics)
-        it = 1
-        metric_to_toolindex = []
-        for d, color in zip(metrics_subdict.values(), colors):
-            # store index of tools without a value for the current metric
-            metric_to_toolindex.append([i for i, x in enumerate(d) if x is None])
-            d = [0 if x is None else x for x in d]
-
-            ax.plot(theta, d, '--', color=color, linewidth=3, dashes=(it, 1))
-            if fill:
-                ax.fill(theta, d, facecolor=color, alpha=0.25)
-            it += 1
-        ax.set_varlabels(labels)
-
-        ax.set_ylim([0.0, 1.0])
-        ax.set_xlim([0.0, 1.0])
-
-        # color red label of tools without a value for at least one metric
-        xticklabels = ax.get_xticklabels()
-        for metric in metric_to_toolindex:
-            for toolindex in metric:
-                xticklabels[toolindex].set_color([1, 0, 0])
-
-    ax = axes[0, 0]
-    ax.legend(metrics, loc=(2.067 - 0.353 * len(metrics), 1.3), labelspacing=0.1, fontsize='small', ncol=len(metrics))
-    fig.savefig(output_dir + '/' + file_name, dpi=100, format='pdf', bbox_inches='tight')
-
-
 def evaluate(gold_standard_file, profiles_files, labels, output_dir):
     shannon_list = []
     l1norm_list = []
@@ -165,24 +116,24 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
             else:
                 rank_to_metric_to_toolvalues[rank][c.FP].append(binary_metrics[rank].fp if rank in binary_metrics else None)
 
-    plot(metrics,
+    pl.plot(metrics,
          labels,
          rank_to_metric_to_toolvalues,
          output_dir,
-         'spider_plot.pdf',
+         'spider_plot',
          ['b', 'g', 'r', 'k', 'm'])
 
-    plot([c.RECALL, c.PRECISION],
+    pl.plot([c.RECALL, c.PRECISION],
          labels,
          rank_to_metric_to_toolvalues,
          output_dir,
-         'spider_plot_recall_precision.pdf',
+         'spider_plot_recall_precision',
          ['r', 'k'],
          grid_points=[0.2, 0.4, 0.6, 0.8, 1.0],
          fill=True)
 
     rank_to_shannon_gs = sh.compute_shannon_index(gs_rank_to_taxid_to_percentage)
-    sh.plot_shannon(shannon_list, rank_to_shannon_gs, labels, output_dir)
+    pl.plot_shannon(shannon_list, rank_to_shannon_gs, labels, output_dir)
 
     return shannon_list, binary_metrics_list, l1norm_list, weighted_unifrac_list
 
