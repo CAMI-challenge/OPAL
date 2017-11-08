@@ -46,6 +46,7 @@ Files must be in the [CAMI profiling Bioboxes format](https://github.com/bioboxe
 * True positives, false positives, false negatives
 * Precision
 * Recall
+* F1 score
 * Jaccard index
 * Shannon diversity and equitability indices
 

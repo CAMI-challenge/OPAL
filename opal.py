@@ -47,7 +47,7 @@ def print_by_rank(output_dir, labels, pd_metrics):
         # define ordering of rows, which is given my order of tool labels
         order_rows = labels
         # define ordering of columns, hard coded
-        order_columns = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.TP, c.FP, c.FN, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
+        order_columns = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
         # subset to those information that either belong to the given rank or are rank independent, i.e. are unifrac values
         table = pd_metrics[(pd_metrics['rank'] == rank) | (pd_metrics['metric'].isin([c.UNIFRAC, c.UNW_UNIFRAC]))]
         # reformat the table with a pivot_table
@@ -60,7 +60,7 @@ def print_by_rank(output_dir, labels, pd_metrics):
 
 def print_by_tool(output_dir, pd_metrics):
     # define ordering of columns, hard coded
-    order_columns = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.TP, c.FP, c.FN, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
+    order_columns = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
     for toolname, pd_metrics_tool in pd_metrics.groupby('tool'):
         table = pd_metrics_tool.pivot_table(index='rank', columns='metric', values='value')
         # little hack to carry unifrac over to every rank
@@ -176,13 +176,15 @@ def reformat_pandas(labels, shannon_list, binary_metrics_list, l1norm_list, weig
                                               "fn",
                                               "jaccard",
                                               "precision",
-                                              "recall"],
+                                              "recall",
+                                              "f1"],
                                              [c.FP,
                                               c.TP,
                                               c.FN,
                                               c.JACCARD,
                                               c.PRECISION,
-                                              c.RECALL], inplace=True)
+                                              c.RECALL,
+                                              c.F1_SCORE], inplace=True)
 
     # convert Shannon
     pd_shannon_list = []
@@ -226,8 +228,8 @@ def highscore_table(metrics, useranks=['phylum', 'class', 'order', 'family', 'ge
     pd_metrics['complexity'] = 'dummy'
     pd_metrics.loc[pd_metrics[pd.isnull(pd_metrics['rank'])].index, 'rank'] = 'rank independent'
 
-    sort_ascendingly = {'L1 norm error': True, 'Unweighted Unifrac error': True,
-                        'Recall': False, 'Precision': False}
+    sort_ascendingly = {c.L1NORM: True, c.UNW_UNIFRAC: True,
+                        c.RECALL: False, c.PRECISION: False}
 
     # collecting rank scores
     posresults = []

@@ -14,6 +14,7 @@ UNW_UNIFRAC = 'Unweighted Unifrac error'
 L1NORM = 'L1 norm error'
 PRECISION = 'Precision'
 RECALL = 'Recall'
+F1_SCORE = 'F1 score'
 TP = "True positives"
 FP = 'False positives'
 FN = "False negatives"
