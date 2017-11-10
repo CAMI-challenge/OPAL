@@ -15,6 +15,7 @@ from utils import ProfilingTools as PF
 from utils import constants as c
 import pandas as pd
 import numpy as np
+from scipy.spatial import distance
 
 
 def make_sure_path_exists(path):
@@ -77,6 +78,7 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
     l1norm_list = []
     binary_metrics_list = []
     weighted_unifrac_list = []
+    braycurtis_list = []
     gs_rank_to_taxid_to_percentage = load_data.open_profile(gold_standard_file)
     gs_profile = PF.Profile(input_file_name=gold_standard_file)
     metrics = [c.UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.FP]
@@ -100,6 +102,11 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
         # Unifrac
         unifrac = uf.compute_unifrac(gs_profile, pf_profile)
         weighted_unifrac_list.append(unifrac)
+
+        # Bray-Curtis
+        braycurtis_list.append(braycurtis(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage))
+
+    pl.plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir)
 
     rank_to_metric_to_toolvalues = defaultdict(dict)
     for rank in c.PHYLUM_SPECIES:
@@ -255,6 +262,24 @@ def highscore_table(metrics, useranks=['phylum', 'class', 'order', 'family', 'ge
 
     # return reformatted table
     return pd.concat(os, axis=1)  #.T.loc[['Recall', 'Precision', 'L1 norm error', 'Unweighted Unifrac error'],:]
+
+
+def braycurtis(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage):
+    rank_to_braycurtis = {}
+    for rank in gs_rank_to_taxid_to_percentage:
+        if rank not in rank_to_taxid_to_percentage:
+            continue
+        taxa_union = set(gs_rank_to_taxid_to_percentage[rank].keys()).union(rank_to_taxid_to_percentage[rank].keys())
+        gs = []
+        predictions = []
+        for taxid in taxa_union:
+            if taxid not in gs_rank_to_taxid_to_percentage[rank] or taxid not in rank_to_taxid_to_percentage[rank]:
+                continue
+            gs.append(gs_rank_to_taxid_to_percentage[rank][taxid])
+            predictions.append(rank_to_taxid_to_percentage[rank][taxid])
+        if len(gs) > 0:
+            rank_to_braycurtis[rank] = distance.braycurtis(gs, predictions)
+    return rank_to_braycurtis
 
 
 def main():

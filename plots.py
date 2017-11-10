@@ -5,6 +5,7 @@ from collections import OrderedDict
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
 from utils import spider_plot_functions as spl
 from utils import constants as c
 
@@ -95,3 +96,38 @@ def plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_name, c
     ax.legend(metrics, loc=(2.067 - 0.353 * len(metrics), 1.3), labelspacing=0.1, fontsize='small', ncol=len(metrics))
     fig.savefig(output_dir + '/' + file_name + '.pdf', dpi=100, format='pdf', bbox_inches='tight')
     fig.savefig(output_dir + '/' + file_name + '.png', dpi=100, format='png', bbox_inches='tight')
+
+
+def plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir):
+    colors_list = create_colors_list()
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    reversed_ranks = c.ALL_RANKS.copy()
+    reversed_ranks.reverse()
+    rank_index = []
+
+    color_index = 0
+    for braycurtis, l1norm in zip(braycurtis_list, l1norm_list):
+        for i, rank in enumerate(reversed_ranks, start=1):
+            if rank in braycurtis and rank in l1norm:
+                ax.scatter(braycurtis[rank], l1norm[rank], i, color=colors_list[color_index])
+                rank_index.append(i)
+        color_index += 1
+
+    ax.set_xlabel('Bray-Curtis')
+    ax.set_ylabel('L1 norm')
+
+    rank_index = list(sorted(set(rank_index)))
+    zlabels = [reversed_ranks[i - 1] for i in rank_index]
+    ax.set_zticklabels(zlabels)
+
+    legend_handles = []
+    for i, label in enumerate(labels):
+        line = mlines.Line2D([], [], color='white', markerfacecolor=colors_list[i], marker='o', markersize=8, label=label)
+        legend_handles.append(line)
+
+    plt.legend(handles=legend_handles, loc=2)
+
+    fig.savefig(output_dir + '/braycurtis_l1norm.pdf', dpi=100, format='pdf', bbox_inches='tight')
+
