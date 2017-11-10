@@ -6,6 +6,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
+from mpl_toolkits.mplot3d import Axes3D
 from utils import spider_plot_functions as spl
 from utils import constants as c
 
@@ -130,4 +131,4 @@ def plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir):
     plt.legend(handles=legend_handles, loc=2)
 
     fig.savefig(output_dir + '/braycurtis_l1norm.pdf', dpi=100, format='pdf', bbox_inches='tight')
-
+    fig.savefig(output_dir + '/braycurtis_l1norm.png', dpi=100, format='png', bbox_inches='tight')
