@@ -7,6 +7,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from utils import spider_plot_functions as spl
 from utils import constants as c
+import seaborn as sns
 
 
 def create_colors_list():
@@ -95,3 +96,63 @@ def plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_name, c
     ax.legend(metrics, loc=(2.067 - 0.353 * len(metrics), 1.3), labelspacing=0.1, fontsize='small', ncol=len(metrics))
     fig.savefig(output_dir + '/' + file_name + '.pdf', dpi=100, format='pdf', bbox_inches='tight')
     fig.savefig(output_dir + '/' + file_name + '.png', dpi=100, format='png', bbox_inches='tight')
+
+
+def plot_barplot(metrics, output_dir, file_name):
+    # copy the input dataframe because we are going impose some minor changes
+    cp_metrics = metrics.copy()
+
+    # right now OPAL is only able to handle one gold standard profile, i.e.
+    # one sample at a time, thus sample_name is not in the provided pandas
+    # dataframe for later more general multiple sample handling.
+    cp_metrics['sample_name'] = 'one CAMI sample'
+
+    # for unifrac: since it is rank independet, rank was set to np.nan. Give it
+    # a more speaking name here.
+    cp_metrics['rank'] = cp_metrics['rank'].fillna('rank independent')
+
+    plot_ranks = cp_metrics['rank'].unique()[:-1]
+    plot_samples = cp_metrics['sample_name'].unique()
+    fig, axes = plt.subplots(len(plot_ranks), len(plot_samples),
+                             figsize=(len(plot_samples)*5, len(plot_ranks)*10))
+
+    # bring existing ranks into the correct order, note that additional ranks
+    # might exist
+    def _sort(ref, value):
+        try:
+            return ref.index(value)
+        except ValueError:
+            return -1
+    plot_ranks = sorted(plot_ranks, key=lambda x: _sort(c.ALL_RANKS, x))
+
+    for i, rank in enumerate(plot_ranks):
+        for j, sample_name in enumerate(plot_samples):
+            # ensure right axis object is choose if a) multiple samples exist
+            # or b) only one sample is in the table
+            if type(axes[i]) == list:
+                ax = axes[i][j]
+            else:
+                ax = axes[i]
+            plot_data = cp_metrics[
+                (cp_metrics['rank'] == rank) &
+                (cp_metrics['sample_name'] == sample_name)].copy()
+            for metric in plot_data['metric'].unique():
+                idx = plot_data[plot_data['metric'] == metric].index
+                plot_data.loc[idx, 'value'] /= plot_data.loc[idx,
+                                                             'value'].max()
+
+            sns.barplot(data=plot_data,
+                        x='value', y='metric', hue='tool', ax=ax)
+            if j == 0:
+                ax.set_ylabel(rank)
+            else:
+                ax.set_ylabel('')
+                ax.set_yticklabels([])
+            ax.set_xlabel(sample_name)
+            if (i+1 == len(plot_ranks)) and (j+1 == len(plot_samples)):
+                ax.legend(bbox_to_anchor=(1.1, 1.05))
+            else:
+                ax.legend_.remove()
+
+    fig.savefig(output_dir + '/' + file_name + '.pdf',
+                dpi=100, format='pdf', bbox_inches='tight')

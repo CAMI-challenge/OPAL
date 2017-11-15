@@ -140,7 +140,7 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
 
 def reformat_pandas(labels, shannon_list, binary_metrics_list, l1norm_list, weighted_unifrac_list):
     """Reformats metrics data into one unified pandas DataFrame.
-    
+
     Parameters
     ----------
     labels : [str]
@@ -148,7 +148,7 @@ def reformat_pandas(labels, shannon_list, binary_metrics_list, l1norm_list, weig
     binary_metrics_list : ?
     l1norm_list : ?
     weighted_unifrac_list : ?
-    
+
     Returns
     -------
     Pandas.DataFrame with following columns: metric, rank, tool, value
@@ -203,12 +203,12 @@ def reformat_pandas(labels, shannon_list, binary_metrics_list, l1norm_list, weig
 
 def highscore_table(metrics, useranks=['phylum', 'class', 'order', 'family', 'genus']):
     """Compile a ranking table like Figure 3c of CAMI publication.
-    
+
     Note that Figure 3c took into account mean scores for all samples of one of the three
     complexity levels, i.e. 1 for low, 2 for medium, 5 for high.
     Here, I assume that we might be able to do that later, but for now I set "complexity"
     to "dummy".
-    
+
     Parameters
     ----------
     metrics : pd.DataFrame
@@ -276,6 +276,7 @@ def main():
     print_by_tool(output_dir, pd_metrics)
     if args.by_rank:
         print_by_rank(output_dir, labels, pd_metrics)
+    pl.plot_barplot(pd_metrics, output_dir, 'barplot')
 
 
 if __name__ == "__main__":
