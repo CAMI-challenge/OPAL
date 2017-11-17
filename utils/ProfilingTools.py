@@ -1,7 +1,6 @@
 # This is a collection of scripts that will allow manipulation of CAMI profiling files
 import sys
 import copy
-import os
 import numpy as np
 import timeit
 
@@ -32,75 +31,44 @@ class Profile(object):
 
     def parse_file(self):
         _data = self._data
-        _header = self._header
         _all_keys = self._all_keys
-        _header = ['{}:{}'.format(k, v) for k, v in self.sample_metadata.items()]
+        _header = self._header
+        for k, v in self.sample_metadata.items():
+            _header.append('{}:{}'.format(k, v))
         for prediction in self.profile:
-            #temp_split = line.split('\t')
-            #tax_id = temp_split[tax_id_pos].strip()
             tax_id = prediction.taxid.strip()
             _all_keys.append(prediction.taxid)
-            #tax_path = temp_split[tax_path_pos].strip().split("|")  # this will be a list, join up late
             tax_path = prediction.taxpath.strip().split("|")  # this will be a list, join up late
-            # all_tax_ids.update(tax_path)
-            #abundance = float(temp_split[abundance_pos].strip())
-            abundance = prediction.percentage
 
-            #if isinstance(rank_pos, int):  # might not be present
-                #rank = temp_split[rank_pos].strip()
-            rank = prediction.rank.strip()
-            #if isinstance(tax_path_sn_pos, int):  # might not be present
-                #tax_path_sn = temp_split[tax_path_sn_pos].strip().split("|")  # this will be a list, join up later
-            tax_path_sn = prediction.taxpathsn.strip().split("|")  # this will be a list, join up later
             if tax_id in _data:  # If this tax_id is already present, add the abundance. NOT CHECKING FOR CONSISTENCY WITH PATH
-                _data[tax_id]["abundance"] += abundance
-                _data[tax_id]["tax_path"] = tax_path
-                #if isinstance(rank_pos, int):  # might not be present
-                    #_data[tax_id]["rank"] = rank
-                _data[tax_id]["rank"] = rank
-                #if isinstance(tax_path_sn_pos, int):  # might not be present
-                    #_data[tax_id]["tax_path_sn"] = tax_path_sn
-                _data[tax_id]["tax_path_sn"] = tax_path_sn
-                # Find the ancestor
-                if len(tax_path) <= 1:
-                    _data[tax_id]["ancestor"] = "-1"  # no ancestor, it's a root
-                    _data[tax_id]["branch_length"] = 1
-                    ancestor = "-1"
-                else:
-                    ancestor = tax_path[-2]
-                    _data[tax_id]["branch_length"] = 1
-                    i = -3
-                    while ancestor is "" or ancestor == tax_id:  # if it's a blank or repeated, go up until finding ancestor
-                        ancestor = tax_path[i]
-                        _data[tax_id]["branch_length"] += 1
-                        i -= 1
-                    _data[tax_id]["ancestor"] = ancestor
-            else:  # Otherwise populate the data
+                _data[tax_id]["abundance"] += prediction.percentage
+            else:
                 _data[tax_id] = dict()
-                _data[tax_id]["abundance"] = abundance
-                _data[tax_id]["tax_path"] = tax_path
-                #if isinstance(rank_pos, int):  # might not be present
-                    #_data[tax_id]["rank"] = rank
-                _data[tax_id]["rank"] = rank
-                #if isinstance(tax_path_sn_pos, int):  # might not be present
-                    #_data[tax_id]["tax_path_sn"] = tax_path_sn
-                _data[tax_id]["tax_path_sn"] = tax_path_sn
-                # Find the ancestor
-                if len(tax_path) <= 1:
-                    _data[tax_id]["ancestor"] = "-1"  # no ancestor, it's a root
-                    _data[tax_id]["branch_length"] = 1
-                    ancestor = "-1"
-                else:
-                    ancestor = tax_path[-2]
-                    _data[tax_id]["branch_length"] = 1
-                    i = -3
-                    while ancestor is "" or ancestor == tax_id:  # if it's a blank or repeated, go up until finding ancestor
-                        ancestor = tax_path[i]
-                        _data[tax_id]["branch_length"] += 1
-                        i -= 1
-                        if i + len(tax_path) < 0:  # no ancestor available, manually set to -1 (the root)
-                            ancestor = "-1"
-                    _data[tax_id]["ancestor"] = ancestor
+                _data[tax_id]["abundance"] = prediction.percentage
+
+            if not (prediction.taxpathsn is None): # might not be present
+                _data[tax_id]["tax_path_sn"] = prediction.taxpathsn.strip().split("|")  # this will be a list, join up later
+
+            _data[tax_id]["tax_path"] = tax_path
+            _data[tax_id]["rank"] = prediction.rank.strip()
+
+            # Find the ancestor
+            if len(tax_path) <= 1:
+                _data[tax_id]["ancestor"] = "-1"  # no ancestor, it's a root
+                _data[tax_id]["branch_length"] = 1
+                ancestor = "-1"
+            else:
+                ancestor = tax_path[-2]
+                _data[tax_id]["branch_length"] = 1
+                i = -3
+                while ancestor is "" or ancestor == tax_id:  # if it's a blank or repeated, go up until finding ancestor
+                    ancestor = tax_path[i]
+                    _data[tax_id]["branch_length"] += 1
+                    i -= 1
+                    if i + len(tax_path) < 0:  # no ancestor available, manually set to -1 (the root)
+                        ancestor = "-1"
+                _data[tax_id]["ancestor"] = ancestor
+
             # Create a placeholder descendant key initialized to [], just so each tax_id has a descendant key associated to it
             if "descendants" not in _data[tax_id]:  # if this tax_id doesn't have a descendant list,
                 _data[tax_id]["descendants"] = list()  # initialize to empty list

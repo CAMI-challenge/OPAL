@@ -84,7 +84,10 @@ def read_rows(input_stream, index_rank, index_taxid, index_percentage, index_tax
         taxid = row_data[index_taxid]
         percentage = row_data[index_percentage]
         taxpath = row_data[index_taxpath]
-        taxpathsn = row_data[index_taxpathsn]
+        if isinstance(index_taxpathsn, int):
+            taxpathsn = row_data[index_taxpathsn]
+        else:
+            taxpathsn = None
         yield rank, taxid, percentage, taxpath, taxpathsn
 
 
@@ -96,13 +99,16 @@ def get_column_indices(input_stream):
         raise RuntimeError("Column not found: {}".format("RANK"))
     if "PERCENTAGE" not in column_names:
         raise RuntimeError("Column not found: {}".format("PERCENTAGE"))
+    if "TAXPATH" not in column_names:
+        raise RuntimeError("Column not found: {}".format("TAXPATH"))
     index_taxid = column_names["TAXID"]
     index_rank = column_names["RANK"]
     index_percentage = column_names["PERCENTAGE"]
-    if "TAXPATH" in column_names:
-        index_taxpath = column_names["TAXPATH"]
+    index_taxpath = column_names["TAXPATH"]
     if "TAXPATHSN" in column_names:
         index_taxpathsn = column_names["TAXPATHSN"]
+    else:
+        index_taxpathsn = None
     return header, index_rank, index_taxid, index_percentage, index_taxpath, index_taxpathsn
 
 
