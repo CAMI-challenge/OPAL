@@ -7,9 +7,9 @@ import timeit
 
 
 class Profile(object):
-    def __init__(self, input_file_name=None):
-        # Initialize file name (if appropriate)
-        self.input_file_name = input_file_name
+    def __init__(self, sample_metadata=None, profile=None):
+        self.sample_metadata = sample_metadata
+        self.profile = profile
         self._data = dict()
         # Stick in the root node just to make sure everything is consistent
         self._data["-1"] = dict()
@@ -28,121 +28,93 @@ class Profile(object):
         self._eps = .0000000000000001  # This is to act like zero, ignore any lines with abundance below this quantity
         self._all_keys = ["-1"]
         self._merged_flag = False
-
-        if self.input_file_name:
-            if not os.path.exists(self.input_file_name):
-                print("Input file %s does not exist" % self.input_file_name)
-                raise Exception
-            else:
-                self.parse_file()
+        self.parse_file()
 
     def parse_file(self):
-        input_file_name = self.input_file_name
         _data = self._data
         _header = self._header
         _all_keys = self._all_keys
-        # all_tax_ids = set()
-        with open(input_file_name, 'r') as read_handler:
-            for line in read_handler:
-                line = line.rstrip()
-                if len(line) == 0:
-                    continue  # skip blank lines
-                if line[0] == '@' and line[1] == '@':
-                    headers = line.strip().split()
-                    for header_iter in range(len(headers)):
-                        header = headers[header_iter]
-                        header = header.replace('@', '')
-                        if header == 'TAXID':
-                            tax_id_pos = header_iter
-                            self._tax_id_pos = tax_id_pos
-                        elif header == 'RANK':
-                            rank_pos = header_iter
-                            self._rank_pos = rank_pos
-                        elif header == 'TAXPATH':
-                            tax_path_pos = header_iter
-                            self._tax_path_pos = tax_path_pos
-                        elif header == 'TAXPATHSN' or header == "TAXPATH_SN":
-                            tax_path_sn_pos = header_iter
-                            self._tax_path_sn_pos = tax_path_sn_pos
-                        elif header == 'PERCENTAGE':
-                            abundance_pos = header_iter
-                            self._abundance_pos = abundance_pos
-                if line[0] in ['@', '#']:
-                    _header.append(line)  # store data and move on
-                    continue
-                if not all([isinstance(x, int) for x in [tax_id_pos, tax_path_pos, abundance_pos]]):
-                    print("Appears the headers TAXID, TAXPATH, and PERCENTAGE are missing from the "
-                          "header (should start with line @@)")
-                    sys.exit(2)
-                temp_split = line.split('\t')
-                tax_id = temp_split[tax_id_pos].strip()
-                _all_keys.append(tax_id)
-                tax_path = temp_split[tax_path_pos].strip().split("|")  # this will be a list, join up late
-                # all_tax_ids.update(tax_path)
-                abundance = float(temp_split[abundance_pos].strip())
-                if isinstance(rank_pos, int):  # might not be present
-                    rank = temp_split[rank_pos].strip()
-                if isinstance(tax_path_sn_pos, int):  # might not be present
-                    tax_path_sn = temp_split[tax_path_sn_pos].strip().split("|")  # this will be a list, join up later
-                if tax_id in _data:  # If this tax_id is already present, add the abundance. NOT CHECKING FOR CONSISTENCY WITH PATH
-                    _data[tax_id]["abundance"] += abundance
-                    _data[tax_id]["tax_path"] = tax_path
-                    if isinstance(rank_pos, int):  # might not be present
-                        _data[tax_id]["rank"] = rank
-                    if isinstance(tax_path_sn_pos, int):  # might not be present
-                        _data[tax_id]["tax_path_sn"] = tax_path_sn
-                    # Find the ancestor
-                    if len(tax_path) <= 1:
-                        _data[tax_id]["ancestor"] = "-1"  # no ancestor, it's a root
-                        _data[tax_id]["branch_length"] = 1
-                        ancestor = "-1"
-                    else:
-                        ancestor = tax_path[-2]
-                        _data[tax_id]["branch_length"] = 1
-                        i = -3
-                        while ancestor is "" or ancestor == tax_id:  # if it's a blank or repeated, go up until finding ancestor
-                            ancestor = tax_path[i]
-                            _data[tax_id]["branch_length"] += 1
-                            i -= 1
-                        _data[tax_id]["ancestor"] = ancestor
-                else:  # Otherwise populate the data
-                    _data[tax_id] = dict()
-                    _data[tax_id]["abundance"] = abundance
-                    _data[tax_id]["tax_path"] = tax_path
-                    if isinstance(rank_pos, int):  # might not be present
-                        _data[tax_id]["rank"] = rank
-                    if isinstance(tax_path_sn_pos, int):  # might not be present
-                        _data[tax_id]["tax_path_sn"] = tax_path_sn
-                    # Find the ancestor
-                    if len(tax_path) <= 1:
-                        _data[tax_id]["ancestor"] = "-1"  # no ancestor, it's a root
-                        _data[tax_id]["branch_length"] = 1
-                        ancestor = "-1"
-                    else:
-                        ancestor = tax_path[-2]
-                        _data[tax_id]["branch_length"] = 1
-                        i = -3
-                        while ancestor is "" or ancestor == tax_id:  # if it's a blank or repeated, go up until finding ancestor
-                            ancestor = tax_path[i]
-                            _data[tax_id]["branch_length"] += 1
-                            i -= 1
-                            if i + len(tax_path) < 0:  # no ancestor available, manually set to -1 (the root)
-                                ancestor = "-1"
-                        _data[tax_id]["ancestor"] = ancestor
-                # Create a placeholder descendant key initialized to [], just so each tax_id has a descendant key associated to it
-                if "descendants" not in _data[tax_id]:  # if this tax_id doesn't have a descendant list,
-                    _data[tax_id]["descendants"] = list()  # initialize to empty list
-                # add the descendants
-                if ancestor in _data:  # see if the ancestor is in the data so we can add this entry as a descendant
-                    if "descendants" not in _data[ancestor]:  # if it's not present, create the descendant list
-                        _data[ancestor]["descendants"] = list()
-                    _data[ancestor]["descendants"].append(
-                        tax_id)  # since ancestor is an ancestor, add this descendant to it
-                else:  # if it's not already in the data, create the entry
-                    _data[ancestor] = dict()
+        _header = ['{}:{}'.format(k, v) for k, v in self.sample_metadata.items()]
+        for prediction in self.profile:
+            #temp_split = line.split('\t')
+            #tax_id = temp_split[tax_id_pos].strip()
+            tax_id = prediction.taxid.strip()
+            _all_keys.append(prediction.taxid)
+            #tax_path = temp_split[tax_path_pos].strip().split("|")  # this will be a list, join up late
+            tax_path = prediction.taxpath.strip().split("|")  # this will be a list, join up late
+            # all_tax_ids.update(tax_path)
+            #abundance = float(temp_split[abundance_pos].strip())
+            abundance = prediction.percentage
+
+            #if isinstance(rank_pos, int):  # might not be present
+                #rank = temp_split[rank_pos].strip()
+            rank = prediction.rank.strip()
+            #if isinstance(tax_path_sn_pos, int):  # might not be present
+                #tax_path_sn = temp_split[tax_path_sn_pos].strip().split("|")  # this will be a list, join up later
+            tax_path_sn = prediction.taxpathsn.strip().split("|")  # this will be a list, join up later
+            if tax_id in _data:  # If this tax_id is already present, add the abundance. NOT CHECKING FOR CONSISTENCY WITH PATH
+                _data[tax_id]["abundance"] += abundance
+                _data[tax_id]["tax_path"] = tax_path
+                #if isinstance(rank_pos, int):  # might not be present
+                    #_data[tax_id]["rank"] = rank
+                _data[tax_id]["rank"] = rank
+                #if isinstance(tax_path_sn_pos, int):  # might not be present
+                    #_data[tax_id]["tax_path_sn"] = tax_path_sn
+                _data[tax_id]["tax_path_sn"] = tax_path_sn
+                # Find the ancestor
+                if len(tax_path) <= 1:
+                    _data[tax_id]["ancestor"] = "-1"  # no ancestor, it's a root
+                    _data[tax_id]["branch_length"] = 1
+                    ancestor = "-1"
+                else:
+                    ancestor = tax_path[-2]
+                    _data[tax_id]["branch_length"] = 1
+                    i = -3
+                    while ancestor is "" or ancestor == tax_id:  # if it's a blank or repeated, go up until finding ancestor
+                        ancestor = tax_path[i]
+                        _data[tax_id]["branch_length"] += 1
+                        i -= 1
+                    _data[tax_id]["ancestor"] = ancestor
+            else:  # Otherwise populate the data
+                _data[tax_id] = dict()
+                _data[tax_id]["abundance"] = abundance
+                _data[tax_id]["tax_path"] = tax_path
+                #if isinstance(rank_pos, int):  # might not be present
+                    #_data[tax_id]["rank"] = rank
+                _data[tax_id]["rank"] = rank
+                #if isinstance(tax_path_sn_pos, int):  # might not be present
+                    #_data[tax_id]["tax_path_sn"] = tax_path_sn
+                _data[tax_id]["tax_path_sn"] = tax_path_sn
+                # Find the ancestor
+                if len(tax_path) <= 1:
+                    _data[tax_id]["ancestor"] = "-1"  # no ancestor, it's a root
+                    _data[tax_id]["branch_length"] = 1
+                    ancestor = "-1"
+                else:
+                    ancestor = tax_path[-2]
+                    _data[tax_id]["branch_length"] = 1
+                    i = -3
+                    while ancestor is "" or ancestor == tax_id:  # if it's a blank or repeated, go up until finding ancestor
+                        ancestor = tax_path[i]
+                        _data[tax_id]["branch_length"] += 1
+                        i -= 1
+                        if i + len(tax_path) < 0:  # no ancestor available, manually set to -1 (the root)
+                            ancestor = "-1"
+                    _data[tax_id]["ancestor"] = ancestor
+            # Create a placeholder descendant key initialized to [], just so each tax_id has a descendant key associated to it
+            if "descendants" not in _data[tax_id]:  # if this tax_id doesn't have a descendant list,
+                _data[tax_id]["descendants"] = list()  # initialize to empty list
+            # add the descendants
+            if ancestor in _data:  # see if the ancestor is in the data so we can add this entry as a descendant
+                if "descendants" not in _data[ancestor]:  # if it's not present, create the descendant list
                     _data[ancestor]["descendants"] = list()
-                    _data[ancestor]["descendants"].append(tax_id)
-                    _data[ancestor]["abundance"] = 0.0
+                _data[ancestor]["descendants"].append(
+                    tax_id)  # since ancestor is an ancestor, add this descendant to it
+            else:  # if it's not already in the data, create the entry
+                _data[ancestor] = dict()
+                _data[ancestor]["descendants"] = list()
+                _data[ancestor]["descendants"].append(tax_id)
+                _data[ancestor]["abundance"] = 0.0
         # only fix if need be
         # if all_tax_ids.intersection(_all_keys):
         self._delete_missing()  # make sure there aren't any missing internal nodes

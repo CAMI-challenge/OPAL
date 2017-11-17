@@ -77,13 +77,16 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
     l1norm_list = []
     binary_metrics_list = []
     weighted_unifrac_list = []
-    gs_rank_to_taxid_to_percentage = load_data.open_profile(gold_standard_file)
-    gs_profile = PF.Profile(input_file_name=gold_standard_file)
+
+    sample_metadata, profile = load_data.open_profile(gold_standard_file)
+    gs_rank_to_taxid_to_percentage = load_data.get_rank_to_taxid_to_percentage(profile)
+    gs_profile = PF.Profile(sample_metadata=sample_metadata, profile=profile)
+
     metrics = [c.UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.FP]
 
     for profile_file, label in zip(profiles_files, labels):
-        rank_to_taxid_to_percentage = load_data.open_profile(profile_file)
-        pf_profile = PF.Profile(input_file_name=profile_file)
+        sample_metadata, profile = load_data.open_profile(profile_file)
+        rank_to_taxid_to_percentage = load_data.get_rank_to_taxid_to_percentage(profile)
 
         # Shannon
         shannon = sh.compute_shannon_index(rank_to_taxid_to_percentage)
@@ -98,6 +101,7 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
         binary_metrics_list.append(binary_metrics)
 
         # Unifrac
+        pf_profile = PF.Profile(sample_metadata=sample_metadata, profile=profile)
         unifrac = uf.compute_unifrac(gs_profile, pf_profile)
         weighted_unifrac_list.append(unifrac)
 
