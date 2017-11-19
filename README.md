@@ -10,6 +10,7 @@ Profiling Assessment
 * matplotlib &ge; 2.0.2
 * dendropy &ge; 4.3.0
 * pandas &ge; 0.20.3
+* biom-format &ge; 2.1.6
 
 # User Guide
 
@@ -68,7 +69,6 @@ optional arguments:
                         Comma-separated profiles names
   -o OUTPUT_DIR, --output_dir OUTPUT_DIR
                         Directory to write the results to
-  -r, --by_rank         Create a results file per rank
 ~~~
 **Example:**
 ~~~BASH
@@ -85,14 +85,14 @@ data/jolly_pasteur_3 \
 ~~~
 **Output:**
 Directory _output_dir_ will contain:
-* a .tsv file for each profile (CLARK.tsv, FOCUS.tsv, MetaPhyler.tsv, mOTU.tsv, MP2.0.tsv, Quikr.tsv, and TIPP.tsv)
+* results.tsv
+* subdirectory per_rank with a .tsv file per taxonomic rank
+* subdirectory per_tool with a .tsv file per tool (CLARK.tsv, FOCUS.tsv, MetaPhyler.tsv, mOTU.tsv, MP2.0.tsv, Quikr.tsv, and TIPP.tsv)
 * spider_plot.pdf
 * spider_plot_recall_precision.pdf
 * plot_shannon.pdf
 
-__Note 1__: spider plots will only be generated if at least 3 profiles are provided, so that the plots can form a triangle.
-
-__Note 2__: _output_dir_ will will also contain a .tsv file per taxonomic rank if option -r is used.
+__Note__: spider plots will only be generated if at least 3 profiles are provided, so that the plots can form a triangle.
 
 # Developer Guide
 
