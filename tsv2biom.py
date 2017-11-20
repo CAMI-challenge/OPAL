@@ -36,7 +36,7 @@ def convert_to_biom(file_paths, output_file, is_json=False):
                        observation_metadata=observ_metadata,
                        sample_metadata=sample_metadata,
                        table_id='_'.join(ids),
-                       type='metagenome profile')
+                       type='OTU table')
 
     if is_json:
         with open(output_file, 'w') as f:
@@ -47,7 +47,7 @@ def convert_to_biom(file_paths, output_file, is_json=False):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Convert profile in CAMI bioboxes format to biom format")
+    parser = argparse.ArgumentParser(description="Convert profile in CAMI Bioboxes format to BIOM format")
     parser.add_argument('files', nargs='+', help="Input file(s), one file per sample")
     parser.add_argument('-o', '--output_file', help="Output file", required=True)
     parser.add_argument('-j', '--json', action='store_true', help="Output in json (default: hdf5)")
