@@ -44,6 +44,7 @@ def compute_binary_metrics(query_profile, query_truth):
 
 
 def print_by_rank(output_dir, labels, pd_metrics):
+    make_sure_path_exists(os.path.join(output_dir, "by_rank"))
     for rank in c.ALL_RANKS:
         # define ordering of rows, which is given my order of tool labels
         order_rows = labels
@@ -56,10 +57,11 @@ def print_by_rank(output_dir, labels, pd_metrics):
         # order table
         table = table.loc[order_rows, order_columns]
         # replace np.NaN with string "na" and write resulting table into a file
-        table.fillna('na').to_csv(os.path.join(output_dir, rank + ".tsv"), sep='\t')
+        table.fillna('na').to_csv(os.path.join(output_dir, "by_rank", rank + ".tsv"), sep='\t')
 
 
 def print_by_tool(output_dir, pd_metrics):
+    make_sure_path_exists(os.path.join(output_dir, "by_tool"))
     # define ordering of columns, hard coded
     order_columns = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
     for toolname, pd_metrics_tool in pd_metrics.groupby('tool'):
@@ -70,7 +72,7 @@ def print_by_tool(output_dir, pd_metrics):
         # order table
         table = table.loc[c.ALL_RANKS, order_columns]
         # replace np.NaN with string "na" and write resulting table into a file
-        table.fillna('na').to_csv(os.path.join(output_dir, toolname + ".tsv"), sep='\t')
+        table.fillna('na').to_csv(os.path.join(output_dir, "by_tool", toolname + ".tsv"), sep='\t')
 
 
 def evaluate(gold_standard_file, profiles_files, labels, output_dir):
@@ -79,13 +81,16 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
     binary_metrics_list = []
     weighted_unifrac_list = []
     braycurtis_list = []
-    gs_rank_to_taxid_to_percentage = load_data.open_profile(gold_standard_file)
-    gs_profile = PF.Profile(input_file_name=gold_standard_file)
+
+    sample_metadata, profile = load_data.open_profile(gold_standard_file)
+    gs_rank_to_taxid_to_percentage = load_data.get_rank_to_taxid_to_percentage(profile)
+    gs_profile = PF.Profile(sample_metadata=sample_metadata, profile=profile)
+
     metrics = [c.UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.FP]
 
     for profile_file, label in zip(profiles_files, labels):
-        rank_to_taxid_to_percentage = load_data.open_profile(profile_file)
-        pf_profile = PF.Profile(input_file_name=profile_file)
+        sample_metadata, profile = load_data.open_profile(profile_file)
+        rank_to_taxid_to_percentage = load_data.get_rank_to_taxid_to_percentage(profile)
 
         # Shannon
         shannon = sh.compute_shannon_index(rank_to_taxid_to_percentage)
@@ -100,6 +105,7 @@ def evaluate(gold_standard_file, profiles_files, labels, output_dir):
         binary_metrics_list.append(binary_metrics)
 
         # Unifrac
+        pf_profile = PF.Profile(sample_metadata=sample_metadata, profile=profile)
         unifrac = uf.compute_unifrac(gs_profile, pf_profile)
         weighted_unifrac_list.append(unifrac)
 
@@ -208,73 +214,14 @@ def reformat_pandas(labels, shannon_list, binary_metrics_list, l1norm_list, weig
     return pd_metrics
 
 
-def highscore_table(metrics, useranks=['phylum', 'class', 'order', 'family', 'genus']):
-    """Compile a ranking table like Figure 3c of CAMI publication.
-    
-    Note that Figure 3c took into account mean scores for all samples of one of the three
-    complexity levels, i.e. 1 for low, 2 for medium, 5 for high.
-    Here, I assume that we might be able to do that later, but for now I set "complexity"
-    to "dummy".
-    
-    Parameters
-    ----------
-    metrics : pd.DataFrame
-        Information about metrics of tool performance.
-        Must contain columns: metric, rank, tool, value
-    useranks : [str]
-        Default: 'phylum', 'class', 'order', 'family', 'genus'
-        Which ranks should be considered for rank dependent metrics.
-        Here we decided to exclude e.g. species, because most profilers
-        fail at that rank and we don't want to emphasize on this rank.
-    Returns
-    -------
-    Pandas.DataFrame holding a high scoring table as in Figure 3c.
-    """
-    # assume for a second that we could handle multiple goldstandard profiles
-    pd_metrics = metrics.copy()
-    pd_metrics['complexity'] = 'dummy'
-    pd_metrics.loc[pd_metrics[pd.isnull(pd_metrics['rank'])].index, 'rank'] = 'rank independent'
-
-    sort_ascendingly = {c.L1NORM: True, c.UNW_UNIFRAC: True,
-                        c.RECALL: False, c.PRECISION: False}
-
-    # collecting rank scores
-    posresults = []
-    for (metric, complexity, rank), g in pd_metrics.groupby(['metric', 'complexity', 'rank']):
-        if metric in sort_ascendingly:
-            if ((rank in useranks) and (metric != 'Unweighted Unifrac error')) or ((rank == 'rank independent') and (metric == 'Unweighted Unifrac error')):
-                res = g.groupby('tool').sum().sort_values('value', ascending=sort_ascendingly[metric])
-                worstpos = res.shape[0]+1
-                res['position'] = range(0, worstpos-1)
-                for m in set(pd_metrics['tool'].unique()) - set(res.index):
-                    res.loc[m, 'position'] = worstpos
-                res['metric'] = metric
-                res['complexity'] = complexity
-                res['rank'] = rank
-                posresults.append(res)
-    posresults = pd.concat(posresults)
-
-    # reformat like Figure 3c
-    os = []
-    for metric, g in posresults.groupby('metric'):
-        highscore = g.groupby('tool')['position'].sum().sort_values()
-        os.append(pd.DataFrame(["%s (%i)" % (idx, pos) for idx, pos in highscore.iteritems()], columns=[metric]))
-
-    # return reformatted table
-    return pd.concat(os, axis=1)  #.T.loc[['Recall', 'Precision', 'L1 norm error', 'Unweighted Unifrac error'],:]
-
-
 def braycurtis(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage):
     rank_to_braycurtis = {}
     for rank in gs_rank_to_taxid_to_percentage:
         if rank not in rank_to_taxid_to_percentage:
             continue
-        taxa_union = set(gs_rank_to_taxid_to_percentage[rank].keys()).union(rank_to_taxid_to_percentage[rank].keys())
         gs = []
         predictions = []
-        for taxid in taxa_union:
-            if taxid not in gs_rank_to_taxid_to_percentage[rank] or taxid not in rank_to_taxid_to_percentage[rank]:
-                continue
+        for taxid in set(gs_rank_to_taxid_to_percentage[rank].keys()) & set(rank_to_taxid_to_percentage[rank].keys()):
             gs.append(gs_rank_to_taxid_to_percentage[rank][taxid])
             predictions.append(rank_to_taxid_to_percentage[rank][taxid])
         if len(gs) > 0:
@@ -288,7 +235,6 @@ def main():
     parser.add_argument("profiles_files", nargs='+', help="Files of profiles")
     parser.add_argument('-l', '--labels', help="Comma-separated profiles names", required=False)
     parser.add_argument('-o', '--output_dir', help="Directory to write the results to", required=True)
-    parser.add_argument('-r', '--by_rank', help="Create a results file per rank", action='store_true')
     args = parser.parse_args()
     labels = get_labels(args.labels, args.profiles_files)
     output_dir = os.path.abspath(args.output_dir)
@@ -298,9 +244,9 @@ def main():
                                                                                      labels,
                                                                                      output_dir)
     pd_metrics = reformat_pandas(labels, shannon_list, binary_metrics_list, l1norm_list, weighted_unifrac_list)
+    pd_metrics[['tool', 'rank', 'metric', 'value']].fillna('na').to_csv(os.path.join(output_dir, "results.tsv"), sep='\t', index=False)
     print_by_tool(output_dir, pd_metrics)
-    if args.by_rank:
-        print_by_rank(output_dir, labels, pd_metrics)
+    print_by_rank(output_dir, labels, pd_metrics)
 
 
 if __name__ == "__main__":

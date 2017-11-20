@@ -10,6 +10,8 @@ Profiling Assessment
 * matplotlib &ge; 2.0.2
 * dendropy &ge; 4.3.0
 * pandas &ge; 0.20.3
+* biom-format &ge; 2.1.6
+* scikit-bio &ge; 0.5.1
 
 # User Guide
 
@@ -30,6 +32,8 @@ Install dependencies as follows (tested on Linux Ubuntu 16.04):
 sudo apt-get install python3-pip
 cd OPAL/
 pip3 install -r requirements/default.txt --user
+pip3 install biom-format==2.1.6 --user
+pip3 install scikit-bio==0.5.1 --user
 ~~~
 
 ## Input
@@ -37,7 +41,13 @@ OPAL uses at least two files:
 1. A gold standard taxonomic profile
 2. One or more taxonomic profiles to be assessed
 
-Files must be in the [CAMI profiling Bioboxes format](https://github.com/bioboxes/rfc/tree/master/data-format).
+Files must be in the [CAMI profiling Bioboxes format](https://github.com/bioboxes/rfc/tree/master/data-format) or in the [BIOM (Biological Observation Matrix) format](http://biom-format.org/). Program [_tsv2biom.py_](#running-tsv2biompy) allows to convert profiles from the former format to the latter.
+
+**The BIOM format**
+
+The BIOM format used by OPAL is a sparse matrix stored in a JSON or HDF5 file, with a column per sample and a row per taxonomy ID, storing the corresponding abundances. RANK, TAXPATH, and TAXPATHSN are stored as metadata of each row and have the same meaning as in the CAMI profiling Bioboxes format:
+* RANK: taxonomic rank
+* TAXPATH and TAXPATHSN: path from the root of the taxonomy to the respective current taxon, including the current taxon, separated by a `|`. TAXPATH and TAXPATHSN contain identifiers and plain names, respectively, of the taxonomies. For more details and examples, see [CAMI profiling Bioboxes format](https://github.com/bioboxes/rfc/tree/master/data-format).
 
 ## Computed metrics
 
@@ -49,6 +59,7 @@ Files must be in the [CAMI profiling Bioboxes format](https://github.com/bioboxe
 * F1 score
 * Jaccard index
 * Shannon diversity and equitability indices
+* Bray–Curtis distance
 
 ## Running _opal.py_
 ~~~BASH
@@ -68,7 +79,6 @@ optional arguments:
                         Comma-separated profiles names
   -o OUTPUT_DIR, --output_dir OUTPUT_DIR
                         Directory to write the results to
-  -r, --by_rank         Create a results file per rank
 ~~~
 **Example:**
 ~~~BASH
@@ -85,14 +95,34 @@ data/jolly_pasteur_3 \
 ~~~
 **Output:**
 Directory _output_dir_ will contain:
-* a .tsv file for each profile (CLARK.tsv, FOCUS.tsv, MetaPhyler.tsv, mOTU.tsv, MP2.0.tsv, Quikr.tsv, and TIPP.tsv)
+* results.tsv
+* subdirectory per_rank with a .tsv file per taxonomic rank
+* subdirectory per_tool with a .tsv file per tool (CLARK.tsv, FOCUS.tsv, MetaPhyler.tsv, mOTU.tsv, MP2.0.tsv, Quikr.tsv, and TIPP.tsv)
 * spider_plot.pdf
 * spider_plot_recall_precision.pdf
 * plot_shannon.pdf
 
-__Note 1__: spider plots will only be generated if at least 3 profiles are provided, so that the plots can form a triangle.
+__Note__: spider plots will only be generated if at least 3 profiles are provided, so that the plots can form a triangle.
 
-__Note 2__: _output_dir_ will will also contain a .tsv file per taxonomic rank if option -r is used.
+## Running _tsv2biom.py_
+~~~BASH
+usage: tsv2biom.py [-h] -o OUTPUT_FILE [-j] files [files ...]
+
+Convert profile in the CAMI Bioboxes format to BIOM
+
+positional arguments:
+  files                 Input file(s), one file per sample
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -o OUTPUT_FILE, --output_file OUTPUT_FILE
+                        Output file
+  -j, --json            Output in json (default: hdf5)
+~~~
+**Example:**
+~~~BASH
+python3 tsv2biom.py data/cranky_wozniak_13 -o output_dir/cranky_wozniak_13.biom
+~~~
 
 # Developer Guide
 
