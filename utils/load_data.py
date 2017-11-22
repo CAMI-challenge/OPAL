@@ -2,6 +2,7 @@
 
 import biom
 import sys
+import os
 
 
 class Prediction:
@@ -113,6 +114,7 @@ def get_column_indices(input_stream):
 
 
 def open_profile_from_tsv(file_path):
+    # TODO: support multiple samples
     profile = []
     with open(file_path) as read_handler:
         header, index_rank, index_taxid, index_percentage, index_taxpath, index_taxpathsn = get_column_indices(read_handler)
@@ -124,35 +126,42 @@ def open_profile_from_tsv(file_path):
             prediction.taxpath = taxpath
             prediction.taxpathsn = taxpathsn
             profile.append(prediction)
-    return header, profile
+        if 'SampleID' in header and header['SampleID'].strip():
+            sample_id = header['SampleID'].strip()
+        else:
+            sample_id = 'S0'
+    return sample_id, header, profile
 
 
 def open_profile(file_path):
+    if not os.path.exists(file_path):
+        sys.exit("Input file {} does not exist.".format(file_path))
     try:
         table = biom.load_table(file_path)
     except:
         try:
-            return open_profile_from_tsv(file_path)
+            return [open_profile_from_tsv(file_path)]
         except:
             sys.exit("Incorrect file format of input profile")
 
+    samples_list = []
     samples = table.ids(axis='sample')
     ids = table.ids(axis='observation')
 
-    for sample in samples:
-        sample_metadata = table.metadata(id=sample, axis='sample')
+    for sample_id in samples:
+        sample_metadata = table.metadata(id=sample_id, axis='sample')
         profile = []
         for id in ids:
             prediction = Prediction()
             metadata = table.metadata(id=id, axis='observation')
             prediction.taxid = id
             prediction.rank = metadata['rank']
-            prediction.percentage = float(table.get_value_by_ids(obs_id=id, samp_id=sample))
+            prediction.percentage = float(table.get_value_by_ids(obs_id=id, samp_id=sample_id))
             prediction.taxpath = metadata['taxpath']
             prediction.taxpathsn = metadata['taxpathsn']
             profile.append(prediction)
-        # TODO: return profile of multiple samples
-        return sample_metadata, profile
+        samples_list.append((sample_id, sample_metadata, profile))
+    return samples_list
 
 
 def get_rank_to_taxid_to_percentage(profile):

@@ -53,7 +53,7 @@ def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir):
     fig.savefig(output_dir + '/plot_shannon.png', dpi=100, format='png', bbox_extra_artists=(lgd,), bbox_inches='tight')
 
 
-def plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_name, colors, grid_points=None, fill=False):
+def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_name, colors, grid_points=None, fill=False):
     N = len(labels)
     if N < 3:
         return

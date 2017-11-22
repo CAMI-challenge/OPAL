@@ -17,8 +17,13 @@ def convert_to_biom(file_paths, output_file, is_json=False):
 
     for i, file_path in enumerate(file_paths):
         ids.append(file_path.split('/')[-1])
-        sample_ids.append('S{}'.format(i))
         header, profile = load_data.open_profile_from_tsv(file_path)
+
+        if 'SampleID' in header and header['SampleID'].strip():
+            sample_ids.append(header['SampleID'].strip())
+        else:
+            sample_ids.append('S{}'.format(i))
+
         sample_metadata.append(header)
 
         for prediction in profile:

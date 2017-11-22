@@ -21,3 +21,4 @@ FN = "False negatives"
 JACCARD = "Jaccard index"
 SHANNON_DIVERSITY = 'Shannon diversity'
 SHANNON_EQUIT = 'Shannon equitability'
+BRAY_CURTIS = 'Bray-Curtis distance'
