@@ -4,7 +4,6 @@ import os
 import errno
 import argparse
 import os.path
-from collections import defaultdict
 import l1norm as l1
 import binary_metrics as bm
 import unifrac_distance as uf
@@ -65,6 +64,8 @@ def print_by_tool(output_dir, pd_metrics):
     # define ordering of columns, hard coded
     order_columns = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
     for toolname, pd_metrics_tool in pd_metrics.groupby('tool'):
+        if toolname == c.GS:
+            continue
         table = pd_metrics_tool.pivot_table(index='rank', columns='metric', values='value')
         # little hack to carry unifrac over to every rank
         for unifrac_col in order_columns[:2]:
@@ -105,6 +106,15 @@ def evaluate(gold_standard_file, profiles_files, labels):
             braycurtis = bc.braycurtis(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage)
 
             pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac)], ignore_index=True)
+
+    # Shannon for gold standard
+    gs_rank_to_shannon = sh.compute_shannon_index(gs_rank_to_taxid_to_percentage)
+
+    pd_gs_shannon = pd.DataFrame([gs_rank_to_shannon[rank].get_pretty_dict() for rank in gs_rank_to_shannon.keys()]).set_index('rank').stack().reset_index().rename(columns={'level_1': 'metric', 0: 'value'})
+    pd_gs_shannon['metric'].replace(['diversity', 'equitability'], [c.SHANNON_DIVERSITY, c.SHANNON_EQUIT], inplace=True)
+    pd_gs_shannon['sample'] = sample_id
+    pd_gs_shannon['tool'] = c.GS
+    pd_metrics = pd.concat([pd_metrics, pd_gs_shannon], ignore_index=True)
 
     return pd_metrics
 
@@ -173,60 +183,6 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
     return pd.concat([pd_braycurtis, pd_shannon, pd_binary_metrics, pd_l1norm, pd_unifrac], ignore_index=True)
 
 
-def plot(pd_metrics, labels, output_dir):
-    metrics = [c.UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.FP]
-    rank_to_metric_to_toolvalues = defaultdict(dict)
-
-    for rank in c.PHYLUM_SPECIES:
-        for metric in metrics:
-            rank_to_metric_to_toolvalues[rank][metric] = []
-        table1 = pd_metrics[(pd_metrics['rank'] == rank) | (pd_metrics['metric'].isin([c.UNIFRAC]))]
-        max_fp = table1[table1['metric'] == c.FP]['value'].max()
-
-        for label in labels:
-            table2 = table1[table1['tool'] == label]
-
-            unifrac = table2[table2['metric'] == c.UNIFRAC]['value'].values[0]
-            rank_to_metric_to_toolvalues[rank][c.UNIFRAC].append(unifrac / 16)
-
-            l1norm = table2[table2['metric'] == c.L1NORM]['value'].values
-            rank_to_metric_to_toolvalues[rank][c.L1NORM].append(l1norm[0] / 2.0 if len(l1norm) > 0 else None)
-
-            recall = table2[table2['metric'] == c.RECALL]['value'].values
-            rank_to_metric_to_toolvalues[rank][c.RECALL].append(recall[0] if len(recall) > 0 else None)
-
-            precision = table2[table2['metric'] == c.PRECISION]['value'].values
-            rank_to_metric_to_toolvalues[rank][c.PRECISION].append(precision[0] if len(precision) > 0 else None)
-
-            fp = table2[table2['metric'] == c.FP]['value'].values
-            if max_fp > 0:
-                rank_to_metric_to_toolvalues[rank][c.FP].append(fp[0] / max_fp if len(fp) > 0 else None)
-            else:
-                rank_to_metric_to_toolvalues[rank][c.FP].append(fp[0] if len(fp) > 0 else None)
-
-    pl.spider_plot(metrics,
-                   labels,
-                   rank_to_metric_to_toolvalues,
-                   output_dir,
-                   'spider_plot',
-                   ['b', 'g', 'r', 'k', 'm'])
-
-    pl.spider_plot([c.RECALL, c.PRECISION],
-                   labels,
-                   rank_to_metric_to_toolvalues,
-                   output_dir,
-                   'spider_plot_recall_precision',
-                   ['r', 'k'],
-                   grid_points=[0.2, 0.4, 0.6, 0.8, 1.0],
-                   fill=True)
-
-    # TODO: re-enable
-    # rank_to_shannon_gs = sh.compute_shannon_index(gs_rank_to_taxid_to_percentage)
-    # pl.plot_shannon(shannon_list, rank_to_shannon_gs, labels, output_dir)
-
-    ## pl.plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir)
-
-
 def main():
     parser = argparse.ArgumentParser(description="Compute all metrics for one or more taxonomic profiles")
     parser.add_argument("-g", "--gold_standard_file", help="Gold standard file", required=True)
@@ -243,7 +199,7 @@ def main():
     pd_metrics[['tool', 'rank', 'metric', 'sample', 'value']].fillna('na').to_csv(os.path.join(output_dir, "results.tsv"), sep='\t', index=False)
     print_by_tool(output_dir, pd_metrics)
     print_by_rank(output_dir, labels, pd_metrics)
-    plot(pd_metrics, labels, output_dir)
+    pl.plot_all(pd_metrics, labels, output_dir)
 
 
 if __name__ == "__main__":

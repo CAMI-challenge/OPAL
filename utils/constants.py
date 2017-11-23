@@ -1,3 +1,4 @@
+GS = 'Gold standard'
 SUPERKINGDOM = 'superkingdom'
 PHYLUM = 'phylum'
 CLASS = 'class'

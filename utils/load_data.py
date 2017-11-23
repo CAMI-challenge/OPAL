@@ -59,78 +59,85 @@ class Prediction:
         return {'rank': self.__rank, 'taxpath': self.__taxpath, 'taxpathsn': self.__taxpathsn}
 
 
-def read_header(input_stream):
-    header = {}
-    column_names = {}
-    for line in input_stream:
-        if len(line.strip()) == 0 or line.startswith("#"):
-            continue
-        line = line.rstrip('\n')
-        if line.startswith("@@"):
-            for index, column_name in enumerate(line[2:].split('\t')):
-                column_names[column_name] = index
-            return header, column_names
-        if line.startswith("@"):
-            key, value = line[1:].split(':', 1)
-            header[key] = value.strip()
-
-
-def read_rows(input_stream, index_rank, index_taxid, index_percentage, index_taxpath, index_taxpathsn):
-    for line in input_stream:
-        if len(line.strip()) == 0 or line.startswith("#"):
-            continue
-        line = line.rstrip('\n')
-        row_data = line.split('\t')
-        rank = row_data[index_rank]
-        taxid = row_data[index_taxid]
-        percentage = row_data[index_percentage]
-        taxpath = row_data[index_taxpath]
-        if isinstance(index_taxpathsn, int):
-            taxpathsn = row_data[index_taxpathsn]
-        else:
-            taxpathsn = None
-        yield rank, taxid, percentage, taxpath, taxpathsn
-
-
-def get_column_indices(input_stream):
-    header, column_names = read_header(input_stream)
-    if "TAXID" not in column_names:
+def get_column_indices(column_name_to_index):
+    if "TAXID" not in column_name_to_index:
         raise RuntimeError("Column not found: {}".format("TAXID"))
-    if "RANK" not in column_names:
+    if "RANK" not in column_name_to_index:
         raise RuntimeError("Column not found: {}".format("RANK"))
-    if "PERCENTAGE" not in column_names:
+    if "PERCENTAGE" not in column_name_to_index:
         raise RuntimeError("Column not found: {}".format("PERCENTAGE"))
-    if "TAXPATH" not in column_names:
+    if "TAXPATH" not in column_name_to_index:
         raise RuntimeError("Column not found: {}".format("TAXPATH"))
-    index_taxid = column_names["TAXID"]
-    index_rank = column_names["RANK"]
-    index_percentage = column_names["PERCENTAGE"]
-    index_taxpath = column_names["TAXPATH"]
-    if "TAXPATHSN" in column_names:
-        index_taxpathsn = column_names["TAXPATHSN"]
+    index_taxid = column_name_to_index["TAXID"]
+    index_rank = column_name_to_index["RANK"]
+    index_percentage = column_name_to_index["PERCENTAGE"]
+    index_taxpath = column_name_to_index["TAXPATH"]
+    if "TAXPATHSN" in column_name_to_index:
+        index_taxpathsn = column_name_to_index["TAXPATHSN"]
     else:
         index_taxpathsn = None
-    return header, index_rank, index_taxid, index_percentage, index_taxpath, index_taxpathsn
+    return index_rank, index_taxid, index_percentage, index_taxpath, index_taxpathsn
 
 
 def open_profile_from_tsv(file_path):
-    # TODO: support multiple samples
+    header = {}
+    new_header = {}
+    column_name_to_index = {}
     profile = []
+    samples_list = []
+
     with open(file_path) as read_handler:
-        header, index_rank, index_taxid, index_percentage, index_taxpath, index_taxpathsn = get_column_indices(read_handler)
-        for rank, taxid, percentage, taxpath, taxpathsn in read_rows(read_handler, index_rank, index_taxid, index_percentage, index_taxpath, index_taxpathsn):
+        for line in read_handler:
+            if len(line.strip()) == 0 or line.startswith("#"):
+                continue
+            line = line.rstrip('\n')
+
+            if line.startswith("@@"):
+                header = new_header
+                new_header = {}
+
+                for index, column_name in enumerate(line[2:].split('\t')):
+                    column_name_to_index[column_name] = index
+
+                # store profile for sample and empty profile array
+                if 'SAMPLEID' in header and 'VERSION' in header and 'RANKS' in header:
+                    if len(profile) > 0:
+                        samples_list.append((header['SAMPLEID'], header, profile))
+                        profile = []
+                else:
+                    print("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.".format(file_path))
+                    raise
+                continue
+
+            # parse header
+            if line.startswith("@"):
+                key, value = line[1:].split(':', 1)
+                new_header[key.upper()] = value.strip()
+                continue
+
+            index_rank, index_taxid, index_percentage, index_taxpath, index_taxpathsn = get_column_indices(column_name_to_index)
+            row_data = line.split('\t')
+
             prediction = Prediction()
-            prediction.taxid = taxid
-            prediction.rank = rank
-            prediction.percentage = float(percentage)
-            prediction.taxpath = taxpath
-            prediction.taxpathsn = taxpathsn
+            prediction.taxid = row_data[index_taxid]
+            prediction.rank = row_data[index_rank]
+            prediction.percentage = float(row_data[index_percentage])
+            prediction.taxpath = row_data[index_taxpath]
+            if isinstance(index_taxpathsn, int):
+                prediction.taxpathsn = row_data[index_taxpathsn]
+            else:
+                prediction.taxpathsn = None
             profile.append(prediction)
-        if 'SampleID' in header and header['SampleID'].strip():
-            sample_id = header['SampleID'].strip()
-        else:
-            sample_id = 'S0'
-    return sample_id, header, profile
+
+    # store profile for last sample
+    if 'SAMPLEID' in header and 'VERSION' in header and 'RANKS' in header:
+        if len(profile) > 0:
+            samples_list.append((header['SAMPLEID'], header, profile))
+    else:
+        print("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.".format(file_path))
+        raise
+
+    return samples_list
 
 
 def open_profile(file_path):
@@ -140,9 +147,9 @@ def open_profile(file_path):
         table = biom.load_table(file_path)
     except:
         try:
-            return [open_profile_from_tsv(file_path)]
+            return open_profile_from_tsv(file_path)
         except:
-            sys.exit("Incorrect file format of input profile")
+            sys.exit("Input file could not be read.")
 
     samples_list = []
     samples = table.ids(axis='sample')

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import numpy as np
+from collections import defaultdict
 from collections import OrderedDict
 import matplotlib
 matplotlib.use('Agg')
@@ -34,13 +35,13 @@ def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir):
     # turn on grid
     axs.grid(which='major', linestyle='-', linewidth='0.5', color='lightgrey')
 
-    for i, rank_to_shannon in enumerate([rank_to_shannon_gs] + rank_to_shannon_list):
+    for i, rank_to_shannon in enumerate(rank_to_shannon_gs + rank_to_shannon_list):
         x = []
         y = []
         for j, rank in enumerate(c.ALL_RANKS, start=1):
             if rank in rank_to_shannon:
                 x.append(j)
-                y.append(rank_to_shannon[rank].equitability)
+                y.append(rank_to_shannon[rank])
         axs.plot(x, y, color=colors_list[i], marker='o', markersize=10)
 
     axs.set_xticklabels([''] + c.ALL_RANKS)
@@ -132,3 +133,66 @@ def plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir):
 
     fig.savefig(output_dir + '/braycurtis_l1norm.pdf', dpi=100, format='pdf', bbox_inches='tight')
     fig.savefig(output_dir + '/braycurtis_l1norm.png', dpi=100, format='png', bbox_inches='tight')
+
+
+def plot_all(pd_metrics, labels, output_dir):
+    metrics = [c.UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.FP]
+    rank_to_metric_to_toolvalues = defaultdict(dict)
+
+    for rank in c.PHYLUM_SPECIES:
+        for metric in metrics:
+            rank_to_metric_to_toolvalues[rank][metric] = []
+        table1 = pd_metrics[(pd_metrics['rank'] == rank) | (pd_metrics['metric'].isin([c.UNIFRAC]))]
+        max_fp = table1[table1['metric'] == c.FP]['value'].max()
+
+        for label in labels:
+            table2 = table1[table1['tool'] == label]
+
+            unifrac = table2[table2['metric'] == c.UNIFRAC]['value'].values[0]
+            rank_to_metric_to_toolvalues[rank][c.UNIFRAC].append(unifrac / 16)
+
+            l1norm = table2[table2['metric'] == c.L1NORM]['value'].values
+            rank_to_metric_to_toolvalues[rank][c.L1NORM].append(l1norm[0] / 2.0 if len(l1norm) > 0 else None)
+
+            recall = table2[table2['metric'] == c.RECALL]['value'].values
+            rank_to_metric_to_toolvalues[rank][c.RECALL].append(recall[0] if len(recall) > 0 else None)
+
+            precision = table2[table2['metric'] == c.PRECISION]['value'].values
+            rank_to_metric_to_toolvalues[rank][c.PRECISION].append(precision[0] if len(precision) > 0 else None)
+
+            fp = table2[table2['metric'] == c.FP]['value'].values
+            if max_fp > 0:
+                rank_to_metric_to_toolvalues[rank][c.FP].append(fp[0] / max_fp if len(fp) > 0 else None)
+            else:
+                rank_to_metric_to_toolvalues[rank][c.FP].append(fp[0] if len(fp) > 0 else None)
+
+    spider_plot(metrics,
+                labels,
+                rank_to_metric_to_toolvalues,
+                output_dir,
+                'spider_plot',
+                ['b', 'g', 'r', 'k', 'm'])
+
+    spider_plot([c.RECALL, c.PRECISION],
+                labels,
+                rank_to_metric_to_toolvalues,
+                output_dir,
+                'spider_plot_recall_precision',
+                ['r', 'k'],
+                grid_points=[0.2, 0.4, 0.6, 0.8, 1.0],
+                fill=True)
+
+    pd_shannon_equit = pd_metrics[pd_metrics['metric'] == c.SHANNON_EQUIT]
+    table1 = pd_shannon_equit[pd_shannon_equit['tool'] == c.GS][['rank', 'value']]
+    rank_to_shannon_gs = table1.set_index('rank').T.to_dict('records')
+
+    tool_to_rank_to_shannon = {}
+    for toolname, pd_equit_tool in pd_shannon_equit.groupby('tool'):
+        if toolname == c.GS:
+            continue
+        tool_to_rank_to_shannon[toolname] = pd_equit_tool[['rank', 'value']].set_index('rank').T.to_dict('records')[0]
+    tool_to_rank_to_shannon = [tool_to_rank_to_shannon[label] for label in labels]
+
+    plot_shannon(tool_to_rank_to_shannon, rank_to_shannon_gs, labels, output_dir)
+
+    # pl.plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir)
