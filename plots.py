@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import pandas as pd
 import numpy as np
 from collections import defaultdict
 from collections import OrderedDict
@@ -76,8 +77,8 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
         metric_to_toolindex = []
         for d, color in zip(metrics_subdict.values(), colors):
             # store index of tools without a value for the current metric
-            metric_to_toolindex.append([i for i, x in enumerate(d) if x is None])
-            d = [0 if x is None else x for x in d]
+            metric_to_toolindex.append([i for i, x in enumerate(d) if x is None or np.isnan(x)])
+            d = [0 if x is None or np.isnan(x) else x for x in d]
 
             ax.plot(theta, d, '--', color=color, linewidth=3, dashes=(it, 1))
             if fill:
@@ -137,34 +138,81 @@ def plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir):
 
 def plot_all(pd_metrics, labels, output_dir):
     metrics = [c.UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.FP]
-    rank_to_metric_to_toolvalues = defaultdict(dict)
+    rank_to_metric_to_toolvalues = defaultdict(lambda : defaultdict(list))
 
+    pd_copy = pd_metrics.copy()
+    pd_copy.loc[pd_copy[pd.isnull(pd_copy['rank'])].index, 'rank'] = 'rank independent'
+    # transform table
+    pd_grouped = pd_copy.pivot_table(index=['rank', 'tool', 'sample'], columns='metric', values='value')
+
+    # compute mean over samples and collapse rows
+    cols = pd_grouped.columns
+    pd_grouped = pd_grouped.groupby(['rank', 'tool'], sort=False)[cols].mean()
+
+    # store maximum precision per rank
+    rank_to_max_fp = defaultdict()
     for rank in c.PHYLUM_SPECIES:
-        for metric in metrics:
-            rank_to_metric_to_toolvalues[rank][metric] = []
-        table1 = pd_metrics[(pd_metrics['rank'] == rank) | (pd_metrics['metric'].isin([c.UNIFRAC]))]
-        max_fp = table1[table1['metric'] == c.FP]['value'].max()
+        pd_rank = pd_grouped.loc[(pd_grouped.index.get_level_values('rank') == rank)]
+        rank_to_max_fp[rank] = pd_rank[c.FP].max()
 
-        for label in labels:
-            table2 = table1[table1['tool'] == label]
-
-            unifrac = table2[table2['metric'] == c.UNIFRAC]['value'].values[0]
-            rank_to_metric_to_toolvalues[rank][c.UNIFRAC].append(unifrac / 16)
-
-            l1norm = table2[table2['metric'] == c.L1NORM]['value'].values
-            rank_to_metric_to_toolvalues[rank][c.L1NORM].append(l1norm[0] / 2.0 if len(l1norm) > 0 else None)
-
-            recall = table2[table2['metric'] == c.RECALL]['value'].values
-            rank_to_metric_to_toolvalues[rank][c.RECALL].append(recall[0] if len(recall) > 0 else None)
-
-            precision = table2[table2['metric'] == c.PRECISION]['value'].values
-            rank_to_metric_to_toolvalues[rank][c.PRECISION].append(precision[0] if len(precision) > 0 else None)
-
-            fp = table2[table2['metric'] == c.FP]['value'].values
-            if max_fp > 0:
-                rank_to_metric_to_toolvalues[rank][c.FP].append(fp[0] / max_fp if len(fp) > 0 else None)
+    tool_to_rank_to_metric_to_value = defaultdict(lambda : defaultdict(dict))
+    for (rank, tool), g in pd_grouped.groupby(['rank', 'tool']):
+        if tool not in labels:
+            continue
+        if rank == 'rank independent':
+            tool_to_rank_to_metric_to_value[tool][rank][c.UNIFRAC] = g[c.UNIFRAC].values[0] /16
+        elif rank not in c.PHYLUM_SPECIES:
+            continue
+        else:
+            tool_to_rank_to_metric_to_value[tool][rank][c.L1NORM] = g[c.L1NORM].values[0] / 2.0 if len(g[c.L1NORM].values) > 0 else None
+            tool_to_rank_to_metric_to_value[tool][rank][c.RECALL] = g[c.RECALL].values[0] if len(g[c.RECALL].values) > 0 else None
+            tool_to_rank_to_metric_to_value[tool][rank][c.PRECISION] = g[c.PRECISION].values[0] if len(g[c.PRECISION].values) > 0 else None
+            if rank_to_max_fp[rank] > 0:
+                tool_to_rank_to_metric_to_value[tool][rank][c.FP] = g[c.FP].values[0] / rank_to_max_fp[rank] if len(g[c.FP].values) else None
             else:
-                rank_to_metric_to_toolvalues[rank][c.FP].append(fp[0] if len(fp) > 0 else None)
+                tool_to_rank_to_metric_to_value[tool][rank][c.FP] = g[c.FP].values[0] if len(g[c.FP].values) else None
+
+    for label in labels:
+        for rank in c.PHYLUM_SPECIES:
+            for metric in metrics:
+                if metric in tool_to_rank_to_metric_to_value[label][rank]:
+                    rank_to_metric_to_toolvalues[rank][metric].append(tool_to_rank_to_metric_to_value[label][rank][metric])
+            rank_to_metric_to_toolvalues[rank][c.UNIFRAC].append(tool_to_rank_to_metric_to_value[label]['rank independent'][c.UNIFRAC])
+
+
+    # for rank in c.PHYLUM_SPECIES:
+    #     for metric in metrics:
+    #         rank_to_metric_to_toolvalues[rank][metric] = []
+    #     table1 = pd_metrics[(pd_metrics['rank'] == rank) | (pd_metrics['metric'].isin([c.UNIFRAC]))]
+    #     max_fp = table1[table1['metric'] == c.FP]['value'].max()
+    #
+    #     for label in labels:
+    #         table2 = table1[table1['tool'] == label]
+    #
+    #         unifrac = table2[table2['metric'] == c.UNIFRAC]['value'].values[0]
+    #         rank_to_metric_to_toolvalues[rank][c.UNIFRAC].append(unifrac / 16)
+    #
+    #         l1norm = table2[table2['metric'] == c.L1NORM]['value'].values
+    #         rank_to_metric_to_toolvalues[rank][c.L1NORM].append(l1norm[0] / 2.0 if len(l1norm) > 0 else None)
+    #
+    #         recall = table2[table2['metric'] == c.RECALL]['value'].values
+    #         rank_to_metric_to_toolvalues[rank][c.RECALL].append(recall[0] if len(recall) > 0 else None)
+    #
+    #         precision = table2[table2['metric'] == c.PRECISION]['value'].values
+    #         rank_to_metric_to_toolvalues[rank][c.PRECISION].append(precision[0] if len(precision) > 0 else None)
+    #
+    #         fp = table2[table2['metric'] == c.FP]['value'].values
+    #         if max_fp > 0:
+    #             rank_to_metric_to_toolvalues[rank][c.FP].append(fp[0] / max_fp if len(fp) > 0 else None)
+    #         else:
+    #             rank_to_metric_to_toolvalues[rank][c.FP].append(fp[0] if len(fp) > 0 else None)
+
+    # for rank in c.PHYLUM_SPECIES:
+    #     print(rank)
+    #     for metric in metrics:
+    #         print(metric)
+    #         print(rank_to_metric_to_toolvalues[rank][metric])
+    # exit()
 
     spider_plot(metrics,
                 labels,
@@ -182,17 +230,17 @@ def plot_all(pd_metrics, labels, output_dir):
                 grid_points=[0.2, 0.4, 0.6, 0.8, 1.0],
                 fill=True)
 
-    pd_shannon_equit = pd_metrics[pd_metrics['metric'] == c.SHANNON_EQUIT]
-    table1 = pd_shannon_equit[pd_shannon_equit['tool'] == c.GS][['rank', 'value']]
-    rank_to_shannon_gs = table1.set_index('rank').T.to_dict('records')
-
-    tool_to_rank_to_shannon = {}
-    for toolname, pd_equit_tool in pd_shannon_equit.groupby('tool'):
-        if toolname == c.GS:
-            continue
-        tool_to_rank_to_shannon[toolname] = pd_equit_tool[['rank', 'value']].set_index('rank').T.to_dict('records')[0]
-    tool_to_rank_to_shannon = [tool_to_rank_to_shannon[label] for label in labels]
-
-    plot_shannon(tool_to_rank_to_shannon, rank_to_shannon_gs, labels, output_dir)
+    # pd_shannon_equit = pd_metrics[pd_metrics['metric'] == c.SHANNON_EQUIT]
+    # table1 = pd_shannon_equit[pd_shannon_equit['tool'] == c.GS][['rank', 'value']]
+    # rank_to_shannon_gs = table1.set_index('rank').T.to_dict('records')
+    #
+    # tool_to_rank_to_shannon = {}
+    # for toolname, pd_equit_tool in pd_shannon_equit.groupby('tool'):
+    #     if toolname == c.GS:
+    #         continue
+    #     tool_to_rank_to_shannon[toolname] = pd_equit_tool[['rank', 'value']].set_index('rank').T.to_dict('records')[0]
+    # tool_to_rank_to_shannon = [tool_to_rank_to_shannon[label] for label in labels]
+    #
+    # plot_shannon(tool_to_rank_to_shannon, rank_to_shannon_gs, labels, output_dir)
 
     # pl.plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir)
