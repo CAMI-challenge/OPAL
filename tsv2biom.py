@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import argparse
 import biom
 from biom.util import biom_open
@@ -17,20 +18,26 @@ def convert_to_biom(file_paths, output_file, is_json=False):
 
     for i, file_path in enumerate(file_paths):
         ids.append(file_path.split('/')[-1])
-        header, profile = load_data.open_profile_from_tsv(file_path)
+        try:
+            samples_list = load_data.open_profile_from_tsv(file_path)
+        except:
+            sys.exit("Input file could not be read.")
 
-        if 'SampleID' in header and header['SampleID'].strip():
-            sample_ids.append(header['SampleID'].strip())
-        else:
-            sample_ids.append('S{}'.format(i))
+        for sample in samples_list:
+            sample_id, header, profile = sample
 
-        sample_metadata.append(header)
+            if sample_id == '':
+                sample_id = 'S{}'.format(i)
+                header['SAMPLEID'] = sample_id
 
-        for prediction in profile:
-            if prediction.taxid not in tax_ids_row_mapping:
-                tax_ids_row_mapping[prediction.taxid] = len(tax_ids_row_mapping)
-            data[(tax_ids_row_mapping[prediction.taxid], i)] = prediction.percentage
-            observ_metadata[prediction.taxid] = prediction.get_metadata()
+            sample_ids.append(sample_id)
+            sample_metadata.append(header)
+
+            for prediction in profile:
+                if prediction.taxid not in tax_ids_row_mapping:
+                    tax_ids_row_mapping[prediction.taxid] = len(tax_ids_row_mapping)
+                data[(tax_ids_row_mapping[prediction.taxid], i)] = prediction.percentage
+                observ_metadata[prediction.taxid] = prediction.get_metadata()
 
     # sort metadata
     observ_metadata = [observ_metadata[key] for key in tax_ids_row_mapping.keys()]

@@ -85,6 +85,8 @@ def open_profile_from_tsv(file_path):
     column_name_to_index = {}
     profile = []
     samples_list = []
+    reading_data = False
+    got_column_indices = False
 
     with open(file_path) as read_handler:
         for line in read_handler:
@@ -92,32 +94,39 @@ def open_profile_from_tsv(file_path):
                 continue
             line = line.rstrip('\n')
 
+            # parse header with column indices
             if line.startswith("@@"):
-                header = new_header
-                new_header = {}
-
                 for index, column_name in enumerate(line[2:].split('\t')):
                     column_name_to_index[column_name] = index
-
-                # store profile for sample and empty profile array
-                if 'SAMPLEID' in header and 'VERSION' in header and 'RANKS' in header:
-                    if len(profile) > 0:
-                        samples_list.append((header['SAMPLEID'], header, profile))
-                        profile = []
-                else:
-                    print("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.".format(file_path))
-                    raise
+                index_rank, index_taxid, index_percentage, index_taxpath, index_taxpathsn = get_column_indices(column_name_to_index)
+                got_column_indices = True
+                reading_data = False
                 continue
 
-            # parse header
+            # parse header with metadata
             if line.startswith("@"):
+                # if last line contained sample data and new header starts, store profile for sample
+                if reading_data:
+                    if 'SAMPLEID' in header and 'VERSION' in header and 'RANKS' in header:
+                        if len(profile) > 0:
+                            samples_list.append((header['SAMPLEID'], header, profile))
+                            profile = []
+                    else:
+                        print("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.".format(file_path))
+                        raise
+                    header = {}
+                reading_data = False
+                got_column_indices = False
                 key, value = line[1:].split(':', 1)
-                new_header[key.upper()] = value.strip()
+                header[key.upper()] = value.strip()
                 continue
 
-            index_rank, index_taxid, index_percentage, index_taxpath, index_taxpathsn = get_column_indices(column_name_to_index)
-            row_data = line.split('\t')
+            if not got_column_indices:
+                print("Header line starting with @@ in file {} is missing or at wrong position.".format(file_path))
+                raise
 
+            reading_data = True
+            row_data = line.split('\t')
             prediction = Prediction()
             prediction.taxid = row_data[index_taxid]
             prediction.rank = row_data[index_rank]
@@ -131,7 +140,7 @@ def open_profile_from_tsv(file_path):
 
     # store profile for last sample
     if 'SAMPLEID' in header and 'VERSION' in header and 'RANKS' in header:
-        if len(profile) > 0:
+        if reading_data and len(profile) > 0:
             samples_list.append((header['SAMPLEID'], header, profile))
     else:
         print("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.".format(file_path))

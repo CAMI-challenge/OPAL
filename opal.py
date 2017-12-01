@@ -9,6 +9,8 @@ import binary_metrics as bm
 import unifrac_distance as uf
 import shannon as sh
 import braycurtis as bc
+# import rankings as rk
+# import html as html
 import plots as pl
 from utils import load_data
 from utils import ProfilingTools as PF
@@ -200,6 +202,9 @@ def main():
     print_by_tool(output_dir, pd_metrics)
     print_by_rank(output_dir, labels, pd_metrics)
     pl.plot_all(pd_metrics, labels, output_dir)
+
+    # pd_rankings = rk.highscore_table(pd_metrics)
+    # html.create_html(pd_rankings)
 
 
 if __name__ == "__main__":

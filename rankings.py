@@ -31,14 +31,17 @@ def highscore_table(metrics, useranks=['phylum', 'class', 'order', 'family', 'ge
     pd_metrics['complexity'] = 'dummy'
     pd_metrics.loc[pd_metrics[pd.isnull(pd_metrics['rank'])].index, 'rank'] = 'rank independent'
 
-    sort_ascendingly = {c.L1NORM: True, c.UNW_UNIFRAC: True,
+    sort_ascendingly = {c.L1NORM: True, c.UNIFRAC: True,
                         c.RECALL: False, c.PRECISION: False}
+
+    # get rid of gold standard
+    pd_metrics = pd_metrics[pd_metrics['tool'] != c.GS]
 
     # collecting rank scores
     posresults = []
     for (metric, complexity, rank), g in pd_metrics.groupby(['metric', 'complexity', 'rank']):
         if metric in sort_ascendingly:
-            if ((rank in useranks) and (metric != 'Unweighted Unifrac error')) or ((rank == 'rank independent') and (metric == 'Unweighted Unifrac error')):
+            if ((rank in useranks) and (metric != c.UNIFRAC)) or ((rank == 'rank independent') and (metric == c.UNIFRAC)):
                 res = g.groupby('tool').sum().sort_values('value', ascending=sort_ascendingly[metric])
                 worstpos = res.shape[0]+1
                 res['position'] = range(0, worstpos-1)
@@ -49,6 +52,9 @@ def highscore_table(metrics, useranks=['phylum', 'class', 'order', 'family', 'ge
                 res['rank'] = rank
                 posresults.append(res)
     posresults = pd.concat(posresults)
+
+    # TODO:
+    # return posresults.groupby(['metric', 'tool'])['position'].sum().to_frame()
 
     # reformat like Figure 3c
     os = []
