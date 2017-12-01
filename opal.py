@@ -54,9 +54,14 @@ def print_by_rank(output_dir, labels, pd_metrics):
         # subset to those information that either belong to the given rank or are rank independent, i.e. are unifrac values
         table = pd_metrics[(pd_metrics['rank'] == rank) | (pd_metrics['metric'].isin([c.UNIFRAC, c.UNW_UNIFRAC]))]
         # reformat the table with a pivot_table
-        table = table.pivot_table(index='tool', columns='metric', values='value')
+        table = table.pivot_table(index=['tool', 'sample'], columns='metric', values='value')
+        # select only tools in labels and get rid of gold standard
+        table = table.loc[pd.IndexSlice[order_rows,:], order_columns]
+        # define categorical column for ordering rows by tools
+        table['tool_cat'] = pd.Categorical(table.index.get_level_values('tool'), categories=order_rows, ordered=True)
         # order table
-        table = table.loc[order_rows, order_columns]
+        table = table.sort_values('tool_cat')
+        table = table.loc[:, order_columns]
         # replace np.NaN with string "na" and write resulting table into a file
         table.fillna('na').to_csv(os.path.join(output_dir, "by_rank", rank + ".tsv"), sep='\t')
 
@@ -68,12 +73,14 @@ def print_by_tool(output_dir, pd_metrics):
     for toolname, pd_metrics_tool in pd_metrics.groupby('tool'):
         if toolname == c.GS:
             continue
-        table = pd_metrics_tool.pivot_table(index='rank', columns='metric', values='value')
+        table = pd_metrics_tool.pivot_table(index=['rank', 'sample'], columns='metric', values='value')
         # little hack to carry unifrac over to every rank
         for unifrac_col in order_columns[:2]:
             table[unifrac_col] = pd_metrics_tool[pd_metrics_tool['metric'] == unifrac_col]['value'].values[0]
         # order table
-        table = table.loc[c.ALL_RANKS, order_columns]
+        table['rank_cat'] = pd.Categorical(table.index.get_level_values('rank'), categories=c.ALL_RANKS, ordered=True)
+        table = table.sort_values('rank_cat')
+        table = table.loc[:, order_columns]
         # replace np.NaN with string "na" and write resulting table into a file
         table.fillna('na').to_csv(os.path.join(output_dir, "by_tool", toolname + ".tsv"), sep='\t')
 
@@ -201,7 +208,7 @@ def main():
     pd_metrics[['tool', 'rank', 'metric', 'sample', 'value']].fillna('na').to_csv(os.path.join(output_dir, "results.tsv"), sep='\t', index=False)
     print_by_tool(output_dir, pd_metrics)
     print_by_rank(output_dir, labels, pd_metrics)
-    pl.plot_all(pd_metrics, labels, output_dir)
+    # pl.plot_all(pd_metrics, labels, output_dir)
 
     # pd_rankings = rk.highscore_table(pd_metrics)
     # html.create_html(pd_rankings)
