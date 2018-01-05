@@ -155,7 +155,7 @@ def plot_all(pd_metrics, labels, output_dir):
         pd_rank = pd_grouped.loc[(pd_grouped.index.get_level_values('rank') == rank)]
         rank_to_max_fp[rank] = pd_rank[c.FP].max()
 
-    tool_to_rank_to_metric_to_value = defaultdict(lambda : defaultdict(dict))
+    tool_to_rank_to_metric_to_value = defaultdict(lambda: defaultdict(dict))
     for (rank, tool), g in pd_grouped.groupby(['rank', 'tool']):
         if tool not in labels:
             continue

@@ -3,6 +3,7 @@
 import biom
 import sys
 import os
+from collections import defaultdict
 
 
 class Prediction:
@@ -79,12 +80,22 @@ def get_column_indices(column_name_to_index):
     return index_rank, index_taxid, index_percentage, index_taxpath, index_taxpathsn
 
 
-def open_profile_from_tsv(file_path):
+def normalize_samples(samples_list):
+    for sample in samples_list:
+        sample_id, sample_metadata, profile = sample
+        sum_per_rank = defaultdict(float)
+        for prediction in profile:
+            sum_per_rank[prediction.rank] += prediction.percentage
+        for prediction in profile:
+            prediction.percentage = (prediction.percentage / sum_per_rank[prediction.rank]) * 100.0
+
+
+def open_profile_from_tsv(file_path, normalize):
     header = {}
-    new_header = {}
     column_name_to_index = {}
     profile = []
     samples_list = []
+    predictions_dict = {}
     reading_data = False
     got_column_indices = False
 
@@ -111,6 +122,7 @@ def open_profile_from_tsv(file_path):
                         if len(profile) > 0:
                             samples_list.append((header['SAMPLEID'], header, profile))
                             profile = []
+                            predictions_dict = {}
                     else:
                         print("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.".format(file_path))
                         raise
@@ -127,16 +139,24 @@ def open_profile_from_tsv(file_path):
 
             reading_data = True
             row_data = line.split('\t')
-            prediction = Prediction()
-            prediction.taxid = row_data[index_taxid]
-            prediction.rank = row_data[index_rank]
-            prediction.percentage = float(row_data[index_percentage])
-            prediction.taxpath = row_data[index_taxpath]
-            if isinstance(index_taxpathsn, int):
-                prediction.taxpathsn = row_data[index_taxpathsn]
+
+            taxid = row_data[index_taxid]
+            # if there is already a prediction for taxon, only sum abundance
+            if taxid in predictions_dict:
+                prediction = predictions_dict[taxid]
+                prediction.percentage += float(row_data[index_percentage])
             else:
-                prediction.taxpathsn = None
-            profile.append(prediction)
+                prediction = Prediction()
+                predictions_dict[taxid] = prediction
+                prediction.taxid = row_data[index_taxid]
+                prediction.rank = row_data[index_rank]
+                prediction.percentage = float(row_data[index_percentage])
+                prediction.taxpath = row_data[index_taxpath]
+                if isinstance(index_taxpathsn, int):
+                    prediction.taxpathsn = row_data[index_taxpathsn]
+                else:
+                    prediction.taxpathsn = None
+                profile.append(prediction)
 
     # store profile for last sample
     if 'SAMPLEID' in header and 'VERSION' in header and 'RANKS' in header:
@@ -146,17 +166,20 @@ def open_profile_from_tsv(file_path):
         print("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.".format(file_path))
         raise
 
+    if normalize:
+        normalize_samples(samples_list)
+
     return samples_list
 
 
-def open_profile(file_path):
+def open_profile(file_path, normalize):
     if not os.path.exists(file_path):
         sys.exit("Input file {} does not exist.".format(file_path))
     try:
         table = biom.load_table(file_path)
     except:
         try:
-            return open_profile_from_tsv(file_path)
+            return open_profile_from_tsv(file_path, normalize)
         except:
             sys.exit("Input file could not be read.")
 
@@ -177,6 +200,10 @@ def open_profile(file_path):
             prediction.taxpathsn = metadata['taxpathsn']
             profile.append(prediction)
         samples_list.append((sample_id, sample_metadata, profile))
+
+    if normalize:
+        normalize_samples(samples_list)
+
     return samples_list
 
 
