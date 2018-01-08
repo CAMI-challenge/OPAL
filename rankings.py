@@ -54,7 +54,7 @@ def highscore_table(metrics, useranks=['phylum', 'class', 'order', 'family', 'ge
     posresults = pd.concat(posresults)
 
     # TODO:
-    # return posresults.groupby(['metric', 'tool'])['position'].sum().to_frame()
+    return posresults.groupby(['metric', 'tool'])['position'].sum().to_frame()
 
     # reformat like Figure 3c
     os = []
