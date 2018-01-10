@@ -1,13 +1,16 @@
 import os
+from collections import defaultdict
 from utils import constants as c
 import pandas as pd
+import datetime
+from version import __version__
 
 from bokeh.embed import file_html
 from bokeh.resources import CDN
 from bokeh.plotting import figure, output_file, show
 from bokeh.models import ColumnDataSource
 from bokeh.layouts import widgetbox, layout, column, row
-from bokeh.models.widgets import DataTable, DateFormatter, TableColumn, TextInput, Slider, Div, RadioGroup
+from bokeh.models.widgets import DataTable, DateFormatter, TableColumn, TextInput, Slider, Div, Select, Panel, Tabs
 from bokeh.models import (ColorBar,
                           Text,
                           BasicTicker,
@@ -18,8 +21,31 @@ from bokeh.models import (ColorBar,
                           CustomJS)
 
 
+DIV_WIDTH = 1200
+DIV_HEIGHT = None
+
+
+def create_title_div(id, name, info):
+    div = Div(text="""<h1 id="{0}">{1}</h1><p>{2}</p>""".format(id, name, info),
+              width=DIV_WIDTH, height=DIV_HEIGHT)
+    return [div]
+
+
+def get_rank_to_sample_pd(labels, pd_metrics):
+    rank_to_sample_pd = defaultdict(dict)
+
+    pd_copy = pd_metrics.copy()
+    # pd_copy.loc[pd_copy[pd.isnull(pd_copy['rank'])].index, 'rank'] = 'rank independent'
+    # transform table
+    pd_grouped = pd_copy.pivot_table(index=['rank', 'tool', 'sample'], columns='metric', values='value')
+
+    for (rank, sample), g in pd_grouped.groupby(['rank', 'sample']):
+        rank_to_sample_pd[rank][sample] = g.reset_index().rename(columns={'tool': 'Tool'}).drop(['rank', 'sample'], axis=1).set_index('Tool').T
+    return rank_to_sample_pd
+
+
 def create_html(pd_rankings, pd_metrics, labels, output_dir):
-    all_metrics = 'Sum of scores'
+    sum_of_scores = 'Sum of scores'
     df_list = []
     df_list_unsorted_pos = []
     metrics_list = []
@@ -33,9 +59,9 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
     df_sum = pd_rankings.groupby(['tool'])['position'].sum().reset_index().sort_values('position')
     df_sum_unsorted_pos = pd_rankings.groupby(['tool'])['position'].sum().reset_index()
     df_list.append(
-        pd.DataFrame({all_metrics: df_sum['tool'].tolist(), 'score' + all_metrics: df_sum['position'].tolist()}))
+        pd.DataFrame({sum_of_scores: df_sum['tool'].tolist(), 'score' + sum_of_scores: df_sum['position'].tolist()}))
     df_list_unsorted_pos.append(
-        pd.DataFrame({all_metrics: df_sum_unsorted_pos['tool'].tolist(), 'score' + all_metrics: df_sum_unsorted_pos['position'].tolist()}))
+        pd.DataFrame({sum_of_scores: df_sum_unsorted_pos['tool'].tolist(), 'score' + sum_of_scores: df_sum_unsorted_pos['position'].tolist()}))
 
     pd_show = pd.concat(df_list, axis=1)
     pd_show_unsorted_pos = pd.concat(df_list_unsorted_pos, axis=1)
@@ -43,8 +69,8 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
     table_source = ColumnDataSource(pd_show)
 
     columns = [
-        TableColumn(field=all_metrics, title=all_metrics, sortable=False),
-        TableColumn(field='score' + all_metrics, title='', width=50),
+        TableColumn(field=sum_of_scores, title=sum_of_scores, sortable=False),
+        TableColumn(field='score' + sum_of_scores, title='', width=50),
         TableColumn(field=c.RECALL, title=c.RECALL, sortable=False),
         TableColumn(field='score' + c.RECALL, title='', width=50),
         TableColumn(field=c.PRECISION, title=c.PRECISION, sortable=False),
@@ -56,8 +82,8 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
     ]
     data_table = DataTable(source=table_source, columns=columns, width=800, height=25 + len(pd_show) * 25)
 
-    top = [float(x) for x in pd_show_unsorted_pos['score' + all_metrics]]
-    source = ColumnDataSource(data=dict(x=pd_show_unsorted_pos[all_metrics].tolist(),
+    top = [float(x) for x in pd_show_unsorted_pos['score' + sum_of_scores]]
+    source = ColumnDataSource(data=dict(x=pd_show_unsorted_pos[sum_of_scores].tolist(),
                                         top=top,
                                         recall=pd_show_unsorted_pos['score' + c.RECALL],
                                         precision=pd_show_unsorted_pos['score' + c.PRECISION],
@@ -100,7 +126,7 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
 
 
     # p.vbar(x=metrics_list, width=0.5, bottom=0, top=pd_show['score'+all_metrics].tolist(), color="firebrick")
-    p = figure(x_range=pd_show_unsorted_pos[all_metrics].tolist(), plot_width=800, plot_height=400, title=all_metrics + " - lower value is better")
+    p = figure(x_range=pd_show_unsorted_pos[sum_of_scores].tolist(), plot_width=800, plot_height=400, title=sum_of_scores + " - lower is better")
     # topx[:] = [0 for x in pd_show['score' + all_metrics]]
     # p.vbar(x=pd_show[all_metrics].tolist(), width=0.5, bottom=0, top="top", color="firebrick", source=source)
     # source = ColumnDataSource(data=dict(top=[]))
@@ -108,12 +134,110 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
     #p.vbar(x=pd_show[all_metrics].tolist(), width=0.5, bottom=0, color="firebrick", top=top)
 
 
-    l = layout([data_table,
-                weight_recall,
-                weight_precision,
-                weight_l1norm,
-                weight_unifrac,
-                p])
+    # pd_by_rank = print_by_rank(labels, pd_metrics)
+    # pd_by_rank.to_csv("test2.csv")
+    # pd_by_rank.to_csv("by_rank.csv", sep='\t')
+
+    #table_str = get_rank_to_sample_pd(labels, pd_metrics).T
+    rank_to_sample_pd = get_rank_to_sample_pd(labels, pd_metrics)
+
+    set_sample_ids = set()
+    for rank in rank_to_sample_pd:
+        for sample_id in rank_to_sample_pd[rank]:
+            set_sample_ids.add(sample_id)
+    all_sample_ids = list(set_sample_ids)
+
+
+    # beta_diversity = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT, c.BRAY_CURTIS]
+    alpha_diversity = [c.L1NORM, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
+    beta_diversity = [c.UNIFRAC, c.UNW_UNIFRAC, c.JACCARD, c.BRAY_CURTIS]
+    binary_metrics = [c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN]
+    all_metrics = [alpha_diversity, beta_diversity, binary_metrics]
+
+    alpha_diversity_label = 'Alpha diversity'
+    beta_diversity_label = 'Beta diversity'
+    binary_metrics_label = 'Binary metrics'
+    all_metrics_labels = [alpha_diversity_label, beta_diversity_label, binary_metrics_label]
+
+    styles = [{'selector': 'td', 'props': [('width', '70pt')]},
+              {'selector': 'th', 'props': [('width', '70pt'), ('text-align', 'left')]},
+              {'selector': 'th:nth-child(1)', 'props': [('width', '120pt'), ('font-weight', 'normal')]},
+              {'selector': '', 'props': [('width', 'max-content'), ('width', '-moz-max-content'), ('border-top', '1px solid lightgray')]}]
+    styles_hidden_thead = styles + [{'selector': 'thead', 'props': [('display', 'none')]}]
+
+
+    rank_to_sample_to_html = defaultdict(list)
+    for rank in rank_to_sample_pd:
+        for sample_id in all_sample_ids:
+            if sample_id in rank_to_sample_pd[rank]:
+                mydf = rank_to_sample_pd[rank][sample_id]
+                mydf.index.name = None
+                mydf = mydf.applymap(lambda x: '{:.3f}'.format(x) if isinstance(x, float) and not x.is_integer() else x) # float_format='%.3f'
+                html = ''
+                first_metrics = True
+                for metrics, metrics_label in zip(all_metrics, all_metrics_labels):
+                    html += '<p style="margin-bottom: auto"><b>{}</b></p>'.format(metrics_label)
+                    mydf_metrics = mydf.loc[metrics]
+                    if first_metrics:
+                        html += mydf_metrics.style.set_table_styles(styles).render()
+                    else:
+                        html += mydf_metrics.style.set_table_styles(styles_hidden_thead).render()
+                    first_metrics = False
+                rank_to_sample_to_html[rank].append(html)
+            else:
+                rank_to_sample_to_html[rank].append("")
+
+    #print(table_str.reset_index())
+    # print(table_str.index)
+    mytable1 = Div(text="""<div>{}</div>""".format(rank_to_sample_to_html[c.ALL_RANKS[0]][0]))
+
+    #radio_group = RadioGroup(labels=["Option 1", "Option 2", "Option 3"], active=0)
+    select_rank = Select(title="Taxonomic rank:", value=c.ALL_RANKS[0], options=c.ALL_RANKS)
+
+    # zip(range(len(min_completeness)), min_completeness)
+    select_sample = Select(title="Sample:", value='0', options=list(zip(map(str, range(len(all_sample_ids))), all_sample_ids)))
+
+    source = ColumnDataSource(data=rank_to_sample_to_html)
+
+    #select_rank_sample_callback = CustomJS(args=dict(select_rank=select_rank, select_sample=select_sample, mytable1=mytable1), code="""
+    select_rank_sample_callback = CustomJS(args=dict(source=source), code="""
+        mytable1.text = source.data[select_rank.value][select_sample.value];
+    """)
+    #select.js_on_change('active', radio_callback)
+    select_rank.js_on_change('value', select_rank_sample_callback)
+    select_sample.js_on_change('value', select_rank_sample_callback)
+    select_rank_sample_callback.args["select_rank"] = select_rank
+    select_rank_sample_callback.args["select_sample"] = select_sample
+    select_rank_sample_callback.args["mytable1"] = mytable1
+
+    #mytable2 = Div(children=mytable1, text="my text2")
+
+    # TODO: get rankings out of taxonomic rankings tab
+
+    col_rankings = column([data_table,
+                           weight_recall,
+                           weight_precision,
+                           weight_l1norm,
+                           weight_unifrac,
+                           p])
+
+    tab1 = Panel(child=column(mytable1), title="Metrics")
+    tab2 = Panel(child=col_rankings, title="Rankings")
+
+    tabs = Tabs(tabs=[tab1, tab2])
+
+    title = create_title_div("main", "OPAL: Profiling Assessment", " produced on {0} with OPAL version {1} ".format(
+            datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), __version__))
+
+    l = layout(title, row(select_rank, select_sample), tabs)
+    # l = layout([row(select_rank, select_sample),
+    #             mytable1,
+    #             data_table,
+    #             weight_recall,
+    #             weight_precision,
+    #             weight_l1norm,
+    #             weight_unifrac,
+    #             p])
 
     # l = row(
     #     widgetbox(weight_recall),
@@ -124,7 +248,5 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
     file = open(os.path.join(output_dir, "rankings.html"), 'w+')
     file.write(html)
     file.close()
-
-
 
 
