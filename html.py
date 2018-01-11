@@ -3,6 +3,16 @@ from collections import defaultdict
 from utils import constants as c
 import pandas as pd
 import datetime
+import numpy as np
+import math
+
+import matplotlib
+matplotlib.use('Agg')
+import seaborn as sns
+import matplotlib.pyplot as pltx
+import matplotlib.colors as pltc
+from matplotlib.colors import rgb2hex
+
 from version import __version__
 
 from bokeh.embed import file_html
@@ -31,16 +41,32 @@ def create_title_div(id, name, info):
     return [div]
 
 
-def get_rank_to_sample_pd(labels, pd_metrics):
+def get_rank_to_sample_pd(pd_metrics):
     rank_to_sample_pd = defaultdict(dict)
 
+    # copy pd without gold standard
     pd_copy = pd_metrics.copy()
-    # pd_copy.loc[pd_copy[pd.isnull(pd_copy['rank'])].index, 'rank'] = 'rank independent'
+    pd_copy = pd_copy[pd_copy.tool != c.GS]
+
+    # label ranks, so that the rows don't get lost
+    pd_copy.loc[pd_copy[pd.isnull(pd_copy['rank'])].index, 'rank'] = 'rank independent'
+
     # transform table
     pd_grouped = pd_copy.pivot_table(index=['rank', 'tool', 'sample'], columns='metric', values='value')
 
+    # copy unifrac values to every taxonomic rank
+    pd_grouped_copy = pd_grouped.copy()
+    for index, row in pd_grouped_copy.iterrows():
+        if index[1] == c.GS:
+            continue
+        pd_grouped.loc[index][c.UNIFRAC] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC]
+        pd_grouped.loc[index][c.UNW_UNIFRAC] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC]
+
     for (rank, sample), g in pd_grouped.groupby(['rank', 'sample']):
         rank_to_sample_pd[rank][sample] = g.reset_index().rename(columns={'tool': 'Tool'}).drop(['rank', 'sample'], axis=1).set_index('Tool').T
+        # drop all metrics except unifrac
+        if rank == 'rank independent':
+            rank_to_sample_pd[rank][sample] = rank_to_sample_pd[rank][sample].drop(c.ALL_METRICS[2:])
     return rank_to_sample_pd
 
 
@@ -134,12 +160,7 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
     #p.vbar(x=pd_show[all_metrics].tolist(), width=0.5, bottom=0, color="firebrick", top=top)
 
 
-    # pd_by_rank = print_by_rank(labels, pd_metrics)
-    # pd_by_rank.to_csv("test2.csv")
-    # pd_by_rank.to_csv("by_rank.csv", sep='\t')
-
-    #table_str = get_rank_to_sample_pd(labels, pd_metrics).T
-    rank_to_sample_pd = get_rank_to_sample_pd(labels, pd_metrics)
+    rank_to_sample_pd = get_rank_to_sample_pd(pd_metrics)
 
     set_sample_ids = set()
     for rank in rank_to_sample_pd:
@@ -147,11 +168,10 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
             set_sample_ids.add(sample_id)
     all_sample_ids = list(set_sample_ids)
 
-
-    # beta_diversity = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT, c.BRAY_CURTIS]
     alpha_diversity = [c.L1NORM, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
     beta_diversity = [c.UNIFRAC, c.UNW_UNIFRAC, c.JACCARD, c.BRAY_CURTIS]
     binary_metrics = [c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN]
+    rank_independent_metrics = [c.UNIFRAC, c.UNW_UNIFRAC]
     all_metrics = [alpha_diversity, beta_diversity, binary_metrics]
 
     alpha_diversity_label = 'Alpha diversity'
@@ -162,8 +182,44 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
     styles = [{'selector': 'td', 'props': [('width', '70pt')]},
               {'selector': 'th', 'props': [('width', '70pt'), ('text-align', 'left')]},
               {'selector': 'th:nth-child(1)', 'props': [('width', '120pt'), ('font-weight', 'normal')]},
-              {'selector': '', 'props': [('width', 'max-content'), ('width', '-moz-max-content'), ('border-top', '1px solid lightgray')]}]
+              {'selector': '', 'props': [('width', 'max-content'), ('width', '-moz-max-content'), ('border-top', '1px solid lightgray'), ('border-spacing', '0px')]}]
     styles_hidden_thead = styles + [{'selector': 'thead', 'props': [('display', 'none')]}]
+
+    def color_negative_red(pd_series):
+        values = pd_series.tolist()
+
+        min_value = min(values)
+        if math.isnan(min_value):
+            return ['' for x in values]
+
+        range1 = 0
+        range2 = 240
+
+        if pd_series.name == c.PRECISION or pd_series.name == c.RECALL or pd_series.name == c.F1_SCORE:
+            min_value = 0
+            max_value = 1
+        else:
+            min_value = round(min_value, 3) if not math.isnan(min_value) else 0
+            max_value = max(values)
+            max_value = round(max_value, 3) if not math.isnan(max_value) else 0
+            if pd_series.name == c.FP or pd_series.name == c.FN:
+                range1 = 240
+                range2 = 0
+                min_value = 0
+
+        norm = pltc.Normalize(min_value, max_value)
+        #norm = pltc.PowerNorm(gamma=1, vmin=min_value, vmax=max_value)
+
+        normed = norm(values)
+        cm = sns.diverging_palette(range1, range2, sep=50, l=60, n=5, as_cmap=True)
+        heatmap_colors = [rgb2hex(x) for x in pltx.cm.get_cmap(cm)(normed)]
+        #print(heatmap_colors)
+        return ['background-color: %s' % color for color in heatmap_colors]
+
+        # color = 'red' if val > 0.5 else 'white'
+        # return 'background-color: %s' % color
+
+    # cm = sns.light_palette("green", as_cmap=True)
 
 
     rank_to_sample_to_html = defaultdict(list)
@@ -172,27 +228,30 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
             if sample_id in rank_to_sample_pd[rank]:
                 mydf = rank_to_sample_pd[rank][sample_id]
                 mydf.index.name = None
-                mydf = mydf.applymap(lambda x: '{:.3f}'.format(x) if isinstance(x, float) and not x.is_integer() else x) # float_format='%.3f'
+                # mydf = mydf.applymap(lambda x: '{:.3f}'.format(x) if isinstance(x, float) and not x.is_integer() else x) # float_format='%.3f'
                 html = ''
                 first_metrics = True
                 for metrics, metrics_label in zip(all_metrics, all_metrics_labels):
+                    if rank == 'rank independent':
+                        metrics = rank_independent_metrics
+                        metrics_label = beta_diversity_label
                     html += '<p style="margin-bottom: auto"><b>{}</b></p>'.format(metrics_label)
                     mydf_metrics = mydf.loc[metrics]
                     if first_metrics:
-                        html += mydf_metrics.style.set_table_styles(styles).render()
+                        html += mydf_metrics.style.apply(color_negative_red, axis=1).set_precision(3).set_table_styles(styles).render()
                     else:
-                        html += mydf_metrics.style.set_table_styles(styles_hidden_thead).render()
+                        html += mydf_metrics.style.apply(color_negative_red, axis=1).set_precision(3).set_table_styles(styles_hidden_thead).render()
+                    if rank == 'rank independent':
+                        break
                     first_metrics = False
                 rank_to_sample_to_html[rank].append(html)
             else:
                 rank_to_sample_to_html[rank].append("")
 
-    #print(table_str.reset_index())
-    # print(table_str.index)
     mytable1 = Div(text="""<div>{}</div>""".format(rank_to_sample_to_html[c.ALL_RANKS[0]][0]))
 
     #radio_group = RadioGroup(labels=["Option 1", "Option 2", "Option 3"], active=0)
-    select_rank = Select(title="Taxonomic rank:", value=c.ALL_RANKS[0], options=c.ALL_RANKS)
+    select_rank = Select(title="Taxonomic rank:", value=c.ALL_RANKS[0], options=c.ALL_RANKS + ['rank independent'])
 
     # zip(range(len(min_completeness)), min_completeness)
     select_sample = Select(title="Sample:", value='0', options=list(zip(map(str, range(len(all_sample_ids))), all_sample_ids)))
@@ -221,7 +280,7 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
                            weight_unifrac,
                            p])
 
-    tab1 = Panel(child=column(mytable1), title="Metrics")
+    tab1 = Panel(child=column(select_rank, mytable1), title="Metrics")
     tab2 = Panel(child=col_rankings, title="Rankings")
 
     tabs = Tabs(tabs=[tab1, tab2])
@@ -229,7 +288,7 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
     title = create_title_div("main", "OPAL: Profiling Assessment", " produced on {0} with OPAL version {1} ".format(
             datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), __version__))
 
-    l = layout(title, row(select_rank, select_sample), tabs)
+    l = layout(title, select_sample, tabs)
     # l = layout([row(select_rank, select_sample),
     #             mytable1,
     #             data_table,
