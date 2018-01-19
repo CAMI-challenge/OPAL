@@ -53,6 +53,10 @@ class RankMetrics:
     def f1(self):
         return self.__f1
 
+    @property
+    def otus(self):
+        return self.__otus
+
     @rank.setter
     def rank(self, rank):
         self.__rank = rank
@@ -84,6 +88,10 @@ class RankMetrics:
     @f1.setter
     def f1(self, f1):
         self.__f1 = f1
+
+    @otus.setter
+    def otus(self, otus):
+        self.__otus = otus
 
     def get_ordered_dict(self):
         from collections import OrderedDict
@@ -183,7 +191,7 @@ def jaccard_index(rank_query, rank_truth):
 
 
 def f1_score(this_precision, this_recall):
-    """ Returns false negative
+    """ Returns f1 score
     >>> f1_score(rank_metrics.precision, rank_metrics.recall)
     1.0
 
@@ -197,7 +205,7 @@ def f1_score(this_precision, this_recall):
 def compute_rank_metrics(rank_query, rank_truth, rank):
     """ Returns metrics for one rank
     >>> compute_rank_metrics(test_query_rank, test_truth_rank, "species").get_ordered_dict()
-    OrderedDict([('_RankMetrics__f1', 1.0), ('_RankMetrics__fn', 0), ('_RankMetrics__fp', 0), ('_RankMetrics__jaccard', 1.0), ('_RankMetrics__precision', 1.0), ('_RankMetrics__rank', 'species'), ('_RankMetrics__recall', 1.0), ('_RankMetrics__tp', 1)])
+    OrderedDict([('_RankMetrics__f1', 1.0), ('_RankMetrics__fn', 0), ('_RankMetrics__fp', 0), ('_RankMetrics__jaccard', 1.0), ('_RankMetrics__otus', 1), ('_RankMetrics__precision', 1.0), ('_RankMetrics__rank', 'species'), ('_RankMetrics__recall', 1.0), ('_RankMetrics__tp', 1)])
 
     """
     tp = __get_tp(rank_query, rank_truth)
@@ -211,13 +219,14 @@ def compute_rank_metrics(rank_query, rank_truth, rank):
     rank_metrics.recall = recall(tp, fn)
     rank_metrics.f1 = f1_score(rank_metrics.precision, rank_metrics.recall)
     rank_metrics.jaccard = jaccard_index(rank_query, rank_truth)
+    rank_metrics.otus = tp + fp
     return rank_metrics
 
 
 def compute_tree_metrics(query, truth):
     """ Return metrics for tree
     >>> compute_tree_metrics(query_tree, truth_tree)["species"].get_ordered_dict()
-    OrderedDict([('_RankMetrics__f1', 0.5), ('_RankMetrics__fn', 1), ('_RankMetrics__fp', 3), ('_RankMetrics__jaccard', 0.3333333333333333), ('_RankMetrics__precision', 0.4), ('_RankMetrics__rank', 'species'), ('_RankMetrics__recall', 0.6666666666666666), ('_RankMetrics__tp', 2)])
+    OrderedDict([('_RankMetrics__f1', 0.5), ('_RankMetrics__fn', 1), ('_RankMetrics__fp', 3), ('_RankMetrics__jaccard', 0.3333333333333333), ('_RankMetrics__otus', 5), ('_RankMetrics__precision', 0.4), ('_RankMetrics__rank', 'species'), ('_RankMetrics__recall', 0.6666666666666666), ('_RankMetrics__tp', 2)])
     """
 
     def check_for_rank(query, rank):

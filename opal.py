@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import errno
 import argparse
 import os.path
@@ -50,7 +51,7 @@ def print_by_rank(output_dir, labels, pd_metrics):
         # define ordering of rows, which is given my order of tool labels
         order_rows = labels
         # define ordering of columns, hard coded
-        order_columns = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT, c.BRAY_CURTIS]
+        order_columns = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.OTUS, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT, c.BRAY_CURTIS]
         # subset to those information that either belong to the given rank or are rank independent, i.e. are unifrac values
         table = pd_metrics[(pd_metrics['rank'] == rank) | (pd_metrics['metric'].isin([c.UNIFRAC, c.UNW_UNIFRAC]))]
         # reformat the table with a pivot_table
@@ -69,7 +70,7 @@ def print_by_rank(output_dir, labels, pd_metrics):
 def print_by_tool(output_dir, pd_metrics):
     make_sure_path_exists(os.path.join(output_dir, "by_tool"))
     # define ordering of columns, hard coded
-    order_columns = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT, c.BRAY_CURTIS]
+    order_columns = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.OTUS, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT, c.BRAY_CURTIS]
     for toolname, pd_metrics_tool in pd_metrics.groupby('tool'):
         if toolname == c.GS:
             continue
@@ -85,63 +86,71 @@ def print_by_tool(output_dir, pd_metrics):
         table.fillna('na').to_csv(os.path.join(output_dir, "by_tool", toolname + ".tsv"), sep='\t')
 
 
+def compute_metrics(sample_metadata, profile, gs_pf_profile, gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage):
+    # Unifrac
+    if isinstance(profile, PF.Profile):
+        pf_profile = profile
+    else:
+        pf_profile = PF.Profile(sample_metadata=sample_metadata, profile=profile)
+    unifrac = uf.compute_unifrac(gs_pf_profile, pf_profile)
+
+    # Shannon
+    shannon = sh.compute_shannon_index(rank_to_taxid_to_percentage)
+
+    # L1 Norm
+    l1norm = l1.compute_l1norm(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage)
+
+    # Binary metrics
+    binary_metrics = compute_binary_metrics(rank_to_taxid_to_percentage, gs_rank_to_taxid_to_percentage)
+
+    # Bray-Curtis
+    braycurtis = bc.braycurtis(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage)
+
+    return unifrac, shannon, l1norm, binary_metrics, braycurtis
+
+
 def evaluate(gold_standard_file, profiles_files, labels, no_normalization):
     normalize = False if no_normalization else True
     gs_samples_list = load_data.open_profile(gold_standard_file, normalize)
     gs_id_to_rank_to_taxid_to_percentage = {}
-    gs_id_to_profile = {}
+    gs_id_to_pf_profile = {}
+    pd_metrics = pd.DataFrame()
+
     for sample in gs_samples_list:
         sample_id, sample_metadata, profile = sample
         gs_id_to_rank_to_taxid_to_percentage[sample_id] = load_data.get_rank_to_taxid_to_percentage(profile)
-        gs_id_to_profile[sample_id] = PF.Profile(sample_metadata=sample_metadata, profile=profile)
+        gs_id_to_pf_profile[sample_id] = PF.Profile(sample_metadata=sample_metadata, profile=profile)
+        unifrac, shannon, l1norm, binary_metrics, braycurtis = compute_metrics(sample_metadata,
+                                                                               gs_id_to_pf_profile[sample_id],
+                                                                               gs_id_to_pf_profile[sample_id],
+                                                                               gs_id_to_rank_to_taxid_to_percentage[sample_id],
+                                                                               gs_id_to_rank_to_taxid_to_percentage[sample_id])
+        pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, c.GS, braycurtis, shannon, binary_metrics, l1norm, unifrac)], ignore_index=True)
 
-    pd_metrics = pd.DataFrame()
-
+    one_profile_assessed = False
     for profile_file, label in zip(profiles_files, labels):
         samples_list = load_data.open_profile(profile_file, normalize)
         for sample in samples_list:
             sample_id, sample_metadata, profile = sample
 
-            # match the sample id of the gold standard and the predictions, unless the gold standard consists of
-            # only one sample (then we don't care)
+            # match the sample id of the gold standard and the predictions
             if sample_id in gs_id_to_rank_to_taxid_to_percentage:
                 gs_rank_to_taxid_to_percentage = gs_id_to_rank_to_taxid_to_percentage[sample_id]
-                gs_profile = gs_id_to_profile[sample_id]
-            elif len(gs_samples_list) > 1:
+                gs_pf_profile = gs_id_to_pf_profile[sample_id]
+            else:
                 print("Skipping assessment of {} for sample {}. No gold standard is available for this sample.".format(label, sample_id))
                 continue
-            else:
-                gs_rank_to_taxid_to_percentage = next(iter(gs_id_to_rank_to_taxid_to_percentage.values()))
-                gs_profile = next(iter(gs_id_to_profile.values()))
 
             rank_to_taxid_to_percentage = load_data.get_rank_to_taxid_to_percentage(profile)
 
-            # Unifrac
-            pf_profile = PF.Profile(sample_metadata=sample_metadata, profile=profile)
-            unifrac = uf.compute_unifrac(gs_profile, pf_profile)
-
-            # Shannon
-            shannon = sh.compute_shannon_index(rank_to_taxid_to_percentage)
-
-            # L1 Norm
-            l1norm = l1.compute_l1norm(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage)
-
-            # Binary metrics
-            binary_metrics = compute_binary_metrics(rank_to_taxid_to_percentage, gs_rank_to_taxid_to_percentage)
-
-            # Bray-Curtis
-            braycurtis = bc.braycurtis(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage)
-
+            unifrac, shannon, l1norm, binary_metrics, braycurtis = compute_metrics(sample_metadata, profile, gs_pf_profile,
+                                                                                   gs_rank_to_taxid_to_percentage,
+                                                                                   rank_to_taxid_to_percentage)
             pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac)], ignore_index=True)
+            one_profile_assessed = True
 
-    # Shannon for gold standard
-    gs_rank_to_shannon = sh.compute_shannon_index(gs_rank_to_taxid_to_percentage)
-
-    pd_gs_shannon = pd.DataFrame([gs_rank_to_shannon[rank].get_pretty_dict() for rank in gs_rank_to_shannon.keys()]).set_index('rank').stack().reset_index().rename(columns={'level_1': 'metric', 0: 'value'})
-    pd_gs_shannon['metric'].replace(['diversity', 'equitability'], [c.SHANNON_DIVERSITY, c.SHANNON_EQUIT], inplace=True)
-    pd_gs_shannon['sample'] = sample_id
-    pd_gs_shannon['tool'] = c.GS
-    pd_metrics = pd.concat([pd_metrics, pd_gs_shannon], ignore_index=True)
+    if not one_profile_assessed:
+        sys.exit("No profile could be evaluated.")
 
     return pd_metrics
 
@@ -190,14 +199,16 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
                                          "jaccard",
                                          "precision",
                                          "recall",
-                                         "f1"],
+                                         "f1",
+                                         "otus"],
                                         [c.FP,
                                          c.TP,
                                          c.FN,
                                          c.JACCARD,
                                          c.PRECISION,
                                          c.RECALL,
-                                         c.F1_SCORE], inplace=True)
+                                         c.F1_SCORE,
+                                         c.OTUS], inplace=True)
     pd_binary_metrics['sample'] = sample_id
     pd_binary_metrics['tool'] = label
 

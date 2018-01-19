@@ -96,7 +96,7 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
                 xticklabels[toolindex].set_color([1, 0, 0])
 
     ax = axes[0, 0]
-    ax.legend(metrics, loc=(2.067 - 0.353 * len(metrics), 1.3), labelspacing=0.1, fontsize='small', ncol=len(metrics))
+    ax.legend(metrics, loc=(1.68 - 0.353 * len(metrics), 1.3), labelspacing=0.1, fontsize='small', ncol=len(metrics))
     fig.savefig(output_dir + '/' + file_name + '.pdf', dpi=100, format='pdf', bbox_inches='tight')
     fig.savefig(output_dir + '/' + file_name + '.png', dpi=100, format='png', bbox_inches='tight')
 
@@ -170,7 +170,12 @@ def plot_all(pd_metrics, labels, output_dir):
             else:
                 tool_to_rank_to_metric_to_value[tool][rank][c.FP] = g[c.FP].values[0] if len(g[c.FP].values) else None
 
+    present_labels = []
     for label in labels:
+        if label not in tool_to_rank_to_metric_to_value:
+            continue
+        else:
+            present_labels.append(label)
         for rank in c.PHYLUM_SPECIES:
             for metric in metrics:
                 if metric in tool_to_rank_to_metric_to_value[label][rank]:
@@ -178,14 +183,14 @@ def plot_all(pd_metrics, labels, output_dir):
             rank_to_metric_to_toolvalues[rank][c.UNIFRAC].append(tool_to_rank_to_metric_to_value[label]['rank independent'][c.UNIFRAC])
 
     spider_plot(metrics,
-                labels,
+                present_labels,
                 rank_to_metric_to_toolvalues,
                 output_dir,
                 'spider_plot',
                 ['b', 'g', 'r', 'k', 'm'])
 
     spider_plot([c.RECALL, c.PRECISION],
-                labels,
+                present_labels,
                 rank_to_metric_to_toolvalues,
                 output_dir,
                 'spider_plot_recall_precision',

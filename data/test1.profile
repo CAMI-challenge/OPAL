@@ -1,6 +1,6 @@
 #Taxonomicprofileforthefile:/nfs1/Koslicki_Lab/koslickd/Sharpton/Output/MetaPhlAn/SRR1931177_1.fa.gz.metaphlan.tsv
 @Version:0.9.1
-@SampleID:SRR1931177_1.fa.gz.metaphlan.tsv
+@SampleID:sample1
 @Ranks:superkingdom|phylum|class|order|family|genus|species|strain
 @@TAXID	RANK	TAXPATH	TAXPATHSN	PERCENTAGE
 2	superkingdom	2	Bacteria	100.000000

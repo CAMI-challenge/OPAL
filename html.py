@@ -20,7 +20,7 @@ from bokeh.resources import CDN
 from bokeh.plotting import figure, output_file, show
 from bokeh.models import ColumnDataSource
 from bokeh.layouts import widgetbox, layout, column, row
-from bokeh.models.widgets import DataTable, DateFormatter, TableColumn, TextInput, Slider, Div, Select, Panel, Tabs
+from bokeh.models.widgets import TableColumn, Slider, Div, Select, Panel, Tabs
 from bokeh.models import (ColorBar,
                           Text,
                           BasicTicker,
@@ -35,10 +35,38 @@ DIV_WIDTH = 1200
 DIV_HEIGHT = None
 
 
+def create_heatmap_bar(output_dir):
+    fig = pltx.figure(figsize=(2, 2))
+    x = np.arange(25).reshape(5, 5)
+    cm = sns.diverging_palette(12, 250, sep=30, l=50, n=15, s=90, as_cmap=True)
+    ax = sns.heatmap(x, cmap=cm, cbar=False)
+    cbar = pltx.colorbar(ax.get_children()[0], orientation='horizontal')
+
+    # hide border
+    cbar.outline.set_visible(False)
+
+    # hide ticks
+    cbar.set_ticks([])
+
+    # hide heatmap
+    pltx.gca().set_visible(False)
+
+    fig.savefig(os.path.join(output_dir, 'heatmap_bar.png'), dpi=100, format='png', bbox_inches='tight', pad_inches=-.035, transparent=True)
+    pltx.close(fig)
+
+
 def create_title_div(id, name, info):
-    div = Div(text="""<h1 id="{0}">{1}</h1><p>{2}</p>""".format(id, name, info),
+    div = Div(text="""<div style="text-align:left;font-size: 20pt;font-weight: bold;">{1}&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 10pt;font-weight:normal;">{2}</span>""".format(id, name, info),
               width=DIV_WIDTH, height=DIV_HEIGHT)
     return [div]
+
+
+def get_columns(labels, current_columns):
+        columns = [c.GS]
+        for label in labels:
+            if label in current_columns:
+                columns.append(label)
+        return columns
 
 
 def get_rank_to_sample_pd(pd_metrics):
@@ -46,7 +74,7 @@ def get_rank_to_sample_pd(pd_metrics):
 
     # copy pd without gold standard
     pd_copy = pd_metrics.copy()
-    pd_copy = pd_copy[pd_copy.tool != c.GS]
+    #pd_copy = pd_copy[pd_copy.tool != c.GS]
 
     # label ranks, so that the rows don't get lost
     pd_copy.loc[pd_copy[pd.isnull(pd_copy['rank'])].index, 'rank'] = 'rank independent'
@@ -54,11 +82,15 @@ def get_rank_to_sample_pd(pd_metrics):
     # transform table
     pd_grouped = pd_copy.pivot_table(index=['rank', 'tool', 'sample'], columns='metric', values='value')
 
+    # add sample "(average over samples)"
+    pd_mean_over_samples = pd_grouped.groupby(['rank', 'tool'], sort=False).mean().reset_index()
+    pd_mean_over_samples['sample'] = '(average over samples)'
+    pd_mean_over_samples.set_index(['rank', 'tool', 'sample'], inplace=True)
+    pd_grouped = pd.concat([pd_grouped, pd_mean_over_samples])
+
     # copy unifrac values to every taxonomic rank
     pd_grouped_copy = pd_grouped.copy()
     for index, row in pd_grouped_copy.iterrows():
-        if index[1] == c.GS:
-            continue
         pd_grouped.loc[index][c.UNIFRAC] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC]
         pd_grouped.loc[index][c.UNW_UNIFRAC] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC]
 
@@ -160,6 +192,8 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
     #p.vbar(x=pd_show[all_metrics].tolist(), width=0.5, bottom=0, color="firebrick", top=top)
 
 
+    create_heatmap_bar(output_dir)
+
     rank_to_sample_pd = get_rank_to_sample_pd(pd_metrics)
 
     set_sample_ids = set()
@@ -168,59 +202,74 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
             set_sample_ids.add(sample_id)
     all_sample_ids = list(set_sample_ids)
 
-    alpha_diversity = [c.L1NORM, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
-    beta_diversity = [c.UNIFRAC, c.UNW_UNIFRAC, c.JACCARD, c.BRAY_CURTIS]
-    binary_metrics = [c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN]
+    presence_metrics = [c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD]
+    estimates_metrics = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.BRAY_CURTIS]
+    alpha_diversity_metics = [c.OTUS, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
     rank_independent_metrics = [c.UNIFRAC, c.UNW_UNIFRAC]
-    all_metrics = [alpha_diversity, beta_diversity, binary_metrics]
+    all_metrics = [presence_metrics, estimates_metrics, alpha_diversity_metics]
 
-    alpha_diversity_label = 'Alpha diversity'
-    beta_diversity_label = 'Beta diversity'
-    binary_metrics_label = 'Binary metrics'
-    all_metrics_labels = [alpha_diversity_label, beta_diversity_label, binary_metrics_label]
+    presence__metrics_label = 'Presence/absence of taxa'
+    estimates_metrics_label = 'Abundance estimates'
+    alpha_diversity_metics = 'Alpha diversity'
+    all_metrics_labels = [presence__metrics_label, estimates_metrics_label, alpha_diversity_metics]
 
     styles = [{'selector': 'td', 'props': [('width', '70pt')]},
               {'selector': 'th', 'props': [('width', '70pt'), ('text-align', 'left')]},
               {'selector': 'th:nth-child(1)', 'props': [('width', '120pt'), ('font-weight', 'normal')]},
-              {'selector': '', 'props': [('width', 'max-content'), ('width', '-moz-max-content'), ('border-top', '1px solid lightgray'), ('border-spacing', '0px')]}]
+              {'selector': '', 'props': [('width', 'max-content'), ('width', '-moz-max-content'), ('border-top', '1px solid lightgray'), ('border-spacing', '0px')]},
+              {'selector': 'expand-toggle:checked ~ * .data', 'props': [('background-color', 'white !important')]}]
     styles_hidden_thead = styles + [{'selector': 'thead', 'props': [('display', 'none')]}]
 
-    def color_negative_red(pd_series):
+    def get_colors_and_ranges(pd_series, max_value_w_gs):
         values = pd_series.tolist()
+        color1 = 'dodgerblue'
+        color2 = 'red'
+        hue1 = 12
+        hue2 = 240
+        if pd_series.name == c.PRECISION or pd_series.name == c.RECALL or pd_series.name == c.F1_SCORE or pd_series.name == c.JACCARD:
+            return color1, color2, hue1, hue2, 0, 1
+        if pd_series.name == c.FP or pd_series.name == c.FN:
+            return color2, color1, hue2, hue1, 0, max(values)
+        if pd_series.name == c.TP:
+            return color1, color2, hue1, hue2, 0, max_value_w_gs
+        return color1, color2, hue1, hue2, max(values), min(values)
 
-        min_value = min(values)
-        if math.isnan(min_value):
-            return ['' for x in values]
+    def get_heatmap_colors(pd_series):
+        values = pd_series.tolist()
+        max_value_w_gs = max(values)
 
-        range1 = 0
-        range2 = 240
+        dropped_gs = False
+        if pd_series.index[0] == c.GS:
+            pd_series.drop(c.GS)
+            values = values[1:]
+            dropped_gs = True
 
-        if pd_series.name == c.PRECISION or pd_series.name == c.RECALL or pd_series.name == c.F1_SCORE:
-            min_value = 0
-            max_value = 1
-        else:
-            min_value = round(min_value, 3) if not math.isnan(min_value) else 0
-            max_value = max(values)
-            max_value = round(max_value, 3) if not math.isnan(max_value) else 0
-            if pd_series.name == c.FP or pd_series.name == c.FN:
-                range1 = 240
-                range2 = 0
-                min_value = 0
+        if math.isnan(min(values)):
+            red = 'background-color: red'
+            return [red for x in values] if not dropped_gs else [''] + [red for x in values]
 
+        color1, color2, hue1, hue2, min_value, max_value = get_colors_and_ranges(pd_series, max_value_w_gs)
+
+        cm = sns.diverging_palette(hue1, hue2, sep=50, l=80, n=15, s=90, as_cmap=True)
         norm = pltc.Normalize(min_value, max_value)
-        #norm = pltc.PowerNorm(gamma=1, vmin=min_value, vmax=max_value)
 
-        normed = norm(values)
-        cm = sns.diverging_palette(range1, range2, sep=50, l=60, n=5, as_cmap=True)
+        normed = norm([round(x, 3) if not math.isnan(x) else max_value for x in values])
         heatmap_colors = [rgb2hex(x) for x in pltx.cm.get_cmap(cm)(normed)]
-        #print(heatmap_colors)
-        return ['background-color: %s' % color for color in heatmap_colors]
+        return_colors = []
+        for val, x in zip(values, heatmap_colors):
+            if val == min_value:
+                return_colors.append('background-color: {}'. format(color2))
+            elif val == max_value:
+                return_colors.append('background-color: {}'. format(color1))
+            elif math.isnan(val):
+                return_colors.append('background-color: red')
+            else:
+                return_colors.append('background-color: {}'. format(x))
 
-        # color = 'red' if val > 0.5 else 'white'
-        # return 'background-color: %s' % color
-
-    # cm = sns.light_palette("green", as_cmap=True)
-
+        if dropped_gs:
+            return [''] + return_colors
+        else:
+            return return_colors
 
     rank_to_sample_to_html = defaultdict(list)
     for rank in rank_to_sample_pd:
@@ -228,19 +277,26 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
             if sample_id in rank_to_sample_pd[rank]:
                 mydf = rank_to_sample_pd[rank][sample_id]
                 mydf.index.name = None
-                # mydf = mydf.applymap(lambda x: '{:.3f}'.format(x) if isinstance(x, float) and not x.is_integer() else x) # float_format='%.3f'
                 html = ''
                 first_metrics = True
                 for metrics, metrics_label in zip(all_metrics, all_metrics_labels):
                     if rank == 'rank independent':
                         metrics = rank_independent_metrics
-                        metrics_label = beta_diversity_label
+                        metrics_label = estimates_metrics_label
                     html += '<p style="margin-bottom: auto"><b>{}</b></p>'.format(metrics_label)
                     mydf_metrics = mydf.loc[metrics]
+
+                    sorted_columns = get_columns(labels, mydf_metrics.columns.tolist())
+                    mydf_metrics = mydf_metrics.loc[:, sorted_columns]
+
                     if first_metrics:
-                        html += mydf_metrics.style.apply(color_negative_red, axis=1).set_precision(3).set_table_styles(styles).render()
+                        this_style = styles
                     else:
-                        html += mydf_metrics.style.apply(color_negative_red, axis=1).set_precision(3).set_table_styles(styles_hidden_thead).render()
+                        this_style = styles_hidden_thead
+                    if metrics_label == presence__metrics_label:
+                        html += mydf_metrics.style.apply(get_heatmap_colors, axis=1).set_precision(3).set_table_styles(this_style).render()
+                    else:
+                        html += mydf_metrics.style.set_precision(3).set_table_styles(this_style).render()
                     if rank == 'rank independent':
                         break
                     first_metrics = False
@@ -271,8 +327,6 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
 
     #mytable2 = Div(children=mytable1, text="my text2")
 
-    # TODO: get rankings out of taxonomic rankings tab
-
     col_rankings = column([data_table,
                            weight_recall,
                            weight_precision,
@@ -280,7 +334,16 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
                            weight_unifrac,
                            p])
 
-    tab1 = Panel(child=column(select_rank, mytable1), title="Metrics")
+    heatmap_legend = '<img src="heatmap_bar.png" /><div style="text-align:left;font-size: 11px;">Worst<span style="float:right;">Best</span></div>'
+    checkbox = Div(text=heatmap_legend, style={"width": "155px", "margin-bottom": "-10px"})
+    # <input type="checkbox" id="expand-toggle" /><label for="expand-toggle" id="expand-btn">Toggle</label>
+
+    plot1 = Panel(child=Div(text='<img src="spider_plot.png" />'), title='Spider plot (1)')
+    plot2 = Panel(child=Div(text='<img src="spider_plot_recall_precision.png" />'), title='Spider plot (2)')
+    plot3 = Panel(child=Div(text='<img src="plot_shannon.png" />'), title='Shannon')
+    tabs_plots = Tabs(tabs=[plot1, plot2, plot3], width=400)
+
+    tab1 = Panel(child=column(select_rank, checkbox, mytable1, tabs_plots), title="Metrics")
     tab2 = Panel(child=col_rankings, title="Rankings")
 
     tabs = Tabs(tabs=[tab1, tab2])
@@ -288,7 +351,7 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
     title = create_title_div("main", "OPAL: Profiling Assessment", " produced on {0} with OPAL version {1} ".format(
             datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), __version__))
 
-    l = layout(title, select_sample, tabs)
+    l = layout(title, select_sample, tabs) #, sizing_mode='scale_width'
     # l = layout([row(select_rank, select_sample),
     #             mytable1,
     #             data_table,
@@ -304,7 +367,7 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
     # )
 
     html = file_html(l, CDN, "OPAL")  # sizing_mode='scale_width'
-    file = open(os.path.join(output_dir, "rankings.html"), 'w+')
+    file = open(os.path.join(output_dir, "results.html"), 'w+')
     file.write(html)
     file.close()
 
