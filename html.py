@@ -5,6 +5,7 @@ import pandas as pd
 import datetime
 import numpy as np
 import math
+from jinja2 import Template
 
 import matplotlib
 matplotlib.use('Agg')
@@ -15,24 +16,17 @@ from matplotlib.colors import rgb2hex
 
 from version import __version__
 
-from bokeh.embed import file_html
-from bokeh.resources import CDN
-from bokeh.plotting import figure, output_file, show
-from bokeh.models import ColumnDataSource
-from bokeh.layouts import widgetbox, layout, column, row
+from bokeh.plotting import figure
+from bokeh.layouts import column, row
 from bokeh.models.widgets import TableColumn, Slider, Div, Select, Panel, Tabs
-from bokeh.models import (ColorBar,
-                          Text,
-                          BasicTicker,
-                          HoverTool,
-                          FuncTickFormatter,
-                          DataTable,
-                          widgets,
+from bokeh.models import (DataTable,
                           CustomJS)
+from bokeh.embed import components
+from bokeh.resources import INLINE
+from bokeh.plotting import ColumnDataSource
 
 
-DIV_WIDTH = 1200
-DIV_HEIGHT = None
+SUM_OF_SCORES = 'Sum of scores'
 
 
 def create_heatmap_bar(output_dir):
@@ -56,9 +50,8 @@ def create_heatmap_bar(output_dir):
 
 
 def create_title_div(id, name, info):
-    div = Div(text="""<div style="text-align:left;font-size: 20pt;font-weight: bold;">{1}&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 10pt;font-weight:normal;">{2}</span>""".format(id, name, info),
-              width=DIV_WIDTH, height=DIV_HEIGHT)
-    return [div]
+    div = Div(text="""<div style="text-align:left;font-size: 20pt;font-weight: bold;">{1}<span style="float: right;font-size: 10pt;font-weight:normal;">{2}</span>""".format(id, name, info), css_classes=['bk-width-auto']) # width=DIV_WIDTH, height=DIV_HEIGHT)
+    return div
 
 
 def get_columns(labels, current_columns):
@@ -102,8 +95,7 @@ def get_rank_to_sample_pd(pd_metrics):
     return rank_to_sample_pd
 
 
-def create_html(pd_rankings, pd_metrics, labels, output_dir):
-    sum_of_scores = 'Sum of scores'
+def get_formatted_pd_rankings(pd_rankings):
     df_list = []
     df_list_unsorted_pos = []
     metrics_list = []
@@ -117,18 +109,23 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
     df_sum = pd_rankings.groupby(['tool'])['position'].sum().reset_index().sort_values('position')
     df_sum_unsorted_pos = pd_rankings.groupby(['tool'])['position'].sum().reset_index()
     df_list.append(
-        pd.DataFrame({sum_of_scores: df_sum['tool'].tolist(), 'score' + sum_of_scores: df_sum['position'].tolist()}))
+        pd.DataFrame({SUM_OF_SCORES: df_sum['tool'].tolist(), 'score' + SUM_OF_SCORES: df_sum['position'].tolist()}))
     df_list_unsorted_pos.append(
-        pd.DataFrame({sum_of_scores: df_sum_unsorted_pos['tool'].tolist(), 'score' + sum_of_scores: df_sum_unsorted_pos['position'].tolist()}))
+        pd.DataFrame({SUM_OF_SCORES: df_sum_unsorted_pos['tool'].tolist(), 'score' + SUM_OF_SCORES: df_sum_unsorted_pos['position'].tolist()}))
 
     pd_show = pd.concat(df_list, axis=1)
     pd_show_unsorted_pos = pd.concat(df_list_unsorted_pos, axis=1)
+    return pd_show, pd_show_unsorted_pos
+
+
+def create_rankings_html(pd_rankings):
+    pd_show, pd_show_unsorted_pos = get_formatted_pd_rankings(pd_rankings)
 
     table_source = ColumnDataSource(pd_show)
 
     columns = [
-        TableColumn(field=sum_of_scores, title=sum_of_scores, sortable=False),
-        TableColumn(field='score' + sum_of_scores, title='', width=50),
+        TableColumn(field=SUM_OF_SCORES, title=SUM_OF_SCORES, sortable=False),
+        TableColumn(field='score' + SUM_OF_SCORES, title='', width=50),
         TableColumn(field=c.RECALL, title=c.RECALL, sortable=False),
         TableColumn(field='score' + c.RECALL, title='', width=50),
         TableColumn(field=c.PRECISION, title=c.PRECISION, sortable=False),
@@ -140,8 +137,8 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
     ]
     data_table = DataTable(source=table_source, columns=columns, width=800, height=25 + len(pd_show) * 25)
 
-    top = [float(x) for x in pd_show_unsorted_pos['score' + sum_of_scores]]
-    source = ColumnDataSource(data=dict(x=pd_show_unsorted_pos[sum_of_scores].tolist(),
+    top = [float(x) for x in pd_show_unsorted_pos['score' + SUM_OF_SCORES]]
+    source = ColumnDataSource(data=dict(x=pd_show_unsorted_pos[SUM_OF_SCORES].tolist(),
                                         top=top,
                                         recall=pd_show_unsorted_pos['score' + c.RECALL],
                                         precision=pd_show_unsorted_pos['score' + c.PRECISION],
@@ -168,8 +165,6 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
         source.change.emit();
     """)
 
-
-    #weight_recall = TextInput(title=c.RECALL + " weight", value='1.0', callback=callback)
     weight_recall = Slider(start=0, end=10, value=1, step=.1, title=c.RECALL + " weight", callback=callback)
     callback.args["weight_recall"] = weight_recall
 
@@ -182,18 +177,70 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
     weight_unifrac = Slider(start=0, end=10, value=1, step=.1, title=c.UNIFRAC + " weight", callback=callback)
     callback.args["weight_unifrac"] = weight_unifrac
 
-
-    # p.vbar(x=metrics_list, width=0.5, bottom=0, top=pd_show['score'+all_metrics].tolist(), color="firebrick")
-    p = figure(x_range=pd_show_unsorted_pos[sum_of_scores].tolist(), plot_width=800, plot_height=400, title=sum_of_scores + " - lower is better")
-    # topx[:] = [0 for x in pd_show['score' + all_metrics]]
-    # p.vbar(x=pd_show[all_metrics].tolist(), width=0.5, bottom=0, top="top", color="firebrick", source=source)
-    # source = ColumnDataSource(data=dict(top=[]))
+    p = figure(x_range=pd_show_unsorted_pos[SUM_OF_SCORES].tolist(), plot_width=800, plot_height=400, title=SUM_OF_SCORES + " - lower is better")
     p.vbar(x='x', top='top', source=source, width=0.5, bottom=0, color="firebrick")
-    #p.vbar(x=pd_show[all_metrics].tolist(), width=0.5, bottom=0, color="firebrick", top=top)
+
+    col_rankings = column([data_table,
+                           row(weight_recall, weight_precision),
+                           row(weight_l1norm, weight_unifrac),
+                           p], css_classes=['bk-padding-top'])
+    return col_rankings
 
 
-    create_heatmap_bar(output_dir)
+def get_colors_and_ranges(pd_series, max_value_w_gs):
+    values = pd_series.tolist()
+    color1 = 'dodgerblue'
+    color2 = 'red'
+    hue1 = 12
+    hue2 = 240
+    if pd_series.name == c.PRECISION or pd_series.name == c.RECALL or pd_series.name == c.F1_SCORE or pd_series.name == c.JACCARD:
+        return color1, color2, hue1, hue2, 0, 1
+    if pd_series.name == c.FP or pd_series.name == c.FN:
+        return color2, color1, hue2, hue1, 0, max(values)
+    if pd_series.name == c.TP:
+        return color1, color2, hue1, hue2, 0, max_value_w_gs
+    return color1, color2, hue1, hue2, max(values), min(values)
 
+
+def get_heatmap_colors(pd_series):
+    values = pd_series.tolist()
+    max_value_w_gs = max(values)
+
+    dropped_gs = False
+    if pd_series.index[0] == c.GS:
+        pd_series.drop(c.GS)
+        values = values[1:]
+        dropped_gs = True
+
+    if math.isnan(min(values)):
+        red = 'background-color: red'
+        return [red for x in values] if not dropped_gs else [''] + [red for x in values]
+
+    color1, color2, hue1, hue2, min_value, max_value = get_colors_and_ranges(pd_series, max_value_w_gs)
+
+    cm = sns.diverging_palette(hue1, hue2, sep=50, l=80, n=15, s=90, as_cmap=True)
+    norm = pltc.Normalize(min_value, max_value)
+
+    normed = norm([round(x, 3) if not math.isnan(x) else max_value for x in values])
+    heatmap_colors = [rgb2hex(x) for x in pltx.cm.get_cmap(cm)(normed)]
+    return_colors = []
+    for val, x in zip(values, heatmap_colors):
+        if val == min_value:
+            return_colors.append('background-color: {}'. format(color2))
+        elif val == max_value:
+            return_colors.append('background-color: {}'. format(color1))
+        elif math.isnan(val):
+            return_colors.append('background-color: red')
+        else:
+            return_colors.append('background-color: {}'. format(x))
+
+    if dropped_gs:
+        return [''] + return_colors
+    else:
+        return return_colors
+
+
+def create_metrics_table(pd_metrics, labels):
     rank_to_sample_pd = get_rank_to_sample_pd(pd_metrics)
 
     set_sample_ids = set()
@@ -201,6 +248,8 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
         for sample_id in rank_to_sample_pd[rank]:
             set_sample_ids.add(sample_id)
     all_sample_ids = list(set_sample_ids)
+    all_sample_ids.remove('(average over samples)')
+    all_sample_ids.insert(0, '(average over samples)')
 
     presence_metrics = [c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD]
     estimates_metrics = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.BRAY_CURTIS]
@@ -219,57 +268,6 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
               {'selector': '', 'props': [('width', 'max-content'), ('width', '-moz-max-content'), ('border-top', '1px solid lightgray'), ('border-spacing', '0px')]},
               {'selector': 'expand-toggle:checked ~ * .data', 'props': [('background-color', 'white !important')]}]
     styles_hidden_thead = styles + [{'selector': 'thead', 'props': [('display', 'none')]}]
-
-    def get_colors_and_ranges(pd_series, max_value_w_gs):
-        values = pd_series.tolist()
-        color1 = 'dodgerblue'
-        color2 = 'red'
-        hue1 = 12
-        hue2 = 240
-        if pd_series.name == c.PRECISION or pd_series.name == c.RECALL or pd_series.name == c.F1_SCORE or pd_series.name == c.JACCARD:
-            return color1, color2, hue1, hue2, 0, 1
-        if pd_series.name == c.FP or pd_series.name == c.FN:
-            return color2, color1, hue2, hue1, 0, max(values)
-        if pd_series.name == c.TP:
-            return color1, color2, hue1, hue2, 0, max_value_w_gs
-        return color1, color2, hue1, hue2, max(values), min(values)
-
-    def get_heatmap_colors(pd_series):
-        values = pd_series.tolist()
-        max_value_w_gs = max(values)
-
-        dropped_gs = False
-        if pd_series.index[0] == c.GS:
-            pd_series.drop(c.GS)
-            values = values[1:]
-            dropped_gs = True
-
-        if math.isnan(min(values)):
-            red = 'background-color: red'
-            return [red for x in values] if not dropped_gs else [''] + [red for x in values]
-
-        color1, color2, hue1, hue2, min_value, max_value = get_colors_and_ranges(pd_series, max_value_w_gs)
-
-        cm = sns.diverging_palette(hue1, hue2, sep=50, l=80, n=15, s=90, as_cmap=True)
-        norm = pltc.Normalize(min_value, max_value)
-
-        normed = norm([round(x, 3) if not math.isnan(x) else max_value for x in values])
-        heatmap_colors = [rgb2hex(x) for x in pltx.cm.get_cmap(cm)(normed)]
-        return_colors = []
-        for val, x in zip(values, heatmap_colors):
-            if val == min_value:
-                return_colors.append('background-color: {}'. format(color2))
-            elif val == max_value:
-                return_colors.append('background-color: {}'. format(color1))
-            elif math.isnan(val):
-                return_colors.append('background-color: red')
-            else:
-                return_colors.append('background-color: {}'. format(x))
-
-        if dropped_gs:
-            return [''] + return_colors
-        else:
-            return return_colors
 
     rank_to_sample_to_html = defaultdict(list)
     for rank in rank_to_sample_pd:
@@ -304,71 +302,87 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
             else:
                 rank_to_sample_to_html[rank].append("")
 
-    mytable1 = Div(text="""<div>{}</div>""".format(rank_to_sample_to_html[c.ALL_RANKS[0]][0]))
+    mytable1 = Div(text="""<div>{}</div>""".format(rank_to_sample_to_html[c.ALL_RANKS[0]][0]), css_classes=['bk-width-auto'])
 
-    #radio_group = RadioGroup(labels=["Option 1", "Option 2", "Option 3"], active=0)
-    select_rank = Select(title="Taxonomic rank:", value=c.ALL_RANKS[0], options=c.ALL_RANKS + ['rank independent'])
+    select_rank = Select(title="Taxonomic rank:", value=c.ALL_RANKS[0], options=c.ALL_RANKS + ['rank independent'], css_classes=['bk-fit-content'])
 
-    # zip(range(len(min_completeness)), min_completeness)
-    select_sample = Select(title="Sample:", value='0', options=list(zip(map(str, range(len(all_sample_ids))), all_sample_ids)))
+    select_sample = Select(title="Sample:", value='0', options=list(zip(map(str, range(len(all_sample_ids))), all_sample_ids)), css_classes=['bk-fit-content'])
 
     source = ColumnDataSource(data=rank_to_sample_to_html)
 
-    #select_rank_sample_callback = CustomJS(args=dict(select_rank=select_rank, select_sample=select_sample, mytable1=mytable1), code="""
     select_rank_sample_callback = CustomJS(args=dict(source=source), code="""
         mytable1.text = source.data[select_rank.value][select_sample.value];
     """)
-    #select.js_on_change('active', radio_callback)
     select_rank.js_on_change('value', select_rank_sample_callback)
     select_sample.js_on_change('value', select_rank_sample_callback)
     select_rank_sample_callback.args["select_rank"] = select_rank
     select_rank_sample_callback.args["select_sample"] = select_sample
     select_rank_sample_callback.args["mytable1"] = mytable1
 
-    #mytable2 = Div(children=mytable1, text="my text2")
-
-    col_rankings = column([data_table,
-                           weight_recall,
-                           weight_precision,
-                           weight_l1norm,
-                           weight_unifrac,
-                           p])
-
     heatmap_legend = '<img src="heatmap_bar.png" /><div style="text-align:left;font-size: 11px;">Worst<span style="float:right;">Best</span></div>'
-    checkbox = Div(text=heatmap_legend, style={"width": "155px", "margin-bottom": "-10px"})
+    heatmap_legend_div = Div(text=heatmap_legend, style={"width": "155px", "margin-bottom": "-10px"})
     # <input type="checkbox" id="expand-toggle" /><label for="expand-toggle" id="expand-btn">Toggle</label>
+    return select_sample, select_rank, heatmap_legend_div, mytable1
 
-    plot1 = Panel(child=Div(text='<img src="spider_plot.png" />'), title='Spider plot (1)')
-    plot2 = Panel(child=Div(text='<img src="spider_plot_recall_precision.png" />'), title='Spider plot (2)')
+
+def create_plots_html():
+    plot1 = Panel(child=Div(text='<img src="spider_plot.png" />'), title='Spider plots (1)')
+    plot2 = Panel(child=Div(text='<img src="spider_plot_recall_precision.png" />'), title='Spider plots (2)')
     plot3 = Panel(child=Div(text='<img src="plot_shannon.png" />'), title='Shannon')
-    tabs_plots = Tabs(tabs=[plot1, plot2, plot3], width=400)
+    tabs_plots = Tabs(tabs=[plot1, plot2, plot3], width=400, css_classes=['bk-tabs-margin'])
+    return tabs_plots
 
-    tab1 = Panel(child=column(select_rank, checkbox, mytable1, tabs_plots), title="Metrics")
+
+def create_html(pd_rankings, pd_metrics, labels, output_dir):
+    col_rankings = create_rankings_html(pd_rankings)
+
+    create_heatmap_bar(output_dir)
+
+    select_sample, select_rank, heatmap_legend_div, mytable1 = create_metrics_table(pd_metrics, labels)
+
+    tabs_plots = create_plots_html()
+
+    tab1 = Panel(child=column(select_rank, heatmap_legend_div, mytable1, tabs_plots, responsive=True, css_classes=['bk-width-auto']), title="Metrics")
     tab2 = Panel(child=col_rankings, title="Rankings")
 
-    tabs = Tabs(tabs=[tab1, tab2])
+    tabs = Tabs(tabs=[tab1, tab2], css_classes=['bk-tabs-margin'])
 
     title = create_title_div("main", "OPAL: Profiling Assessment", " produced on {0} with OPAL version {1} ".format(
             datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), __version__))
 
-    l = layout(title, select_sample, tabs) #, sizing_mode='scale_width'
-    # l = layout([row(select_rank, select_sample),
-    #             mytable1,
-    #             data_table,
-    #             weight_recall,
-    #             weight_precision,
-    #             weight_l1norm,
-    #             weight_unifrac,
-    #             p])
+    template = Template('''<!DOCTYPE html>
+        <html lang="en">
+            <head>
+                <meta charset="utf-8">
+                <title>OPAL: Profiling Assessment</title>
+                {{ js_resources }}
+                {{ css_resources }}
+                <style>.bk-fit-content {width: fit-content; width: -moz-fit-content;}
+                .bk-width-auto {width: auto !important;}
+                .bk-width-auto-test>div {width: auto !important;}
+                div.bk-width-auto-test {width: 80% !important;}
+                .bk-tabs-margin{margin-top: 20px !important;}
+                .bk-root {display: flex; justify-content: center;}
+                .bk-padding-top {padding-top: 10px;}
+                html {overflow: -moz-scrollbars-vertical; overflow-y: scroll;}
+                </style>
+            </head>
+            <body>
+                {{ div }}
+                {{ script }}
+            </body>
+        </html>
+        ''')
 
-    # l = row(
-    #     widgetbox(weight_recall),
-    #     column(p)
-    # )
+    html_columns = column(title, select_sample, tabs, responsive=True, css_classes=['bk-width-auto-test'])
+    script, div = components(html_columns)
+    js_resources = INLINE.render_js()
+    css_resources = INLINE.render_css()
 
-    html = file_html(l, CDN, "OPAL")  # sizing_mode='scale_width'
-    file = open(os.path.join(output_dir, "results.html"), 'w+')
-    file.write(html)
-    file.close()
+    html = template.render(js_resources=js_resources,
+            css_resources=css_resources,
+            script=script,
+            div=div)
 
-
+    with open(os.path.join(output_dir, "results.html"), 'w') as f:
+        f.write(html)
