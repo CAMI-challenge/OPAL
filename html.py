@@ -5,6 +5,7 @@ import pandas as pd
 import datetime
 import numpy as np
 import math
+import re
 from jinja2 import Template
 
 import matplotlib
@@ -269,6 +270,24 @@ def create_metrics_table(pd_metrics, labels):
               {'selector': 'expand-toggle:checked ~ * .data', 'props': [('background-color', 'white !important')]}]
     styles_hidden_thead = styles + [{'selector': 'thead', 'props': [('display', 'none')]}]
 
+    d = {c.RECALL: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.RECALL, c.RECALL),
+         c.PRECISION: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.PRECISION, c.PRECISION),
+         c.F1_SCORE: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.F1_SCORE, c.F1_SCORE),
+         c.TP: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.TP, c.TP),
+         c.FP: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.FP, c.FP),
+         c.JACCARD: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.JACCARD, c.JACCARD),
+         c.UNIFRAC: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.UNIFRAC, c.UNIFRAC),
+         c.UNW_UNIFRAC: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.UNW_UNIFRAC, c.UNW_UNIFRAC),
+         c.L1NORM: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.L1NORM, c.L1NORM),
+         c.BRAY_CURTIS: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.BRAY_CURTIS, c.BRAY_CURTIS),
+         c.OTUS: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.OTUS, c.OTUS),
+         c.SHANNON_DIVERSITY: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.SHANNON_DIVERSITY, c.SHANNON_DIVERSITY),
+         c.SHANNON_EQUIT: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.SHANNON_EQUIT, c.SHANNON_EQUIT)}
+    pattern = re.compile('|'.join(map(re.escape, d)))
+
+    def translate(match):
+        return d[match.group(0)]
+
     rank_to_sample_to_html = defaultdict(list)
     for rank in rank_to_sample_pd:
         for sample_id in all_sample_ids:
@@ -298,6 +317,7 @@ def create_metrics_table(pd_metrics, labels):
                     if rank == 'rank independent':
                         break
                     first_metrics = False
+                html = pattern.sub(translate, html)
                 rank_to_sample_to_html[rank].append(html)
             else:
                 rank_to_sample_to_html[rank].append("")
@@ -325,11 +345,17 @@ def create_metrics_table(pd_metrics, labels):
     return select_sample, select_rank, heatmap_legend_div, mytable1
 
 
-def create_plots_html():
-    plot1 = Panel(child=Div(text='<img src="spider_plot.png" />'), title='Spider plots (1)')
-    plot2 = Panel(child=Div(text='<img src="spider_plot_recall_precision.png" />'), title='Spider plots (2)')
+def create_plots_html(output_dir):
+    message_no_spdplot = 'Spider plots require that at least 3 profiles be provided.'
+
+    text = '<img src="spider_plot.png" />' if os.path.exists(os.path.join(output_dir, 'spider_plot.png')) else message_no_spdplot
+    plot1 = Panel(child=Div(text=text), title='Spider plots (1)', width=780)
+
+    text = '<img src="spider_plot_recall_precision.png" />' if os.path.exists(os.path.join(output_dir, 'spider_plot_recall_precision.png')) else message_no_spdplot
+    plot2 = Panel(child=Div(text=text), title='Spider plots (2)')
+
     plot3 = Panel(child=Div(text='<img src="plot_shannon.png" />'), title='Shannon')
-    tabs_plots = Tabs(tabs=[plot1, plot2, plot3], width=400, css_classes=['bk-tabs-margin'])
+    tabs_plots = Tabs(tabs=[plot1, plot2, plot3], width=780, css_classes=['bk-tabs-margin'])
     return tabs_plots
 
 
@@ -340,9 +366,11 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
 
     select_sample, select_rank, heatmap_legend_div, mytable1 = create_metrics_table(pd_metrics, labels)
 
-    tabs_plots = create_plots_html()
+    tabs_plots = create_plots_html(output_dir)
 
-    tab1 = Panel(child=column(select_rank, heatmap_legend_div, mytable1, tabs_plots, responsive=True, css_classes=['bk-width-auto']), title="Metrics")
+    metrics_row = row(column(select_sample, select_rank, heatmap_legend_div, mytable1, responsive=True, css_classes=['bk-width-auto']), column(tabs_plots, responsive=True, css_classes=['bk-width-auto']), css_classes=['bk-width-auto'], responsive=True)
+
+    tab1 = Panel(child=metrics_row, title="Metrics")
     tab2 = Panel(child=col_rankings, title="Rankings")
 
     tabs = Tabs(tabs=[tab1, tab2], css_classes=['bk-tabs-margin'])
@@ -359,12 +387,47 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
                 {{ css_resources }}
                 <style>.bk-fit-content {width: fit-content; width: -moz-fit-content;}
                 .bk-width-auto {width: auto !important;}
-                .bk-width-auto-test>div {width: auto !important;}
-                div.bk-width-auto-test {width: 80% !important;}
+                .bk-width-auto-main>div {width: -webkit-fill-available !important;}
+                div.bk-width-auto-main {width: -webkit-fill-available !important;}
                 .bk-tabs-margin{margin-top: 20px !important;}
                 .bk-root {display: flex; justify-content: center;}
                 .bk-padding-top {padding-top: 10px;}
                 html {overflow: -moz-scrollbars-vertical; overflow-y: scroll;}
+                .tooltip {
+                    position: relative;
+                    display: inline-block;
+                    border-bottom: 1px dashed lightgray;
+                    cursor: help;
+                }
+                .tooltip .tooltiptext {
+                    visibility: hidden;
+                    width: 120px;
+                    background-color: #555;
+                    color: #fff;
+                    text-align: center;
+                    border-radius: 6px;
+                    padding: 5px 0;
+                    position: absolute;
+                    z-index: 1;
+                    bottom: 125%;
+                    left: 50%;
+                    margin-left: -60px;
+                    opacity: 0;
+                }
+                .tooltip .tooltiptext::after {
+                    content: "";
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    margin-left: -5px;
+                    border-width: 5px;
+                    border-style: solid;
+                    border-color: #555 transparent transparent transparent;
+                }
+                .tooltip:hover .tooltiptext {
+                    visibility: visible;
+                    opacity: 1;
+                }
                 </style>
             </head>
             <body>
@@ -374,7 +437,7 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
         </html>
         ''')
 
-    html_columns = column(title, select_sample, tabs, responsive=True, css_classes=['bk-width-auto-test'])
+    html_columns = column(title, tabs, responsive=True, css_classes=['bk-width-auto-main'])
     script, div = components(html_columns)
     js_resources = INLINE.render_js()
     css_resources = INLINE.render_css()

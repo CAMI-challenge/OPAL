@@ -1,5 +1,5 @@
 # Taxonomic Profiling Output
-@SampleID:/exchange/input/Low/RL_S001__insert_270.fq.gz
+@SampleID:CAMI_LOW_S001
 @Version:0.9.3
 @Ranks:superkingdom|phylum|class|order|family|genus|species|strain
 @TaxonomyID:cami-ncbi-taxonomy_2015.01.30

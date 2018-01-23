@@ -32,7 +32,7 @@ def get_labels(labels, profiles_files):
     if labels:
         labels_list = [x.strip() for x in labels.split(',')]
         if len(labels_list) != len(profiles_files):
-            exit('Number of labels does not match the number of files of profiles. Please check parameter -l, --labels.')
+            exit('The number of labels does not match the number of files of profiles. Please check parameter -l, --labels.')
         return labels_list
     tool_id = []
     for profile_file in profiles_files:
@@ -138,7 +138,7 @@ def evaluate(gold_standard_file, profiles_files, labels, no_normalization):
                 gs_rank_to_taxid_to_percentage = gs_id_to_rank_to_taxid_to_percentage[sample_id]
                 gs_pf_profile = gs_id_to_pf_profile[sample_id]
             else:
-                print("Skipping assessment of {} for sample {}. No gold standard is available for this sample.".format(label, sample_id))
+                print("Skipping assessment of {} for sample {}. Make sure the SampleID of the gold standard and the profile are identical.".format(label, sample_id))
                 continue
 
             rank_to_taxid_to_percentage = load_data.get_rank_to_taxid_to_percentage(profile)

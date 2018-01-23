@@ -12,6 +12,8 @@ Profiling Assessment
 * pandas &ge; 0.20.3
 * biom-format &ge; 2.1.6
 * scikit-bio &ge; 0.5.1
+* bokeh &ge; 0.12.9
+* seaborn &ge; 0.8.1
 
 # User Guide
 
@@ -95,6 +97,7 @@ data/jolly_pasteur_3 \
 ~~~
 **Output:**
 Directory _output_dir_ will contain:
+* results.html
 * results.tsv
 * subdirectory per_rank with a .tsv file per taxonomic rank
 * subdirectory per_tool with a .tsv file per tool (CLARK.tsv, FOCUS.tsv, MetaPhyler.tsv, mOTU.tsv, MP2.0.tsv, Quikr.tsv, and TIPP.tsv)

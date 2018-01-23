@@ -1,6 +1,6 @@
 #CAMI Submission for Taxonomic Profiling
 @Version:0.9.2
-@SampleID:RL_S001__insert_270.fq.gz
+@SampleID:CAMI_LOW_S001
 @Ranks:superkingdom|phylum|class|order|family|genus|species|strain
 
 @@TAXID	RANK	TAXPATH	TAXPATHSN	PERCENTAGE
