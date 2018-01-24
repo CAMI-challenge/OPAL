@@ -1,7 +1,9 @@
 [![CircleCI](https://circleci.com/gh/CAMI-challenge/OPAL.svg?style=svg)](https://circleci.com/gh/CAMI-challenge/OPAL)
 
-# OPAL
-Profiling Assessment
+# OPAL - Profiling Assessment
+
+Example page produced by OPAL: *https://cami-challenge.github.io/OPAL/*
+
 
 # Requirements
 
