@@ -275,6 +275,7 @@ def create_metrics_table(pd_metrics, labels):
          c.F1_SCORE: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.F1_SCORE, c.F1_SCORE),
          c.TP: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.TP, c.TP),
          c.FP: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.FP, c.FP),
+         c.FN: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.FN, c.FN),
          c.JACCARD: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.JACCARD, c.JACCARD),
          c.UNIFRAC: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.UNIFRAC, c.UNIFRAC),
          c.UNW_UNIFRAC: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.UNW_UNIFRAC, c.UNW_UNIFRAC),
@@ -346,7 +347,7 @@ def create_metrics_table(pd_metrics, labels):
 
 
 def create_plots_html(output_dir):
-    message_no_spdplot = 'Spider plots require that at least 3 profiles be provided.'
+    message_no_spdplot = 'Spider plots require at least 3 profiles.'
 
     text = '<img src="spider_plot.png" />' if os.path.exists(os.path.join(output_dir, 'spider_plot.png')) else message_no_spdplot
     plot1 = Panel(child=Div(text=text), title='Spider plots (1)', width=780)

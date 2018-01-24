@@ -138,7 +138,7 @@ def evaluate(gold_standard_file, profiles_files, labels, no_normalization):
                 gs_rank_to_taxid_to_percentage = gs_id_to_rank_to_taxid_to_percentage[sample_id]
                 gs_pf_profile = gs_id_to_pf_profile[sample_id]
             else:
-                print("Skipping assessment of {} for sample {}. Make sure the SampleID of the gold standard and the profile are identical.".format(label, sample_id))
+                sys.stderr.write("Skipping assessment of {} for sample {}. Make sure the SampleID of the gold standard and the profile are identical.\n".format(label, sample_id))
                 continue
 
             rank_to_taxid_to_percentage = load_data.get_rank_to_taxid_to_percentage(profile)

@@ -124,7 +124,7 @@ def open_profile_from_tsv(file_path, normalize):
                             profile = []
                             predictions_dict = {}
                     else:
-                        print("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.".format(file_path))
+                        sys.stderr.write("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.\n".format(file_path))
                         raise
                     header = {}
                 reading_data = False
@@ -134,7 +134,7 @@ def open_profile_from_tsv(file_path, normalize):
                 continue
 
             if not got_column_indices:
-                print("Header line starting with @@ in file {} is missing or at wrong position.".format(file_path))
+                sys.stderr.write("Header line starting with @@ in file {} is missing or at wrong position.\n".format(file_path))
                 raise
 
             reading_data = True
@@ -163,7 +163,7 @@ def open_profile_from_tsv(file_path, normalize):
         if reading_data and len(profile) > 0:
             samples_list.append((header['SAMPLEID'], header, profile))
     else:
-        print("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.".format(file_path))
+        sys.stderr.write("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.\n".format(file_path))
         raise
 
     if normalize:
