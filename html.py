@@ -65,10 +65,7 @@ def get_columns(labels, current_columns):
 
 def get_rank_to_sample_pd(pd_metrics):
     rank_to_sample_pd = defaultdict(dict)
-
-    # copy pd without gold standard
     pd_copy = pd_metrics.copy()
-    #pd_copy = pd_copy[pd_copy.tool != c.GS]
 
     # label ranks, so that the rows don't get lost
     pd_copy.loc[pd_copy[pd.isnull(pd_copy['rank'])].index, 'rank'] = 'rank independent'
@@ -77,10 +74,27 @@ def get_rank_to_sample_pd(pd_metrics):
     pd_grouped = pd_copy.pivot_table(index=['rank', 'tool', 'sample'], columns='metric', values='value')
 
     # add sample "(average over samples)"
-    pd_mean_over_samples = pd_grouped.groupby(['rank', 'tool'], sort=False).mean().reset_index()
-    pd_mean_over_samples['sample'] = '(average over samples)'
-    pd_mean_over_samples.set_index(['rank', 'tool', 'sample'], inplace=True)
-    pd_grouped = pd.concat([pd_grouped, pd_mean_over_samples])
+    pd_mean_over_samples = pd_grouped.groupby(['rank', 'tool'], sort=False).mean()
+    # convert means to string to store '<mean> (<standard error>)'
+    pd_mean_over_samples_str = pd_mean_over_samples.astype(str)
+    pd_sem_over_samples = pd_grouped.groupby(['rank', 'tool'], sort=False).sem()
+
+    # add standard error to "(average over samples)"
+    df_columns = pd_sem_over_samples.columns.values
+    for index, row in pd_sem_over_samples.iterrows():
+        for j, item in enumerate(row):
+            sem_value = pd_sem_over_samples.get_value(index, df_columns[j])
+            mean_value = '{:>.{precision}g}'.format(pd_mean_over_samples.get_value(index, df_columns[j]), precision=3)
+            # if standard error is nan because there is only one sample, then just copy mean
+            if np.isnan(sem_value):
+                pd_mean_over_samples_str.set_value(index, df_columns[j], "{}".format(mean_value))
+            else:
+                sem_value = '{:>.{precision}g}'.format(sem_value, precision=3)
+                pd_mean_over_samples_str.set_value(index, df_columns[j], "{} ({})".format(mean_value, sem_value))
+    pd_mean_over_samples_str['sample'] = '(average over samples)'
+    pd_mean_over_samples_str = pd_mean_over_samples_str.reset_index().set_index(['rank', 'tool', 'sample'])
+
+    pd_grouped = pd.concat([pd_grouped, pd_mean_over_samples_str])
 
     # copy unifrac values to every taxonomic rank
     pd_grouped_copy = pd_grouped.copy()
@@ -90,7 +104,7 @@ def get_rank_to_sample_pd(pd_metrics):
 
     for (rank, sample), g in pd_grouped.groupby(['rank', 'sample']):
         rank_to_sample_pd[rank][sample] = g.reset_index().rename(columns={'tool': 'Tool'}).drop(['rank', 'sample'], axis=1).set_index('Tool').T
-        # drop all metrics except unifrac
+        # drop all metrics except unifrac for 'rank independent'
         if rank == 'rank independent':
             rank_to_sample_pd[rank][sample] = rank_to_sample_pd[rank][sample].drop(c.ALL_METRICS[2:])
     return rank_to_sample_pd
@@ -188,36 +202,43 @@ def create_rankings_html(pd_rankings):
     return col_rankings
 
 
-def get_colors_and_ranges(pd_series, max_value_w_gs):
-    values = pd_series.tolist()
+def get_colors_and_ranges(name, all_values):
     color1 = 'dodgerblue'
     color2 = 'red'
     hue1 = 12
     hue2 = 240
-    if pd_series.name == c.PRECISION or pd_series.name == c.RECALL or pd_series.name == c.F1_SCORE or pd_series.name == c.JACCARD:
+    if name == c.PRECISION or name == c.RECALL or name == c.F1_SCORE or name == c.JACCARD or name == c.BRAY_CURTIS:
         return color1, color2, hue1, hue2, 0, 1
-    if pd_series.name == c.FP or pd_series.name == c.FN:
-        return color2, color1, hue2, hue1, 0, max(values)
-    if pd_series.name == c.TP:
-        return color1, color2, hue1, hue2, 0, max_value_w_gs
-    return color1, color2, hue1, hue2, max(values), min(values)
+    if name == c.FP or name == c.FN or name == c.UNIFRAC or name == c.UNW_UNIFRAC:
+        return color2, color1, hue2, hue1, 0, max(all_values)
+    if name == c.TP:
+        return color1, color2, hue1, hue2, 0, max(all_values)
+    if name == c.L1NORM:
+        return color1, color2, hue1, hue2, 0, 2
+    return color1, color2, hue1, hue2, max(all_values), min(all_values)
 
 
 def get_heatmap_colors(pd_series):
     values = pd_series.tolist()
-    max_value_w_gs = max(values)
+
+    # convert "<mean> (<standard error>)" to float of <mean>
+    if len(values) > 0 and isinstance(values[0], str):
+        values = [float(x.split(' ')[0]) for x in values]
+    all_values = values[:]
 
     dropped_gs = False
     if pd_series.index[0] == c.GS:
         pd_series.drop(c.GS)
         values = values[1:]
         dropped_gs = True
+    if len(values) == 0:
+        return ['']
 
     if math.isnan(min(values)):
         red = 'background-color: red'
         return [red for x in values] if not dropped_gs else [''] + [red for x in values]
 
-    color1, color2, hue1, hue2, min_value, max_value = get_colors_and_ranges(pd_series, max_value_w_gs)
+    color1, color2, hue1, hue2, min_value, max_value = get_colors_and_ranges(pd_series.name, all_values)
 
     cm = sns.diverging_palette(hue1, hue2, sep=50, l=80, n=15, s=90, as_cmap=True)
     norm = pltc.Normalize(min_value, max_value)
@@ -258,10 +279,10 @@ def create_metrics_table(pd_metrics, labels):
     rank_independent_metrics = [c.UNIFRAC, c.UNW_UNIFRAC]
     all_metrics = [presence_metrics, estimates_metrics, alpha_diversity_metics]
 
-    presence__metrics_label = 'Presence/absence of taxa'
+    presence_metrics_label = 'Presence/absence of taxa'
     estimates_metrics_label = 'Abundance estimates'
     alpha_diversity_metics = 'Alpha diversity'
-    all_metrics_labels = [presence__metrics_label, estimates_metrics_label, alpha_diversity_metics]
+    all_metrics_labels = [presence_metrics_label, estimates_metrics_label, alpha_diversity_metics]
 
     styles = [{'selector': 'td', 'props': [('width', '70pt')]},
               {'selector': 'th', 'props': [('width', '70pt'), ('text-align', 'left')]},
@@ -311,7 +332,7 @@ def create_metrics_table(pd_metrics, labels):
                         this_style = styles
                     else:
                         this_style = styles_hidden_thead
-                    if metrics_label == presence__metrics_label:
+                    if metrics_label == presence_metrics_label or metrics_label == estimates_metrics_label:
                         html += mydf_metrics.style.apply(get_heatmap_colors, axis=1).set_precision(3).set_table_styles(this_style).render()
                     else:
                         html += mydf_metrics.style.set_precision(3).set_table_styles(this_style).render()
@@ -350,10 +371,10 @@ def create_plots_html(output_dir):
     message_no_spdplot = 'Spider plots require at least 3 profiles.'
 
     text = '<img src="spider_plot.png" />' if os.path.exists(os.path.join(output_dir, 'spider_plot.png')) else message_no_spdplot
-    plot1 = Panel(child=Div(text=text), title='Spider plots (1)', width=780)
+    plot1 = Panel(child=Div(text=text), title='Relative performance', width=780)
 
     text = '<img src="spider_plot_recall_precision.png" />' if os.path.exists(os.path.join(output_dir, 'spider_plot_recall_precision.png')) else message_no_spdplot
-    plot2 = Panel(child=Div(text=text), title='Spider plots (2)')
+    plot2 = Panel(child=Div(text=text), title='Absolute performance')
 
     plot3 = Panel(child=Div(text='<img src="plot_shannon.png" />'), title='Shannon')
     tabs_plots = Tabs(tabs=[plot1, plot2, plot3], width=780, css_classes=['bk-tabs-margin'])

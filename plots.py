@@ -198,9 +198,10 @@ def plot_all(pd_metrics, labels, output_dir):
                 grid_points=[0.2, 0.4, 0.6, 0.8, 1.0],
                 fill=True)
 
+    # compute average shannon for gold standard
     pd_shannon_equit = pd_metrics[pd_metrics['metric'] == c.SHANNON_EQUIT]
     table1 = pd_shannon_equit[pd_shannon_equit['tool'] == c.GS][['rank', 'value']]
-    rank_to_shannon_gs = table1.set_index('rank').T.to_dict('records')
+    rank_to_shannon_gs = table1.groupby('rank').mean().T.to_dict('records')
 
     tool_to_rank_to_shannon = defaultdict(dict)
     for (rank, tool), g in pd_grouped.groupby(['rank', 'tool']):
