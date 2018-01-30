@@ -26,9 +26,7 @@ def highscore_table(metrics, useranks=['phylum', 'class', 'order', 'family', 'ge
     -------
     Pandas.DataFrame holding a high scoring table as in Figure 3c.
     """
-    # assume for a second that we could handle multiple goldstandard profiles
     pd_metrics = metrics.copy()
-    pd_metrics['complexity'] = 'dummy'
     pd_metrics.loc[pd_metrics[pd.isnull(pd_metrics['rank'])].index, 'rank'] = 'rank independent'
 
     sort_ascendingly = {c.L1NORM: True, c.UNIFRAC: True,
@@ -39,7 +37,7 @@ def highscore_table(metrics, useranks=['phylum', 'class', 'order', 'family', 'ge
 
     # collecting rank scores
     posresults = []
-    for (metric, complexity, rank), g in pd_metrics.groupby(['metric', 'complexity', 'rank']):
+    for (metric, sample, rank), g in pd_metrics.groupby(['metric', 'sample', 'rank']):
         if metric in sort_ascendingly:
             if ((rank in useranks) and (metric != c.UNIFRAC)) or ((rank == 'rank independent') and (metric == c.UNIFRAC)):
                 res = g.groupby('tool').sum().sort_values('value', ascending=sort_ascendingly[metric])
@@ -48,12 +46,11 @@ def highscore_table(metrics, useranks=['phylum', 'class', 'order', 'family', 'ge
                 for m in set(pd_metrics['tool'].unique()) - set(res.index):
                     res.loc[m, 'position'] = worstpos
                 res['metric'] = metric
-                res['complexity'] = complexity
+                res['sample'] = sample
                 res['rank'] = rank
                 posresults.append(res)
     posresults = pd.concat(posresults)
 
-    # TODO:
     return posresults.groupby(['metric', 'tool'])['position'].sum().to_frame()
 
     # reformat like Figure 3c
