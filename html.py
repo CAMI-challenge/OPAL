@@ -19,7 +19,7 @@ from version import __version__
 
 from bokeh.plotting import figure
 from bokeh.layouts import column, row
-from bokeh.models.widgets import TableColumn, Slider, Div, Select, Panel, Tabs
+from bokeh.models.widgets import TableColumn, Slider, Div, Select, Panel, Tabs, CheckboxGroup
 from bokeh.models import (DataTable,
                           CustomJS)
 from bokeh.embed import components
@@ -90,6 +90,7 @@ def get_rank_to_sample_pd(pd_metrics):
                 pd_mean_over_samples_str.set_value(index, df_columns[j], "{}".format(mean_value))
             else:
                 sem_value = '{:>.{precision}g}'.format(sem_value, precision=3)
+                sem_value = '<div class="tooltip tooltip-sem">{}<span class="tooltiptext">standard error: {}</span></div>'.format(sem_value, sem_value)
                 pd_mean_over_samples_str.set_value(index, df_columns[j], "{} ({})".format(mean_value, sem_value))
     pd_mean_over_samples_str['sample'] = '(average over samples)'
     pd_mean_over_samples_str = pd_mean_over_samples_str.reset_index().set_index(['rank', 'tool', 'sample'])
@@ -376,7 +377,24 @@ def create_plots_html(output_dir):
     text = '<img src="spider_plot_recall_precision.png" />' if os.path.exists(os.path.join(output_dir, 'spider_plot_recall_precision.png')) else message_no_spdplot
     plot2 = Panel(child=Div(text=text), title='Absolute performance')
 
-    plot3 = Panel(child=Div(text='<img src="plot_shannon.png" />'), title='Shannon')
+    img_shannon = '<img src="plot_shannon.png" />'
+    img_shannon_diff = '<img src="plot_shannon_diff.png" />'
+    div_plot_shannon = Div(text=img_shannon)
+    source = ColumnDataSource(data=dict(active=[img_shannon, img_shannon_diff]))
+    checkbox_callback = CustomJS(args=dict(source=source), code="""
+        if(this.active.length > 0) {
+            div_plot_shannon.text = source.data['active'][1];
+        } else {
+            div_plot_shannon.text = source.data['active'][0];
+        }
+    """)
+    checkbox_group = CheckboxGroup(labels=["Absolute differences to gold standard"], active=[], width=300, css_classes=['bk-checkbox-shannon'])
+    checkbox_group.js_on_click(checkbox_callback)
+    checkbox_callback.args["div_plot_shannon"] = div_plot_shannon
+
+    shannon_column = column(checkbox_group, div_plot_shannon, responsive=True, css_classes=['bk-shannon-plots'])
+
+    plot3 = Panel(child=shannon_column, title='Shannon')
     tabs_plots = Tabs(tabs=[plot1, plot2, plot3], width=780, css_classes=['bk-tabs-margin'])
     return tabs_plots
 
@@ -414,12 +432,26 @@ def create_html(pd_rankings, pd_metrics, labels, output_dir):
                 .bk-tabs-margin{margin-top: 20px !important;}
                 .bk-root {display: flex; justify-content: center;}
                 .bk-padding-top {padding-top: 10px;}
+                .bk-shannon-plots > div:first-child {
+                    padding-bottom: 0px;
+                    padding-left: 20px;
+                    padding-top: 14px;
+                }
+                .bk-shannon-plots > div:last-child {
+                    padding-top: 0px;
+                }
+                .bk-checkbox-shannon input[type="checkbox"] {
+                    margin: 2px 0 0;
+                } 
                 html {overflow: -moz-scrollbars-vertical; overflow-y: scroll;}
                 .tooltip {
                     position: relative;
                     display: inline-block;
                     border-bottom: 1px dashed lightgray;
                     cursor: help;
+                }
+                .tooltip-sem {
+                    border-bottom: 1px dotted black;
                 }
                 .tooltip .tooltiptext {
                     visibility: hidden;

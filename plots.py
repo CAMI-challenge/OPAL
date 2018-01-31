@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import pandas as pd
 import numpy as np
 from collections import defaultdict
@@ -25,8 +26,16 @@ def create_colors_list():
     return colors_list
 
 
-def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir):
+def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir, file_name):
     colors_list = create_colors_list()
+
+    if rank_to_shannon_gs is None:
+        # skip color of gold standard, if not present
+        colors_list = colors_list[1:]
+        ylabel = 'Shannon equitability (absolute diff. to gold standard)'
+    else:
+        labels = ['Gold standard'] + labels
+        ylabel = 'Shannon equitability'
 
     fig, axs = plt.subplots(figsize=(6, 5))
 
@@ -36,7 +45,7 @@ def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir):
     # turn on grid
     axs.grid(which='major', linestyle='-', linewidth='0.5', color='lightgrey')
 
-    for i, rank_to_shannon in enumerate(rank_to_shannon_gs + rank_to_shannon_list):
+    for i, rank_to_shannon in enumerate(rank_to_shannon_gs + rank_to_shannon_list if rank_to_shannon_gs is not None else rank_to_shannon_list):
         x = []
         y = []
         for j, rank in enumerate(c.ALL_RANKS, start=1):
@@ -48,11 +57,11 @@ def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir):
     axs.set_xticklabels([''] + c.ALL_RANKS)
     plt.setp(axs.get_xticklabels(), fontsize=9, rotation=25)
 
-    axs.set_ylabel('Shannon equitability')
+    axs.set_ylabel(ylabel)
 
-    lgd = plt.legend(['Gold standard'] + labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handlelength=0, frameon=False)
-    fig.savefig(output_dir + '/plot_shannon.pdf', dpi=100, format='pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')
-    fig.savefig(output_dir + '/plot_shannon.png', dpi=100, format='png', bbox_extra_artists=(lgd,), bbox_inches='tight')
+    lgd = plt.legend(labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handlelength=0, frameon=False)
+    fig.savefig(os.path.join(output_dir, file_name + '.pdf'), dpi=100, format='pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')
+    fig.savefig(os.path.join(output_dir, file_name + '.png'), dpi=100, format='png', bbox_extra_artists=(lgd,), bbox_inches='tight')
 
 
 def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_name, colors, grid_points=None, fill=False):
@@ -208,8 +217,20 @@ def plot_all(pd_metrics, labels, output_dir):
         if tool == c.GS or rank == 'rank independent':
             continue
         tool_to_rank_to_shannon[tool][rank] = g[c.SHANNON_EQUIT].values[0] if len(g[c.SHANNON_EQUIT].values) > 0 else None
-    tool_to_rank_to_shannon = [tool_to_rank_to_shannon[label] for label in labels]
 
-    plot_shannon(tool_to_rank_to_shannon, rank_to_shannon_gs, labels, output_dir)
+    # compute differences between each tool and gold standard
+    tool_to_rank_to_shannon_difference = defaultdict(dict)
+
+    for tool in tool_to_rank_to_shannon.keys():
+        for rank in tool_to_rank_to_shannon[tool].keys():
+            if rank in rank_to_shannon_gs[0]:
+                tool_to_rank_to_shannon_difference[tool][rank] = abs(rank_to_shannon_gs[0][rank] - tool_to_rank_to_shannon[tool][rank])
+
+    # convert to list of dictionaries
+    tool_to_rank_to_shannon = [tool_to_rank_to_shannon[label] for label in labels]
+    tool_to_rank_to_shannon_difference = [tool_to_rank_to_shannon_difference[label] for label in labels]
+
+    plot_shannon(tool_to_rank_to_shannon, rank_to_shannon_gs, labels, output_dir, 'plot_shannon')
+    plot_shannon(tool_to_rank_to_shannon_difference, None, labels, output_dir, 'plot_shannon_diff')
 
     # pl.plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir)
