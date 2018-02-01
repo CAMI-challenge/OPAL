@@ -143,7 +143,7 @@ tox
 
 # Citation
 
-Most metrics implemented in OPAL were used and described in the CAMI manuscript, please cite:
-* Sczyrba*, Hofmann*, Belmann*, et al. (2017). **Critical Assessment of Metagenome Interpretation—a benchmark of metagenomics software.** *Nature Methods*, 14, 11:1063–1071. doi:[10.1038/nmeth.4458](https://doi.org/10.1038/nmeth.4458)
+Most metrics implemented in OPAL were used and described in the CAMI manuscript. Please cite:
+* Sczyrba, Hofmann, Belmann, et al. (2017). **Critical Assessment of Metagenome Interpretation—a benchmark of metagenomics software.** *Nature Methods*, 14, 11:1063–1071. doi:[10.1038/nmeth.4458](https://doi.org/10.1038/nmeth.4458)
 
 (A stand-alone manuscript describing the full scope of OPAL is currently in preparation.)
