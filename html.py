@@ -208,14 +208,16 @@ def get_colors_and_ranges(name, all_values):
     color2 = 'red'
     hue1 = 12
     hue2 = 240
-    if name == c.PRECISION or name == c.RECALL or name == c.F1_SCORE or name == c.JACCARD or name == c.BRAY_CURTIS:
+    if name == c.PRECISION or name == c.RECALL or name == c.F1_SCORE or name == c.JACCARD:
         return color1, color2, hue1, hue2, 0, 1
     if name == c.FP or name == c.FN or name == c.UNIFRAC or name == c.UNW_UNIFRAC:
         return color2, color1, hue2, hue1, 0, max(all_values)
     if name == c.TP:
         return color1, color2, hue1, hue2, 0, max(all_values)
     if name == c.L1NORM:
-        return color1, color2, hue1, hue2, 0, 2
+        return color2, color1, hue2, hue1, 0, 2
+    if name == c.BRAY_CURTIS:
+        return color2, color1, hue2, hue1, 0, 1
     return color1, color2, hue1, hue2, max(all_values), min(all_values)
 
 
