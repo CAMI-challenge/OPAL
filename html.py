@@ -7,13 +7,14 @@ import numpy as np
 import math
 import re
 from jinja2 import Template
+from statistics import median
 
 import matplotlib
 matplotlib.use('Agg')
 import seaborn as sns
 import matplotlib.pyplot as pltx
-import matplotlib.colors as pltc
 from matplotlib.colors import rgb2hex
+from matplotlib.colors import Normalize
 
 from version import __version__
 
@@ -87,7 +88,7 @@ def get_rank_to_sample_pd(pd_metrics):
             mean_value = '{:>.{precision}g}'.format(pd_mean_over_samples.get_value(index, df_columns[j]), precision=3)
             # if standard error is nan because there is only one sample, then just copy mean
             if np.isnan(sem_value):
-                pd_mean_over_samples_str.set_value(index, df_columns[j], "{}".format(mean_value))
+                pd_mean_over_samples_str.set_value(index, df_columns[j], mean_value)
             else:
                 sem_value = '{:>.{precision}g}'.format(sem_value, precision=3)
                 sem_value = '<div class="tooltip tooltip-sem">{}<span class="tooltiptext">standard error: {}</span></div>'.format(sem_value, sem_value)
@@ -203,17 +204,19 @@ def create_rankings_html(pd_rankings):
     return col_rankings
 
 
-def get_colors_and_ranges(name, all_values):
+def get_colors_and_ranges(name, all_values, df_metrics):
     color1 = 'dodgerblue'
     color2 = 'red'
     hue1 = 12
     hue2 = 240
     if name == c.PRECISION or name == c.RECALL or name == c.F1_SCORE or name == c.JACCARD:
         return color1, color2, hue1, hue2, 0, 1
-    if name == c.FP or name == c.FN or name == c.UNIFRAC or name == c.UNW_UNIFRAC:
+    if name == c.FP or name == c.UNIFRAC or name == c.UNW_UNIFRAC:
         return color2, color1, hue2, hue1, 0, max(all_values)
     if name == c.TP:
         return color1, color2, hue1, hue2, 0, max(all_values)
+    if name == c.FN:
+        return color2, color1, hue2, hue1, 0, pd.to_numeric(df_metrics.loc[c.TP, ]).max()
     if name == c.L1NORM:
         return color2, color1, hue2, hue1, 0, 2
     if name == c.BRAY_CURTIS:
@@ -221,7 +224,17 @@ def get_colors_and_ranges(name, all_values):
     return color1, color2, hue1, hue2, max(all_values), min(all_values)
 
 
-def get_heatmap_colors(pd_series):
+class MidpointNormalize(Normalize):
+    def __init__(self, vmin=None, vmax=None, midpoint=None, clip=False):
+        self.midpoint = midpoint
+        Normalize.__init__(self, vmin, vmax, clip)
+
+    def __call__(self, value, clip=None):
+        x, y = [self.vmin, self.midpoint, self.vmax], [0, 0.5, 1]
+        return np.ma.masked_array(np.interp(value, x, y))
+
+
+def get_heatmap_colors(pd_series, **args):
     values = pd_series.tolist()
 
     # convert "<mean> (<standard error>)" to float of <mean>
@@ -241,10 +254,10 @@ def get_heatmap_colors(pd_series):
         red = 'background-color: red'
         return [red for x in values] if not dropped_gs else [''] + [red for x in values]
 
-    color1, color2, hue1, hue2, min_value, max_value = get_colors_and_ranges(pd_series.name, all_values)
+    color1, color2, hue1, hue2, min_value, max_value = get_colors_and_ranges(pd_series.name, all_values, args["df_metrics"])
 
     cm = sns.diverging_palette(hue1, hue2, sep=50, l=80, n=15, s=90, as_cmap=True)
-    norm = pltc.Normalize(min_value, max_value)
+    norm = MidpointNormalize(vmin=min_value, vmax=max_value, midpoint=median(all_values))
 
     normed = norm([round(x, 3) if not math.isnan(x) else max_value for x in values])
     heatmap_colors = [rgb2hex(x) for x in pltx.cm.get_cmap(cm)(normed)]
@@ -336,7 +349,7 @@ def create_metrics_table(pd_metrics, labels):
                     else:
                         this_style = styles_hidden_thead
                     if metrics_label == presence_metrics_label or metrics_label == estimates_metrics_label:
-                        html += mydf_metrics.style.apply(get_heatmap_colors, axis=1).set_precision(3).set_table_styles(this_style).render()
+                        html += mydf_metrics.style.apply(get_heatmap_colors, df_metrics=mydf_metrics, axis=1).set_precision(3).set_table_styles(this_style).render()
                     else:
                         html += mydf_metrics.style.set_precision(3).set_table_styles(this_style).render()
                     if rank == 'rank independent':
@@ -364,7 +377,7 @@ def create_metrics_table(pd_metrics, labels):
     select_rank_sample_callback.args["select_sample"] = select_sample
     select_rank_sample_callback.args["mytable1"] = mytable1
 
-    heatmap_legend = '<img src="heatmap_bar.png" /><div style="text-align:left;font-size: 11px;">Worst<span style="float:right;">Best</span></div>'
+    heatmap_legend = '<img src="heatmap_bar.png" /><div style="text-align:left;font-size: 11px;">Worst<span style="float:right;">Best</span><span style="margin-right: 36px;float:right;">Median</span></div>'
     heatmap_legend_div = Div(text=heatmap_legend, style={"width": "155px", "margin-bottom": "-10px"})
     # <input type="checkbox" id="expand-toggle" /><label for="expand-toggle" id="expand-btn">Toggle</label>
     return select_sample, select_rank, heatmap_legend_div, mytable1
