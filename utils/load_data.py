@@ -207,9 +207,11 @@ def open_profile(file_path, normalize):
     return samples_list
 
 
-def get_rank_to_taxid_to_percentage(profile):
+def get_rank_to_taxid_to_percentage(profile, rank=None):
     rank_to_taxid_to_percentage = {}
     for prediction in profile:
+        if rank and prediction.rank != rank:
+            continue
         if prediction.rank not in rank_to_taxid_to_percentage:
             rank_to_taxid_to_percentage[prediction.rank] = {}
         rank_to_taxid_to_percentage[prediction.rank][prediction.taxid] = prediction.percentage

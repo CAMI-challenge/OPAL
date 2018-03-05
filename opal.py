@@ -109,17 +109,29 @@ def compute_metrics(sample_metadata, profile, gs_pf_profile, gs_rank_to_taxid_to
     return unifrac, shannon, l1norm, binary_metrics, braycurtis
 
 
-def evaluate(gold_standard_file, profiles_files, labels, no_normalization):
+def load_profiles(gold_standard_file, profiles_files, no_normalization):
     normalize = False if no_normalization else True
-    gs_samples_list = load_data.open_profile(gold_standard_file, normalize)
-    gs_id_to_rank_to_taxid_to_percentage = {}
-    gs_id_to_pf_profile = {}
-    pd_metrics = pd.DataFrame()
-    sample_ids_list = []
 
+    gs_samples_list = load_data.open_profile(gold_standard_file, normalize)
+    sample_ids_list = []
     for sample in gs_samples_list:
         sample_id, sample_metadata, profile = sample
         sample_ids_list.append(sample_id)
+
+    profiles_list_to_samples_list = []
+    for profile_file in profiles_files:
+        profiles_list_to_samples_list.append(load_data.open_profile(profile_file, normalize))
+
+    return sample_ids_list, gs_samples_list, profiles_list_to_samples_list
+
+
+def evaluate(gs_samples_list, profiles_list_to_samples_list, labels):
+    gs_id_to_rank_to_taxid_to_percentage = {}
+    gs_id_to_pf_profile = {}
+    pd_metrics = pd.DataFrame()
+
+    for sample in gs_samples_list:
+        sample_id, sample_metadata, profile = sample
         gs_id_to_rank_to_taxid_to_percentage[sample_id] = load_data.get_rank_to_taxid_to_percentage(profile)
         gs_id_to_pf_profile[sample_id] = PF.Profile(sample_metadata=sample_metadata, profile=profile)
         unifrac, shannon, l1norm, binary_metrics, braycurtis = compute_metrics(sample_metadata,
@@ -130,8 +142,7 @@ def evaluate(gold_standard_file, profiles_files, labels, no_normalization):
         pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, c.GS, braycurtis, shannon, binary_metrics, l1norm, unifrac)], ignore_index=True)
 
     one_profile_assessed = False
-    for profile_file, label in zip(profiles_files, labels):
-        samples_list = load_data.open_profile(profile_file, normalize)
+    for samples_list, label in zip(profiles_list_to_samples_list, labels):
         for sample in samples_list:
             sample_id, sample_metadata, profile = sample
 
@@ -154,7 +165,7 @@ def evaluate(gold_standard_file, profiles_files, labels, no_normalization):
     if not one_profile_assessed:
         sys.exit("No profile could be evaluated.")
 
-    return pd_metrics, sample_ids_list
+    return pd_metrics
 
 
 def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac):
@@ -234,11 +245,18 @@ def main():
     labels = get_labels(args.labels, args.profiles_files)
     output_dir = os.path.abspath(args.output_dir)
     make_sure_path_exists(output_dir)
-    pd_metrics, sample_ids_list = evaluate(args.gold_standard_file,
-                                           args.profiles_files,
-                                           labels,
-                                           args.no_normalization)
+
+    sample_ids_list, gs_samples_list, profiles_list_to_samples_list = load_profiles(args.gold_standard_file,
+                                                                                    args.profiles_files,
+                                                                                    args.no_normalization)
+
+    pd_metrics = evaluate(gs_samples_list,
+                          profiles_list_to_samples_list,
+                          labels)
     pd_metrics[['tool', 'rank', 'metric', 'sample', 'value']].fillna('na').to_csv(os.path.join(output_dir, "results.tsv"), sep='\t', index=False)
+
+    pl.plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_ids_list, labels, output_dir)
+
     print_by_tool(output_dir, pd_metrics)
     print_by_rank(output_dir, labels, pd_metrics)
     pl.plot_all(pd_metrics, labels, output_dir)

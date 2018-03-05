@@ -3,6 +3,7 @@
 import os
 import pandas as pd
 import numpy as np
+import itertools
 from collections import defaultdict
 from collections import OrderedDict
 import matplotlib
@@ -10,8 +11,10 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 from mpl_toolkits.mplot3d import Axes3D
+import braycurtis as bc
 from utils import spider_plot_functions as spl
 from utils import constants as c
+from utils import load_data
 
 
 def create_colors_list():
@@ -24,6 +27,62 @@ def create_colors_list():
     for color in plt.cm.Set3(np.linspace(0, 1, 12)):
         colors_list.append(tuple(color))
     return colors_list
+
+
+def do_scatter_plot(profile_values, gs_values, output_dir, label):
+    fig, axs = plt.subplots(figsize=(6, 5))
+
+    # force axes to be from 0 to 100%
+    axs.set_xlim([0.0, 1.0])
+    axs.set_ylim([0.0, 1.0])
+
+    # turn on grid
+    axs.grid(which='major', linestyle='-', linewidth='0.5', color='lightgrey')
+
+    axs.scatter(profile_values, gs_values, alpha=0.5)
+    axs.set_xlabel(label)
+    axs.set_ylabel('Gold standard')
+    axs.set_title(c.BRAY_CURTIS)
+
+    fig.savefig(os.path.join(output_dir, 'beta_diversity_bc_' + label + '.pdf'), dpi=100, format='pdf', bbox_inches='tight')
+
+
+def plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_ids_list, labels, output_dir):
+    if len(sample_ids_list) < 2:
+        return
+
+    gs_sampleid_to_rank_to_taxid_to_percentage = {}
+    for sample in gs_samples_list:
+        sample_id, sample_metadata, profile = sample
+        gs_sampleid_to_rank_to_taxid_to_percentage[sample_id] = load_data.get_rank_to_taxid_to_percentage(profile, c.SPECIES)
+
+    sample_ids_combinations = list(itertools.combinations(sample_ids_list, 2))
+    gs_braycurtis = {}
+    # Compute Bray-Curtis for all combinations of samples
+    for sample1, sample2 in sample_ids_combinations:
+        gs_braycurtis[(sample1, sample2)] = bc.braycurtis(gs_sampleid_to_rank_to_taxid_to_percentage[sample1], gs_sampleid_to_rank_to_taxid_to_percentage[sample2])[c.SPECIES]
+
+    profile_sampleid_to_rank_to_taxid_to_percentage = {}
+    for profile, label in zip(profiles_list_to_samples_list, labels):
+        profile_sampleid_to_rank_to_taxid_to_percentage[label] = {}
+        for sample in profile:
+            sample_id, sample_metadata, profile = sample
+            if not sample_id in gs_sampleid_to_rank_to_taxid_to_percentage:
+                continue
+            profile_sampleid_to_rank_to_taxid_to_percentage[label][sample_id] = load_data.get_rank_to_taxid_to_percentage(profile, c.SPECIES)
+
+        profile_braycurtis = {}
+        # Compute Bray-Curtis for all combinations of samples
+        for sample1, sample2 in sample_ids_combinations:
+            if sample1 in profile_sampleid_to_rank_to_taxid_to_percentage[label] and sample2 in profile_sampleid_to_rank_to_taxid_to_percentage[label]:
+                profile_braycurtis[(sample1, sample2)] = bc.braycurtis(profile_sampleid_to_rank_to_taxid_to_percentage[label][sample1], profile_sampleid_to_rank_to_taxid_to_percentage[label][sample2])[c.SPECIES]
+
+        gs_values = []
+        profile_values = []
+        for (sample1, sample2), value in profile_braycurtis.items():
+            gs_values.append(gs_braycurtis[(sample1, sample2)])
+            profile_values.append(profile_braycurtis[(sample1, sample2)])
+        do_scatter_plot(profile_values, gs_values, output_dir, label)
 
 
 def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir, file_name):
@@ -106,8 +165,8 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
 
     ax = axes[0, 0]
     ax.legend(metrics, loc=(1.68 - 0.353 * len(metrics), 1.3), labelspacing=0.1, fontsize='small', ncol=len(metrics))
-    fig.savefig(output_dir + '/' + file_name + '.pdf', dpi=100, format='pdf', bbox_inches='tight')
-    fig.savefig(output_dir + '/' + file_name + '.png', dpi=100, format='png', bbox_inches='tight')
+    fig.savefig(os.path.join(output_dir, file_name + '.pdf'), dpi=100, format='pdf', bbox_inches='tight')
+    fig.savefig(os.path.join(output_dir, file_name + '.png'), dpi=100, format='png', bbox_inches='tight')
 
 
 def plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir):
@@ -141,8 +200,8 @@ def plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir):
 
     plt.legend(handles=legend_handles, loc=2)
 
-    fig.savefig(output_dir + '/braycurtis_l1norm.pdf', dpi=100, format='pdf', bbox_inches='tight')
-    fig.savefig(output_dir + '/braycurtis_l1norm.png', dpi=100, format='png', bbox_inches='tight')
+    fig.savefig(os.path.join(output_dir, 'braycurtis_l1norm.pdf'), dpi=100, format='pdf', bbox_inches='tight')
+    fig.savefig(os.path.join(output_dir, 'braycurtis_l1norm.png'), dpi=100, format='png', bbox_inches='tight')
 
 
 def plot_all(pd_metrics, labels, output_dir):
