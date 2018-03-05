@@ -115,9 +115,11 @@ def evaluate(gold_standard_file, profiles_files, labels, no_normalization):
     gs_id_to_rank_to_taxid_to_percentage = {}
     gs_id_to_pf_profile = {}
     pd_metrics = pd.DataFrame()
+    sample_ids_list = []
 
     for sample in gs_samples_list:
         sample_id, sample_metadata, profile = sample
+        sample_ids_list.append(sample_id)
         gs_id_to_rank_to_taxid_to_percentage[sample_id] = load_data.get_rank_to_taxid_to_percentage(profile)
         gs_id_to_pf_profile[sample_id] = PF.Profile(sample_metadata=sample_metadata, profile=profile)
         unifrac, shannon, l1norm, binary_metrics, braycurtis = compute_metrics(sample_metadata,
@@ -152,7 +154,7 @@ def evaluate(gold_standard_file, profiles_files, labels, no_normalization):
     if not one_profile_assessed:
         sys.exit("No profile could be evaluated.")
 
-    return pd_metrics
+    return pd_metrics, sample_ids_list
 
 
 def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac):
@@ -232,17 +234,17 @@ def main():
     labels = get_labels(args.labels, args.profiles_files)
     output_dir = os.path.abspath(args.output_dir)
     make_sure_path_exists(output_dir)
-    pd_metrics = evaluate(args.gold_standard_file,
-                          args.profiles_files,
-                          labels,
-                          args.no_normalization)
+    pd_metrics, sample_ids_list = evaluate(args.gold_standard_file,
+                                           args.profiles_files,
+                                           labels,
+                                           args.no_normalization)
     pd_metrics[['tool', 'rank', 'metric', 'sample', 'value']].fillna('na').to_csv(os.path.join(output_dir, "results.tsv"), sep='\t', index=False)
     print_by_tool(output_dir, pd_metrics)
     print_by_rank(output_dir, labels, pd_metrics)
     pl.plot_all(pd_metrics, labels, output_dir)
 
     pd_rankings = rk.highscore_table(pd_metrics)
-    html.create_html(pd_rankings, pd_metrics, labels, output_dir)
+    html.create_html(pd_rankings, pd_metrics, labels, sample_ids_list, output_dir)
 
 
 if __name__ == "__main__":

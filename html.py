@@ -216,7 +216,11 @@ def get_colors_and_ranges(name, all_values, df_metrics):
     if name == c.TP:
         return color1, color2, hue1, hue2, 0, max(all_values)
     if name == c.FN:
-        return color2, color1, hue2, hue1, 0, pd.to_numeric(df_metrics.loc[c.TP, ]).max()
+        fn_values = df_metrics.loc[c.TP, ].values
+        # convert "<mean> (<standard error>)" to float of <mean>
+        if len(fn_values) > 0 and isinstance(fn_values[0], str):
+            fn_values = [float(x.split(' ')[0]) for x in fn_values]
+        return color2, color1, hue2, hue1, 0, max(fn_values)
     if name == c.L1NORM:
         return color2, color1, hue2, hue1, 0, 2
     if name == c.BRAY_CURTIS:
@@ -250,14 +254,16 @@ def get_heatmap_colors(pd_series, **args):
     if len(values) == 0:
         return ['']
 
-    if math.isnan(min(values)):
+    notnan_values = [x for x in values if isinstance(x, (float, int)) and not np.isnan(x)]
+    notnan_all_values = [x for x in all_values if isinstance(x, (float, int)) and not np.isnan(x)]
+    if len(notnan_values) == 0:
         red = 'background-color: red'
         return [red for x in values] if not dropped_gs else [''] + [red for x in values]
 
     color1, color2, hue1, hue2, min_value, max_value = get_colors_and_ranges(pd_series.name, all_values, args["df_metrics"])
 
     cm = sns.diverging_palette(hue1, hue2, sep=50, l=80, n=15, s=90, as_cmap=True)
-    norm = MidpointNormalize(vmin=min_value, vmax=max_value, midpoint=median(all_values))
+    norm = MidpointNormalize(vmin=min_value, vmax=max_value, midpoint=median(notnan_all_values))
 
     normed = norm([round(x, 3) if not math.isnan(x) else max_value for x in values])
     heatmap_colors = [rgb2hex(x) for x in pltx.cm.get_cmap(cm)(normed)]
@@ -278,15 +284,10 @@ def get_heatmap_colors(pd_series, **args):
         return return_colors
 
 
-def create_metrics_table(pd_metrics, labels):
+def create_metrics_table(pd_metrics, labels, sample_ids_list):
     rank_to_sample_pd = get_rank_to_sample_pd(pd_metrics)
 
-    set_sample_ids = set()
-    for rank in rank_to_sample_pd:
-        for sample_id in rank_to_sample_pd[rank]:
-            set_sample_ids.add(sample_id)
-    all_sample_ids = list(set_sample_ids)
-    all_sample_ids.remove('(average over samples)')
+    all_sample_ids = sample_ids_list[:]
     all_sample_ids.insert(0, '(average over samples)')
 
     presence_metrics = [c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD]
@@ -300,8 +301,8 @@ def create_metrics_table(pd_metrics, labels):
     alpha_diversity_metics = 'Alpha diversity'
     all_metrics_labels = [presence_metrics_label, estimates_metrics_label, alpha_diversity_metics]
 
-    styles = [{'selector': 'td', 'props': [('width', '70pt')]},
-              {'selector': 'th', 'props': [('width', '70pt'), ('text-align', 'left')]},
+    styles = [{'selector': 'td', 'props': [('width', '77pt')]},
+              {'selector': 'th', 'props': [('width', '77pt'), ('text-align', 'left')]},
               {'selector': 'th:nth-child(1)', 'props': [('width', '120pt'), ('font-weight', 'normal')]},
               {'selector': '', 'props': [('width', 'max-content'), ('width', '-moz-max-content'), ('border-top', '1px solid lightgray'), ('border-spacing', '0px')]},
               {'selector': 'expand-toggle:checked ~ * .data', 'props': [('background-color', 'white !important')]}]
@@ -414,12 +415,12 @@ def create_plots_html(output_dir):
     return tabs_plots
 
 
-def create_html(pd_rankings, pd_metrics, labels, output_dir):
+def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, output_dir):
     col_rankings = create_rankings_html(pd_rankings)
 
     create_heatmap_bar(output_dir)
 
-    select_sample, select_rank, heatmap_legend_div, mytable1 = create_metrics_table(pd_metrics, labels)
+    select_sample, select_rank, heatmap_legend_div, mytable1 = create_metrics_table(pd_metrics, labels, sample_ids_list)
 
     tabs_plots = create_plots_html(output_dir)
 
