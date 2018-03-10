@@ -250,9 +250,12 @@ def main():
                                                                                     args.profiles_files,
                                                                                     args.no_normalization)
 
+    pl.plot_samples_hist(gs_samples_list, sample_ids_list, output_dir)
+
     pd_metrics = evaluate(gs_samples_list,
                           profiles_list_to_samples_list,
                           labels)
+
     pd_metrics[['tool', 'rank', 'metric', 'sample', 'value']].fillna('na').to_csv(os.path.join(output_dir, "results.tsv"), sep='\t', index=False)
 
     pl.plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_ids_list, labels, output_dir)

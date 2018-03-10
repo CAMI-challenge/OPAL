@@ -29,6 +29,32 @@ def create_colors_list():
     return colors_list
 
 
+def plot_samples_hist(gs_samples_list, sample_ids_list, output_dir):
+    df_gs = pd.DataFrame()
+    gs_sampleid_to_rank_to_taxid_to_percentage = {}
+    for sample in gs_samples_list:
+        sample_id, sample_metadata, profile = sample
+        gs_sampleid_to_rank_to_taxid_to_percentage[sample_id] = load_data.get_rank_to_taxid_to_percentage(profile, c.SPECIES)
+        df_gs_sample = pd.DataFrame.from_dict(gs_sampleid_to_rank_to_taxid_to_percentage[sample_id][c.SPECIES], orient='index')
+        df_gs_sample.index.name = 'taxid'
+        df_gs_sample['sample'] = sample_id
+        df_gs_sample.rename(columns={0: 'value'}, inplace=True)
+        df_gs_sample.set_index('sample', append=True, inplace=True)
+        df_gs = pd.concat([df_gs, df_gs_sample])
+    df_gs = df_gs.pivot_table(index=['taxid'], columns='sample', values='value').T
+    df_gs = df_gs.loc[sample_ids_list]
+
+    fig, axs = plt.subplots(figsize=(6, 5))
+    axs.tick_params(axis='x',
+                    which='both',
+                    bottom='off',
+                    top='off',
+                    labelbottom='off')
+    fig = df_gs.plot(kind='bar', ax=axs, stacked=True, legend=False, colormap=plt.get_cmap('gist_rainbow')).get_figure()
+    fig.savefig(os.path.join(output_dir, 'gold_standard.pdf'), dpi=100, format='pdf', bbox_inches='tight')
+    fig.savefig(os.path.join(output_dir, 'gold_standard.png'), dpi=100, format='png', bbox_inches='tight')
+
+
 def do_scatter_plot(profile_values, gs_values, output_dir, label):
     fig, axs = plt.subplots(figsize=(6, 5))
 
