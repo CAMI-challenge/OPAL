@@ -30,32 +30,46 @@ def create_colors_list():
 
 
 def plot_samples_hist(gs_samples_list, sample_ids_list, output_dir):
-    df_gs = pd.DataFrame()
-    gs_sampleid_to_rank_to_taxid_to_percentage = {}
-    for sample in gs_samples_list:
-        sample_id, sample_metadata, profile = sample
-        gs_sampleid_to_rank_to_taxid_to_percentage[sample_id] = load_data.get_rank_to_taxid_to_percentage(profile, c.SPECIES)
-        df_gs_sample = pd.DataFrame.from_dict(gs_sampleid_to_rank_to_taxid_to_percentage[sample_id][c.SPECIES], orient='index')
-        df_gs_sample.index.name = 'taxid'
-        df_gs_sample['sample'] = sample_id
-        df_gs_sample.rename(columns={0: 'value'}, inplace=True)
-        df_gs_sample.set_index('sample', append=True, inplace=True)
-        df_gs = pd.concat([df_gs, df_gs_sample])
-    df_gs = df_gs.pivot_table(index=['taxid'], columns='sample', values='value').T
-    df_gs = df_gs.loc[sample_ids_list]
+    plots_list = []
+    for rank in c.ALL_RANKS:
+        df_gs = pd.DataFrame()
+        gs_sampleid_to_rank_to_taxid_to_percentage = {}
+        for sample in gs_samples_list:
+            sample_id, sample_metadata, profile = sample
+            gs_sampleid_to_rank_to_taxid_to_percentage[sample_id] = load_data.get_rank_to_taxid_to_percentage(profile, rank)
+            if len(gs_sampleid_to_rank_to_taxid_to_percentage[sample_id]) == 0:
+                continue
+            df_gs_sample = pd.DataFrame.from_dict(gs_sampleid_to_rank_to_taxid_to_percentage[sample_id][rank], orient='index')
+            df_gs_sample.index.name = 'taxid'
+            df_gs_sample['Sample'] = sample_id
+            df_gs_sample.rename(columns={0: 'value'}, inplace=True)
+            df_gs_sample.set_index('Sample', append=True, inplace=True)
+            df_gs = pd.concat([df_gs, df_gs_sample])
+        if df_gs.empty:
+            continue
 
-    fig, axs = plt.subplots(figsize=(6, 5))
-    axs.tick_params(axis='x',
-                    which='both',
-                    bottom='off',
-                    top='off',
-                    labelbottom='off')
-    fig = df_gs.plot(kind='bar', ax=axs, stacked=True, legend=False, colormap=plt.get_cmap('gist_rainbow')).get_figure()
-    fig.savefig(os.path.join(output_dir, 'gold_standard.pdf'), dpi=100, format='pdf', bbox_inches='tight')
-    fig.savefig(os.path.join(output_dir, 'gold_standard.png'), dpi=100, format='png', bbox_inches='tight')
+        df_gs = df_gs.pivot_table(index=['taxid'], columns='Sample', values='value').T
+
+        df_gs = df_gs.loc[sample_ids_list]
+
+        fig, axs = plt.subplots(figsize=(6, 5))
+        axs.tick_params(axis='x',
+                        which='both',
+                        bottom='off',
+                        top='off',
+                        labelbottom='off')
+        axs.set_ylabel('Proportions [%]')
+        axs.set_title('Rank: ' + rank)
+        fig_name = os.path.join('gold_standard', rank)
+        fig = df_gs.plot(kind='bar', ax=axs, stacked=True, legend=False, colormap=plt.get_cmap('gist_rainbow')).get_figure()
+        fig.savefig(os.path.join(output_dir, fig_name + '.pdf'), dpi=100, format='pdf', bbox_inches='tight')
+        fig.savefig(os.path.join(output_dir, fig_name + '.png'), dpi=100, format='png', bbox_inches='tight')
+        plt.close(fig)
+        plots_list.append(fig_name)
+    return plots_list
 
 
-def do_scatter_plot(profile_values, gs_values, output_dir, label):
+def do_scatter_plot(profile_values, gs_values, output_dir, rank, label):
     fig, axs = plt.subplots(figsize=(6, 5))
 
     # force axes to be from 0 to 100%
@@ -68,26 +82,39 @@ def do_scatter_plot(profile_values, gs_values, output_dir, label):
     axs.scatter(profile_values, gs_values, alpha=0.5)
     axs.set_xlabel(label)
     axs.set_ylabel('Gold standard')
-    axs.set_title(c.BRAY_CURTIS)
+    axs.set_title(c.BRAY_CURTIS + ' - Rank: ' + rank)
 
-    fig.savefig(os.path.join(output_dir, 'beta_diversity_bc_' + label + '.pdf'), dpi=100, format='pdf', bbox_inches='tight')
+    fig_name = os.path.join("by_tool", label, 'beta_diversity_bc_' + rank)
+    fig.savefig(os.path.join(output_dir, fig_name + '.pdf'), dpi=100, format='pdf', bbox_inches='tight')
+    fig.savefig(os.path.join(output_dir, fig_name + '.png'), dpi=100, format='png', bbox_inches='tight')
+    plt.close(fig)
+    return [fig_name]
 
 
 def plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_ids_list, labels, output_dir):
     if len(sample_ids_list) < 2:
-        return
+        return []
 
     gs_sampleid_to_rank_to_taxid_to_percentage = {}
     for sample in gs_samples_list:
         sample_id, sample_metadata, profile = sample
-        gs_sampleid_to_rank_to_taxid_to_percentage[sample_id] = load_data.get_rank_to_taxid_to_percentage(profile, c.SPECIES)
+        gs_sampleid_to_rank_to_taxid_to_percentage[sample_id] = load_data.get_rank_to_taxid_to_percentage(profile)
 
+    # Gold standard
     sample_ids_combinations = list(itertools.combinations(sample_ids_list, 2))
-    gs_braycurtis = {}
+    gs_sample12_to_rank_to_braycurtis = {}
     # Compute Bray-Curtis for all combinations of samples
     for sample1, sample2 in sample_ids_combinations:
-        gs_braycurtis[(sample1, sample2)] = bc.braycurtis(gs_sampleid_to_rank_to_taxid_to_percentage[sample1], gs_sampleid_to_rank_to_taxid_to_percentage[sample2])[c.SPECIES]
+        gs_sample12_to_rank_to_braycurtis[(sample1, sample2)] = bc.braycurtis(gs_sampleid_to_rank_to_taxid_to_percentage[sample1], gs_sampleid_to_rank_to_taxid_to_percentage[sample2])
+    # Sort by rank
+    gs_rank_to_sample12_to_braycurtis = defaultdict(dict)
+    for sample12, rank_to_braycurtis in gs_sample12_to_rank_to_braycurtis.items():
+        for rank, value in rank_to_braycurtis.items():
+            gs_rank_to_sample12_to_braycurtis[rank][sample12] = value
 
+    plots_list = []
+
+    # Assessed profiles
     profile_sampleid_to_rank_to_taxid_to_percentage = {}
     for profile, label in zip(profiles_list_to_samples_list, labels):
         profile_sampleid_to_rank_to_taxid_to_percentage[label] = {}
@@ -95,20 +122,28 @@ def plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_i
             sample_id, sample_metadata, profile = sample
             if not sample_id in gs_sampleid_to_rank_to_taxid_to_percentage:
                 continue
-            profile_sampleid_to_rank_to_taxid_to_percentage[label][sample_id] = load_data.get_rank_to_taxid_to_percentage(profile, c.SPECIES)
+            profile_sampleid_to_rank_to_taxid_to_percentage[label][sample_id] = load_data.get_rank_to_taxid_to_percentage(profile)
 
-        profile_braycurtis = {}
+        profile_sample12_to_rank_to_braycurtis = {}
         # Compute Bray-Curtis for all combinations of samples
         for sample1, sample2 in sample_ids_combinations:
             if sample1 in profile_sampleid_to_rank_to_taxid_to_percentage[label] and sample2 in profile_sampleid_to_rank_to_taxid_to_percentage[label]:
-                profile_braycurtis[(sample1, sample2)] = bc.braycurtis(profile_sampleid_to_rank_to_taxid_to_percentage[label][sample1], profile_sampleid_to_rank_to_taxid_to_percentage[label][sample2])[c.SPECIES]
+                profile_sample12_to_rank_to_braycurtis[(sample1, sample2)] = bc.braycurtis(profile_sampleid_to_rank_to_taxid_to_percentage[label][sample1], profile_sampleid_to_rank_to_taxid_to_percentage[label][sample2])
+        # Sort by rank
+        profile_rank_to_sample12_to_braycurtis = defaultdict(dict)
+        for sample12, rank_to_braycurtis in profile_sample12_to_rank_to_braycurtis.items():
+            for rank, value in rank_to_braycurtis.items():
+                profile_rank_to_sample12_to_braycurtis[rank][sample12] = value
 
-        gs_values = []
-        profile_values = []
-        for (sample1, sample2), value in profile_braycurtis.items():
-            gs_values.append(gs_braycurtis[(sample1, sample2)])
-            profile_values.append(profile_braycurtis[(sample1, sample2)])
-        do_scatter_plot(profile_values, gs_values, output_dir, label)
+        for rank in c.ALL_RANKS:
+            gs_values = []
+            profile_values = []
+            if rank in gs_rank_to_sample12_to_braycurtis and rank in profile_rank_to_sample12_to_braycurtis:
+                for (sample1, sample2), value in profile_rank_to_sample12_to_braycurtis[rank].items():
+                    gs_values.append(gs_rank_to_sample12_to_braycurtis[rank][(sample1, sample2)])
+                    profile_values.append(profile_rank_to_sample12_to_braycurtis[rank][(sample1, sample2)])
+                plots_list += do_scatter_plot(profile_values, gs_values, output_dir, rank, label)
+    return plots_list
 
 
 def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir, file_name):
@@ -147,12 +182,13 @@ def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir, f
     lgd = plt.legend(labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handlelength=0, frameon=False)
     fig.savefig(os.path.join(output_dir, file_name + '.pdf'), dpi=100, format='pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')
     fig.savefig(os.path.join(output_dir, file_name + '.png'), dpi=100, format='png', bbox_extra_artists=(lgd,), bbox_inches='tight')
+    plt.close(fig)
 
 
 def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_name, colors, grid_points=None, fill=False):
     N = len(labels)
     if N < 3:
-        return
+        return []
     theta = spl.radar_factory(N, frame='polygon')
     fig, axes = plt.subplots(figsize=(9, 9), nrows=2, ncols=3, subplot_kw=dict(projection='radar'))
     fig.subplots_adjust(wspace=0.35, hspace=0.05, top=0.87, bottom=0.3)
@@ -193,6 +229,8 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
     ax.legend(metrics, loc=(1.68 - 0.353 * len(metrics), 1.3), labelspacing=0.1, fontsize='small', ncol=len(metrics))
     fig.savefig(os.path.join(output_dir, file_name + '.pdf'), dpi=100, format='pdf', bbox_inches='tight')
     fig.savefig(os.path.join(output_dir, file_name + '.png'), dpi=100, format='png', bbox_inches='tight')
+    plt.close(fig)
+    return [file_name]
 
 
 def plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir):
@@ -228,6 +266,7 @@ def plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir):
 
     fig.savefig(os.path.join(output_dir, 'braycurtis_l1norm.pdf'), dpi=100, format='pdf', bbox_inches='tight')
     fig.savefig(os.path.join(output_dir, 'braycurtis_l1norm.png'), dpi=100, format='png', bbox_inches='tight')
+    plt.close(fig)
 
 
 def plot_all(pd_metrics, labels, output_dir):
@@ -276,21 +315,21 @@ def plot_all(pd_metrics, labels, output_dir):
                     rank_to_metric_to_toolvalues[rank][metric].append(tool_to_rank_to_metric_to_value[label][rank][metric])
             rank_to_metric_to_toolvalues[rank][c.UNIFRAC].append(tool_to_rank_to_metric_to_value[label]['rank independent'][c.UNIFRAC])
 
-    spider_plot(metrics,
-                present_labels,
-                rank_to_metric_to_toolvalues,
-                output_dir,
-                'spider_plot',
-                ['b', 'g', 'r', 'k', 'm'])
+    plots_list = spider_plot(metrics,
+                             present_labels,
+                             rank_to_metric_to_toolvalues,
+                             output_dir,
+                             'spider_plot',
+                             ['b', 'g', 'r', 'k', 'm'])
 
-    spider_plot([c.RECALL, c.PRECISION],
-                present_labels,
-                rank_to_metric_to_toolvalues,
-                output_dir,
-                'spider_plot_recall_precision',
-                ['r', 'k'],
-                grid_points=[0.2, 0.4, 0.6, 0.8, 1.0],
-                fill=True)
+    plots_list += spider_plot([c.RECALL, c.PRECISION],
+                              present_labels,
+                              rank_to_metric_to_toolvalues,
+                              output_dir,
+                              'spider_plot_recall_precision',
+                              ['r', 'k'],
+                              grid_points=[0.2, 0.4, 0.6, 0.8, 1.0],
+                              fill=True)
 
     # compute average shannon for gold standard
     pd_shannon_equit = pd_metrics[pd_metrics['metric'] == c.SHANNON_EQUIT]
@@ -319,3 +358,4 @@ def plot_all(pd_metrics, labels, output_dir):
     plot_shannon(tool_to_rank_to_shannon_difference, None, labels, output_dir, 'plot_shannon_diff')
 
     # pl.plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir)
+    return plots_list

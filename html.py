@@ -384,13 +384,13 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
     return select_sample, select_rank, heatmap_legend_div, mytable1
 
 
-def create_plots_html(output_dir):
-    message_no_spdplot = 'Spider plots require at least 3 profiles.'
+def create_plots_html(plots_list):
+    message_no_spdplot = 'Spider plots of performance require at least 3 profiles.'
 
-    text = '<img src="spider_plot.png" />' if os.path.exists(os.path.join(output_dir, 'spider_plot.png')) else message_no_spdplot
+    text = '<img src="spider_plot.png" />' if 'spider_plot' in plots_list else message_no_spdplot
     plot1 = Panel(child=Div(text=text), title='Relative performance', width=780)
 
-    text = '<img src="spider_plot_recall_precision.png" />' if os.path.exists(os.path.join(output_dir, 'spider_plot_recall_precision.png')) else message_no_spdplot
+    text = '<img src="spider_plot_recall_precision.png" />' if 'spider_plot_recall_precision' in plots_list else message_no_spdplot
     plot2 = Panel(child=Div(text=text), title='Absolute performance')
 
     img_shannon = '<img src="plot_shannon.png" />'
@@ -415,21 +415,62 @@ def create_plots_html(output_dir):
     return tabs_plots
 
 
-def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, output_dir):
+def create_beta_diversity_tab(labels, plots_list):
+    rank_to_img = {rank: [''] for rank in c.ALL_RANKS}
+    for rank in c.ALL_RANKS:
+        for label in labels:
+            file = os.path.join("by_tool", label, 'beta_diversity_bc_' + rank)
+            if file in plots_list:
+                rank_to_img[rank][0] = rank_to_img[rank][0] + '<img src=' + '"' + file + '.png' + '"' + '/>'
+    div_plots = Div(text=rank_to_img[c.SPECIES][0], css_classes=['bk-width-auto'])
+
+    source = ColumnDataSource(data=rank_to_img)
+
+    select2_rank_sample_callback = CustomJS(args=dict(source=source), code="""
+        div_plots.text = source.data[select2_rank.value][0];
+    """)
+
+    select2_rank = Select(title="Taxonomic rank:", value=c.SPECIES, options=c.ALL_RANKS, css_classes=['bk-fit-content'])
+    select2_rank.js_on_change('value', select2_rank_sample_callback)
+    select2_rank_sample_callback.args["select2_rank"] = select2_rank
+    select2_rank_sample_callback.args["div_plots"] = div_plots
+
+    beta_div_column = column(select2_rank, div_plots, responsive=True, css_classes=['bk-width-auto', 'bk-width-auto-main'])
+    return beta_div_column
+
+
+def create_gs_tab(plots_list, tabs_list):
+    imgs = ''
+    for rank in c.ALL_RANKS:
+        fig_name = os.path.join('gold_standard', rank)
+        if fig_name in plots_list:
+            imgs = imgs + '<img src=' + '"' + fig_name + '.png' + '"' + '/>'
+    if len(imgs) > 0:
+        div_plots = Div(text=imgs, css_classes=['bk-width-auto'])
+        gs_column = column(div_plots, responsive=True, css_classes=['bk-width-auto', 'bk-width-auto-main'])
+        tabs_list.append(Panel(child=gs_column, title="Gold standard"))
+
+
+def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, output_dir):
     col_rankings = create_rankings_html(pd_rankings)
 
     create_heatmap_bar(output_dir)
 
     select_sample, select_rank, heatmap_legend_div, mytable1 = create_metrics_table(pd_metrics, labels, sample_ids_list)
 
-    tabs_plots = create_plots_html(output_dir)
+    tabs_plots = create_plots_html(plots_list)
 
     metrics_row = row(column(select_sample, select_rank, heatmap_legend_div, mytable1, responsive=True, css_classes=['bk-width-auto']), column(tabs_plots, responsive=True, css_classes=['bk-width-auto']), css_classes=['bk-width-auto'], responsive=True)
 
-    tab1 = Panel(child=metrics_row, title="Metrics")
-    tab2 = Panel(child=col_rankings, title="Rankings")
+    beta_div_column = create_beta_diversity_tab(labels, plots_list)
 
-    tabs = Tabs(tabs=[tab1, tab2], css_classes=['bk-tabs-margin'])
+    tabs_list = [Panel(child=metrics_row, title="Metrics"),
+                 Panel(child=col_rankings, title="Rankings"),
+                 Panel(child=beta_div_column, title="Beta diversity")]
+
+    create_gs_tab(plots_list, tabs_list)
+
+    tabs = Tabs(tabs=tabs_list, css_classes=['bk-tabs-margin'])
 
     title = create_title_div("main", "OPAL: Profiling Assessment", " produced on {0} with OPAL version {1} ".format(
             datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), __version__))
