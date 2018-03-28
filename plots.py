@@ -4,12 +4,14 @@ import os
 import pandas as pd
 import numpy as np
 import itertools
+import math
 from collections import defaultdict
 from collections import OrderedDict
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
+from matplotlib.ticker import MaxNLocator
 from mpl_toolkits.mplot3d import Axes3D
 import braycurtis as bc
 from utils import spider_plot_functions as spl
@@ -27,6 +29,52 @@ def create_colors_list():
     for color in plt.cm.Set3(np.linspace(0, 1, 12)):
         colors_list.append(tuple(color))
     return colors_list
+
+
+def plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=False):
+    colors_list = create_colors_list()
+    fig, axs = plt.subplots(figsize=(6, 5))
+
+    # turn on grid
+    axs.grid(which='major', linestyle='-', linewidth='0.5', color='lightgrey')
+
+    axs.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+    axs.set_xlabel('Number of samples')
+    if log_scale:
+        axs.set_ylabel('log$_{10}$(number of taxa)')
+    else:
+        axs.set_ylabel('Number of taxa')
+
+    x = list(range(1, len(gs_samples_list) + 1))
+
+    for i, rank in enumerate(c.ALL_RANKS):
+        if rank == 'strain':
+            continue
+        y = []
+        tax_ids = set()
+        for sample in gs_samples_list:
+            sample_id, sample_metadata, profile = sample
+            for prediction in profile:
+                if prediction.rank == rank and prediction.percentage > .0:
+                    tax_ids.add(prediction.taxid)
+            num_ids = len(tax_ids)
+            if log_scale:
+                y.append(math.log10(num_ids) if num_ids > 0 else 0)
+            else:
+                y.append(num_ids)
+        axs.plot(x, y, color=colors_list[i])
+
+    if log_scale:
+        file_name = 'rarefaction_curves_log_scale'
+    else:
+        file_name = 'rarefaction_curves'
+
+    lgd = plt.legend(c.ALL_RANKS, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handlelength=2, frameon=False)
+    fig.savefig(os.path.join(output_dir, file_name + '.pdf'), dpi=100, format='pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')
+    fig.savefig(os.path.join(output_dir, file_name + '.png'), dpi=100, format='png', bbox_extra_artists=(lgd,), bbox_inches='tight')
+    plt.close(fig)
+    return [file_name]
 
 
 def plot_samples_hist(gs_samples_list, sample_ids_list, output_dir):

@@ -440,15 +440,27 @@ def create_beta_diversity_tab(labels, plots_list):
 
 
 def create_gs_tab(plots_list, tabs_list):
-    imgs = ''
+    # Rarefaction curves panel
+    imgs = '<img src="rarefaction_curves.png"/><img src="rarefaction_curves_log_scale.png"/>'
+    div_plots_rarefaction = Div(text=imgs, css_classes=['bk-width-auto'])
+    gs_column_rarefaction = column(div_plots_rarefaction, responsive=True, css_classes=['bk-width-auto', 'bk-width-auto-main'])
+
+    # Proportions panel
+    imgs_proportions = ''
     for rank in c.ALL_RANKS:
         fig_name = os.path.join('gold_standard', rank)
         if fig_name in plots_list:
-            imgs = imgs + '<img src=' + '"' + fig_name + '.png' + '"' + '/>'
-    if len(imgs) > 0:
-        div_plots = Div(text=imgs, css_classes=['bk-width-auto'])
-        gs_column = column(div_plots, responsive=True, css_classes=['bk-width-auto', 'bk-width-auto-main'])
-        tabs_list.append(Panel(child=gs_column, title="Gold standard"))
+            imgs_proportions = imgs_proportions + '<img src=' + '"' + fig_name + '.png' + '"' + '/>'
+    if len(imgs_proportions) > 0:
+        div_plots = Div(text=imgs_proportions, css_classes=['bk-width-auto'])
+        gs_column_prop = column(div_plots, responsive=True, css_classes=['bk-width-auto', 'bk-width-auto-main'])
+        proportions_panel = Panel(child=gs_column_prop, title="Proportions")
+
+        rarefaction_panel = Panel(child=gs_column_rarefaction, title="Rarefaction curves")
+        tabs_plots = Tabs(tabs=[proportions_panel, rarefaction_panel], css_classes=['bk-tabs-margin', 'bk-tabs-margin-lr'])
+        tabs_list.append(Panel(child=tabs_plots, title="Gold standard"))
+    else:
+        tabs_list.append(Panel(child=gs_column_rarefaction, title="Gold standard"))
 
 
 def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, output_dir):
@@ -487,6 +499,7 @@ def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, ou
                 .bk-width-auto-main>div {width: -webkit-fill-available !important;}
                 div.bk-width-auto-main {width: -webkit-fill-available !important;}
                 .bk-tabs-margin{margin-top: 20px !important;}
+                .bk-tabs-margin-lr{margin-left: 10px; margin-right: 10px}
                 .bk-root {display: flex; justify-content: center;}
                 .bk-padding-top {padding-top: 10px;}
                 .bk-shannon-plots > div:first-child {

@@ -246,7 +246,7 @@ def main():
     parser.add_argument("-g", "--gold_standard_file", help="Gold standard file", required=True)
     parser.add_argument("profiles_files", nargs='+', help="Files of profiles")
     parser.add_argument('-n', '--no_normalization', help="Do not normalize samples", action='store_true')
-    parser.add_argument('-p', '--plot_abundances', help="Plot abundances in the gold standard (can take a while)", action='store_true')
+    parser.add_argument('-p', '--plot_abundances', help="Plot abundances in the gold standard (can take some minutes)", action='store_true')
     parser.add_argument('-l', '--labels', help="Comma-separated profiles names", required=False)
     parser.add_argument('-o', '--output_dir', help="Directory to write the results to", required=True)
     args = parser.parse_args()
@@ -268,6 +268,9 @@ def main():
     pd_metrics[['tool', 'rank', 'metric', 'sample', 'value']].fillna('na').to_csv(os.path.join(output_dir, "results.tsv"), sep='\t', index=False)
 
     plots_list += pl.plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_ids_list, labels, output_dir)
+
+    plots_list += pl.plot_rarefaction_curves(gs_samples_list, output_dir)
+    plots_list += pl.plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=True)
 
     print_by_tool(output_dir, pd_metrics)
     print_by_rank(output_dir, labels, pd_metrics)
