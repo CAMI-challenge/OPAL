@@ -441,14 +441,15 @@ def create_beta_diversity_tab(labels, plots_list):
 
 def create_gs_tab(plots_list, tabs_list):
     # Rarefaction curves panel
-    imgs = '<img src="rarefaction_curves.png"/><img src="rarefaction_curves_log_scale.png"/>'
+    imgs = '<img src="gold_standard/rarefaction_curves.png"/><img src="gold_standard/rarefaction_curves_log_scale.png"/>'
     div_plots_rarefaction = Div(text=imgs, css_classes=['bk-width-auto'])
-    gs_column_rarefaction = column(div_plots_rarefaction, responsive=True, css_classes=['bk-width-auto', 'bk-width-auto-main'])
+    div_plots_text = Div(text="Dotted lines are accumulation curves.", css_classes=['bk-width-auto'])
+    gs_column_rarefaction = column(div_plots_rarefaction, div_plots_text, responsive=True, css_classes=['bk-width-auto', 'bk-width-auto-main'])
 
     # Proportions panel
     imgs_proportions = ''
     for rank in c.ALL_RANKS:
-        fig_name = os.path.join('gold_standard', rank)
+        fig_name = 'gold_standard/' + rank
         if fig_name in plots_list:
             imgs_proportions = imgs_proportions + '<img src=' + '"' + fig_name + '.png' + '"' + '/>'
     if len(imgs_proportions) > 0:

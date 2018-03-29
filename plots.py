@@ -17,6 +17,7 @@ import braycurtis as bc
 from utils import spider_plot_functions as spl
 from utils import constants as c
 from utils import load_data
+import scipy.special
 
 
 def create_colors_list():
@@ -47,23 +48,44 @@ def plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=False):
         axs.set_ylabel('Number of taxa')
 
     x = list(range(1, len(gs_samples_list) + 1))
+    y_rank_to_rar = OrderedDict((rank, []) for rank in c.ALL_RANKS)
+    y_rank_to_acc = OrderedDict((rank, []) for rank in c.ALL_RANKS)
 
     for i, rank in enumerate(c.ALL_RANKS):
-        if rank == 'strain':
-            continue
-        y = []
-        tax_ids = set()
+        tax_id_to_num_occurrences = {}
+
+        # compute accumulation curves
+        num_ids = 0
         for sample in gs_samples_list:
             sample_id, sample_metadata, profile = sample
             for prediction in profile:
                 if prediction.rank == rank and prediction.percentage > .0:
-                    tax_ids.add(prediction.taxid)
-            num_ids = len(tax_ids)
+                    if prediction.taxid in tax_id_to_num_occurrences:
+                        tax_id_to_num_occurrences[prediction.taxid] += 1
+                    else:
+                        tax_id_to_num_occurrences[prediction.taxid] = 1
+            num_ids = len(tax_id_to_num_occurrences)
             if log_scale:
-                y.append(math.log10(num_ids) if num_ids > 0 else 0)
+                y_rank_to_rar[rank].append(math.log10(num_ids) if num_ids > 0 else 0)
             else:
-                y.append(num_ids)
-        axs.plot(x, y, color=colors_list[i])
+                y_rank_to_rar[rank].append(num_ids)
+
+        # compute rarefaction curves
+        num_samples = len(gs_samples_list)
+        for j, sample in enumerate(gs_samples_list, 1):
+            sum_over_taxa = 0
+            for tax_id in tax_id_to_num_occurrences:
+                sum_over_taxa += scipy.special.binom(num_samples - tax_id_to_num_occurrences[tax_id], j)
+            if log_scale:
+                value = num_ids - (scipy.special.binom(num_samples, j) ** (-1) * sum_over_taxa)
+                y_rank_to_acc[rank].append(math.log10(value) if value > 0 else 0)
+            else:
+                y_rank_to_acc[rank].append(num_ids - (scipy.special.binom(num_samples, j) ** (-1) * sum_over_taxa))
+
+    for i, rank in enumerate(c.ALL_RANKS):
+        axs.plot(x, y_rank_to_acc[rank], color=colors_list[i])
+    for i, rank in enumerate(c.ALL_RANKS):
+        axs.plot(x, y_rank_to_rar[rank], linestyle=':', color=colors_list[i])
 
     if log_scale:
         file_name = 'rarefaction_curves_log_scale'
@@ -71,8 +93,8 @@ def plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=False):
         file_name = 'rarefaction_curves'
 
     lgd = plt.legend(c.ALL_RANKS, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handlelength=2, frameon=False)
-    fig.savefig(os.path.join(output_dir, file_name + '.pdf'), dpi=100, format='pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')
-    fig.savefig(os.path.join(output_dir, file_name + '.png'), dpi=100, format='png', bbox_extra_artists=(lgd,), bbox_inches='tight')
+    fig.savefig(os.path.join(output_dir, 'gold_standard', file_name + '.pdf'), dpi=100, format='pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')
+    fig.savefig(os.path.join(output_dir, 'gold_standard', file_name + '.png'), dpi=100, format='png', bbox_extra_artists=(lgd,), bbox_inches='tight')
     plt.close(fig)
     return [file_name]
 
