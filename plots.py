@@ -134,7 +134,21 @@ def plot_samples_hist(gs_samples_list, sample_ids_list, output_dir):
         fig = df_gs.plot(kind='bar', ax=axs, stacked=True, legend=False, colormap=plt.get_cmap('gist_rainbow')).get_figure()
         fig.savefig(os.path.join(output_dir, fig_name + '.pdf'), dpi=100, format='pdf', bbox_inches='tight')
         fig.savefig(os.path.join(output_dir, fig_name + '.png'), dpi=100, format='png', bbox_inches='tight')
+
+        legend, labels = axs.get_legend_handles_labels()
+        fig2, axs2 = plt.subplots(figsize=(1, 1))
+        axs2.xaxis.set_visible(False)
+        axs2.yaxis.set_visible(False)
+        for v in axs2.spines.values():
+            v.set_visible(False)
+
+        ncol = int(math.ceil(df_gs.shape[1]/35))
+        axs2.legend(legend, labels, loc='center', frameon=True, ncol=ncol, handletextpad=0, columnspacing=1.0, borderaxespad=0., fontsize=9)
+        plt.tight_layout()
+        fig2.savefig(os.path.join(output_dir, fig_name + '_legend.png'), dpi=100, format='png', bbox_inches='tight')
+
         plt.close(fig)
+        plt.close(fig2)
         plots_list.append(fig_name)
     return plots_list
 

@@ -198,6 +198,7 @@ def create_rankings_html(pd_rankings):
     p.vbar(x='x', top='top', source=source, width=0.5, bottom=0, color="firebrick")
 
     col_rankings = column([data_table,
+                           Div(text="<font color='navy'><u>Hint:</u> slide the bars to change the weight of the metrics.</font>", style={"width": "500px", "margin-top": "18px"}),
                            row(weight_recall, weight_precision),
                            row(weight_l1norm, weight_unifrac),
                            p], css_classes=['bk-padding-top'])
@@ -443,7 +444,7 @@ def create_gs_tab(plots_list, tabs_list):
     # Rarefaction curves panel
     imgs = '<img src="gold_standard/rarefaction_curves.png"/><img src="gold_standard/rarefaction_curves_log_scale.png"/>'
     div_plots_rarefaction = Div(text=imgs, css_classes=['bk-width-auto'])
-    div_plots_text = Div(text="Dotted lines are accumulation curves.", css_classes=['bk-width-auto'])
+    div_plots_text = Div(text="Dotted lines are the respective accumulation curves.", css_classes=['bk-width-auto'])
     gs_column_rarefaction = column(div_plots_rarefaction, div_plots_text, responsive=True, css_classes=['bk-width-auto', 'bk-width-auto-main'])
 
     # Proportions panel
@@ -451,8 +452,10 @@ def create_gs_tab(plots_list, tabs_list):
     for rank in c.ALL_RANKS:
         fig_name = 'gold_standard/' + rank
         if fig_name in plots_list:
-            imgs_proportions = imgs_proportions + '<img src=' + '"' + fig_name + '.png' + '"' + '/>'
+            imgs_proportions = imgs_proportions + '<img src="' + fig_name + '.png" onclick="showlegend(this, \'' + rank + '_legend\')" class="proportions"/>'
+            imgs_proportions = imgs_proportions + '<img src="' + fig_name + '_legend.png" style="visibility:hidden;" id="' + rank + '_legend" class="legend">'
     if len(imgs_proportions) > 0:
+        imgs_proportions = "<div style='margin-top:18px; margin-bottom:16px;'><font color='navy'><u>Hint:</u> click on a plot for its legend and drag it as necessary. Click on plot again to hide the legend.</font></div>" + imgs_proportions
         div_plots = Div(text=imgs_proportions, css_classes=['bk-width-auto'])
         gs_column_prop = column(div_plots, responsive=True, css_classes=['bk-width-auto', 'bk-width-auto-main'])
         proportions_panel = Panel(child=gs_column_prop, title="Proportions")
@@ -553,11 +556,64 @@ def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, ou
                     visibility: visible;
                     opacity: 1;
                 }
+                .proportions {
+                    cursor: pointer;
+                }
+                .legend {
+                    position:absolute;
+                    cursor: move;
+                    z-index: 1;
+                }
                 </style>
             </head>
             <body>
                 {{ div }}
                 {{ script }}
+                <script>
+                    showlegend = function(img, elementid){
+                        var x = document.getElementById(elementid);
+                        if (x.style.visibility == 'visible') {
+                            x.style.visibility = 'hidden';
+                        } else {
+                            if (!x.style.top) {
+                                x.style.top = img.offsetTop.toString().concat('px');
+                            }
+                            if (!x.style.left) {
+                                x.style.left = img.offsetLeft.toString().concat('px');
+                            }
+                            x.style.visibility = 'visible';
+                        }
+                    }
+                    function startDrag(e) {
+                        if (!e) {
+                            var e = window.event;
+                        }
+                        if(e.preventDefault) e.preventDefault();
+                        targ = e.target ? e.target : e.srcElement;
+                        if (targ.className != 'legend') {return};
+                        offsetX = e.clientX;
+                        offsetY = e.clientY;
+                        coordX = parseInt(targ.style.left);
+                        coordY = parseInt(targ.style.top);
+                        drag = true;
+                        document.onmousemove=dragDiv;
+                        return false;
+                    }
+                    function dragDiv(e) {
+                        if (!drag) {return};
+                        if (!e) { var e= window.event};
+                        targ.style.left=coordX+e.clientX-offsetX+'px';
+                        targ.style.top=coordY+e.clientY-offsetY+'px';
+                        return false;
+                    }
+                    function stopDrag() {
+                        drag=false;
+                    }
+                    window.onload = function() {
+                        document.onmousedown = startDrag;
+                        document.onmouseup = stopDrag;
+                    }
+                </script>
             </body>
         </html>
         ''')
