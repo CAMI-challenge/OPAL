@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import itertools
 import math
+import copy
 from collections import defaultdict
 from collections import OrderedDict
 import matplotlib
@@ -103,13 +104,20 @@ def plot_samples_hist(gs_samples_list, sample_ids_list, output_dir):
     plots_list = []
     for rank in c.ALL_RANKS:
         df_gs = pd.DataFrame()
-        gs_sampleid_to_rank_to_taxid_to_percentage = {}
         for sample in gs_samples_list:
             sample_id, sample_metadata, profile = sample
-            gs_sampleid_to_rank_to_taxid_to_percentage[sample_id] = load_data.get_rank_to_taxid_to_percentage(profile, rank)
+            gs_sampleid_to_rank_to_taxid_to_percentage = {sample_id: load_data.get_rank_to_taxid_to_percentage(profile, rank)}
             if len(gs_sampleid_to_rank_to_taxid_to_percentage[sample_id]) == 0:
                 continue
-            df_gs_sample = pd.DataFrame.from_dict(gs_sampleid_to_rank_to_taxid_to_percentage[sample_id][rank], orient='index')
+
+            # add taxonomy name
+            tax_id_to_name = load_data.get_taxa_names(profile)
+            gs_sampleid_to_rank_to_taxidandname_to_percentage = copy.deepcopy(gs_sampleid_to_rank_to_taxid_to_percentage)
+            for tax_id, percentage in gs_sampleid_to_rank_to_taxid_to_percentage[sample_id][rank].items():
+                gs_sampleid_to_rank_to_taxidandname_to_percentage[sample_id][rank][tax_id_to_name[tax_id] + ' ' + tax_id] = percentage
+                del gs_sampleid_to_rank_to_taxidandname_to_percentage[sample_id][rank][tax_id]
+
+            df_gs_sample = pd.DataFrame.from_dict(gs_sampleid_to_rank_to_taxidandname_to_percentage[sample_id][rank], orient='index')
             df_gs_sample.index.name = 'taxid'
             df_gs_sample['Sample'] = sample_id
             df_gs_sample.rename(columns={0: 'value'}, inplace=True)

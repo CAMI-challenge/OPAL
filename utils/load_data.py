@@ -207,6 +207,13 @@ def open_profile(file_path, normalize):
     return samples_list
 
 
+def get_taxa_names(profile):
+    tax_id_to_name = {}
+    for prediction in profile:
+        tax_id_to_name[prediction.taxid] = prediction.taxpathsn.split("|")[-1]
+    return tax_id_to_name
+
+
 def get_rank_to_taxid_to_percentage(profile, rank=None):
     rank_to_taxid_to_percentage = {}
     for prediction in profile:
