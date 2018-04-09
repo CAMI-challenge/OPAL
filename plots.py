@@ -110,7 +110,7 @@ def plot_samples_hist(gs_samples_list, sample_ids_list, output_dir):
             if len(gs_sampleid_to_rank_to_taxid_to_percentage[sample_id]) == 0:
                 continue
 
-            # add taxonomy name
+            # add taxa names
             tax_id_to_name = load_data.get_taxa_names(profile)
             gs_sampleid_to_rank_to_taxidandname_to_percentage = copy.deepcopy(gs_sampleid_to_rank_to_taxid_to_percentage)
             for tax_id, percentage in gs_sampleid_to_rank_to_taxid_to_percentage[sample_id][rank].items():
