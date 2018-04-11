@@ -87,7 +87,8 @@ def normalize_samples(samples_list):
         for prediction in profile:
             sum_per_rank[prediction.rank] += prediction.percentage
         for prediction in profile:
-            prediction.percentage = (prediction.percentage / sum_per_rank[prediction.rank]) * 100.0
+            if prediction.percentage > 0:
+                prediction.percentage = (prediction.percentage / sum_per_rank[prediction.rank]) * 100.0
 
 
 def open_profile_from_tsv(file_path, normalize):

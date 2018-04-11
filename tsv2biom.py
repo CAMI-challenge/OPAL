@@ -16,14 +16,14 @@ def convert_to_biom(file_paths, output_file, is_json=False):
     observ_metadata = {}
     ids = []
 
-    for i, file_path in enumerate(file_paths):
+    for file_path in file_paths:
         ids.append(file_path.split('/')[-1])
         try:
-            samples_list = load_data.open_profile_from_tsv(file_path)
+            samples_list = load_data.open_profile_from_tsv(file_path, False)
         except:
             sys.exit("Input file could not be read.")
 
-        for sample in samples_list:
+        for i, sample in enumerate(samples_list):
             sample_id, header, profile = sample
 
             if sample_id == '':

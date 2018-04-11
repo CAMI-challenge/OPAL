@@ -187,7 +187,10 @@ def jaccard_index(rank_query, rank_truth):
     rank_truth = __get_existing_taxa(rank_truth)
     intersection = len(list(set(rank_query).intersection(rank_truth)))
     union = len(list(set(rank_query).union(rank_truth)))
-    return intersection / union
+    if union > 0:
+        return intersection / union
+    else:
+        return .0
 
 
 def f1_score(this_precision, this_recall):
