@@ -7,37 +7,30 @@ Example page produced by OPAL: *https://cami-challenge.github.io/OPAL/*
 
 # Requirements
 
-* python &ge; 3.5
-* numpy &ge; 1.13.0
-* matplotlib &ge; 2.0.2
-* dendropy &ge; 4.3.0
-* pandas &ge; 0.20.3
-* biom-format &ge; 2.1.6
-* scikit-bio &ge; 0.5.1
-* bokeh &ge; 0.12.9
-* seaborn &ge; 0.8.1
+See [default.txt](requirements/default.txt) for all dependencies.
 
 # User Guide
 
 ## Installation
 
-Download OPAL:
-~~~BASH
-wget https://github.com/CAMI-challenge/OPAL/archive/master.zip -O opal.zip
-~~~
-Or clone it using git:
-~~~BASH
-git clone https://github.com/CAMI-challenge/OPAL.git
-~~~
-
-Install dependencies as follows (tested on Linux Ubuntu 16.04):
+Install pip first (tested on Linux Ubuntu 16.04):
 
 ~~~BASH
-sudo apt-get install python3-pip
-cd OPAL/
-pip3 install -r requirements/default.txt --user
-pip3 install biom-format==2.1.6 --user
-pip3 install scikit-bio==0.5.1 --user
+sudo apt install python3-pip
+~~~
+
+Then run:
+
+~~~BASH
+pip install numpy
+pip install cami-opal
+~~~
+
+Make sure to add OPAL to your PATH:
+
+~~~BASH
+echo 'PATH=$PATH:${HOME}/.local/bin' >> ~/.bashrc
+source ~/.bashrc
 ~~~
 
 ## Input
