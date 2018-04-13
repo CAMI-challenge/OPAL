@@ -22,8 +22,8 @@ sudo apt install python3-pip
 Then run:
 
 ~~~BASH
-pip install numpy
-pip install cami-opal
+pip3 install numpy
+pip3 install cami-opal
 ~~~
 
 Make sure to add OPAL to your PATH:
@@ -60,7 +60,7 @@ The BIOM format used by OPAL is a sparse matrix stored in a JSON or HDF5 file, w
 
 ## Running _opal.py_
 ~~~BASH
-usage: opal.py [-h] -g GOLD_STANDARD_FILE [-l LABELS] -o OUTPUT_DIR [-r]
+usage: opal.py [-h] -g GOLD_STANDARD_FILE [-n] [-p] [-l LABELS] -o OUTPUT_DIR
                profiles_files [profiles_files ...]
 
 Compute all metrics for one or more taxonomic profiles
@@ -72,6 +72,11 @@ optional arguments:
   -h, --help            show this help message and exit
   -g GOLD_STANDARD_FILE, --gold_standard_file GOLD_STANDARD_FILE
                         Gold standard file
+  -n, --no_normalization
+                        Do not normalize samples
+  -p, --plot_abundances
+                        Plot abundances in the gold standard (can take some
+                        minutes)
   -l LABELS, --labels LABELS
                         Comma-separated profiles names
   -o OUTPUT_DIR, --output_dir OUTPUT_DIR
