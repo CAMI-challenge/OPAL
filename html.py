@@ -197,8 +197,9 @@ def create_rankings_html(pd_rankings):
     p = figure(x_range=pd_show_unsorted_pos[SUM_OF_SCORES].tolist(), plot_width=800, plot_height=400, title=SUM_OF_SCORES + " - lower is better")
     p.vbar(x='x', top='top', source=source, width=0.5, bottom=0, color="firebrick")
 
-    col_rankings = column([data_table,
-                           Div(text="<font color='navy'><u>Hint:</u> slide the bars to change the weight of the metrics.</font>", style={"width": "500px", "margin-top": "18px"}),
+    col_rankings = column([Div(text="<font color='navy'><u>Hint 1:</u> click on the columns of scores for sorting.</font>", style={"width": "500px", "margin-bottom": "10px"}),
+                           data_table,
+                           Div(text="<font color='navy'><u>Hint 2:</u> slide the bars to change the weight of the metrics.</font>", style={"width": "500px", "margin-top": "18px"}),
                            row(weight_recall, weight_precision),
                            row(weight_l1norm, weight_unifrac),
                            p], css_classes=['bk-padding-top'])
@@ -444,8 +445,8 @@ def create_gs_tab(plots_list, tabs_list):
     # Rarefaction curves panel
     imgs = '<img src="gold_standard/rarefaction_curves.png"/><img src="gold_standard/rarefaction_curves_log_scale.png"/>'
     div_plots_rarefaction = Div(text=imgs, css_classes=['bk-width-auto'])
-    div_plots_text = Div(text="Dotted lines are accumulation curves.", css_classes=['bk-width-auto'])
-    gs_column_rarefaction = column(div_plots_rarefaction, div_plots_text, responsive=True, css_classes=['bk-width-auto', 'bk-width-auto-main'])
+    div_plots_text = Div(text="<div style='margin-top:18px; margin-bottom:0px;'><font color='navy'><ul style='list-style-type:square;margin-bottom:0;margin-top:0;'><li>OPAL always assumes that the samples are from the same environment.</li><li>Dotted lines are accumulation curves.</li></ul></font></div>", css_classes=['bk-width-auto'])
+    gs_column_rarefaction = column(div_plots_text, div_plots_rarefaction, responsive=True, css_classes=['bk-width-auto', 'bk-width-auto-main'])
     rarefaction_panel = Panel(child=gs_column_rarefaction, title="Rarefaction curves")
 
     # Proportions panel
@@ -621,7 +622,7 @@ def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, ou
         ''')
 
     if desc_text:
-        data_desc_div = Div(text="""<div style="text-align:left;font-size: 11pt;font-weight: bold;">{}""".format(desc_text), css_classes=['bk-width-auto']) # width=DIV_WIDTH, height=DIV_HEIGHT)
+        data_desc_div = Div(text="""<div style="text-align:left;font-size: 11pt;font-weight: bold;">{}""".format(desc_text), css_classes=['bk-width-auto'])
         html_columns = column(title, data_desc_div, tabs, responsive=True, css_classes=['bk-width-auto-main'])
     else:
         html_columns = column(title, tabs, responsive=True, css_classes=['bk-width-auto-main'])
