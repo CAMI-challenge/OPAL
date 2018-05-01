@@ -18,6 +18,7 @@ from utils import ProfilingTools as PF
 from utils import constants as c
 import pandas as pd
 import numpy as np
+from version import __version__
 
 
 def make_sure_path_exists(path):
@@ -248,7 +249,9 @@ def main():
     parser.add_argument('-n', '--no_normalization', help="Do not normalize samples", action='store_true')
     parser.add_argument('-p', '--plot_abundances', help="Plot abundances in the gold standard (can take some minutes)", action='store_true')
     parser.add_argument('-l', '--labels', help="Comma-separated profiles names", required=False)
+    parser.add_argument('-d', '--desc', help="Description for HTML page", required=False)
     parser.add_argument('-o', '--output_dir', help="Directory to write the results to", required=True)
+    parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
     args = parser.parse_args()
     labels = get_labels(args.labels, args.profiles_files)
     output_dir = os.path.abspath(args.output_dir)
@@ -277,7 +280,7 @@ def main():
     plots_list += pl.plot_all(pd_metrics, labels, output_dir)
 
     pd_rankings = rk.highscore_table(pd_metrics)
-    html.create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, output_dir)
+    html.create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, output_dir, args.desc)
 
 
 if __name__ == "__main__":

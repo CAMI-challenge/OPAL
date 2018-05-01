@@ -468,7 +468,7 @@ def create_gs_tab(plots_list, tabs_list):
         tabs_list.append(Panel(child=tabs_plots, title="Gold standard"))
 
 
-def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, output_dir):
+def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, output_dir, desc_text):
     col_rankings = create_rankings_html(pd_rankings)
 
     create_heatmap_bar(output_dir)
@@ -620,7 +620,11 @@ def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, ou
         </html>
         ''')
 
-    html_columns = column(title, tabs, responsive=True, css_classes=['bk-width-auto-main'])
+    if desc_text:
+        data_desc_div = Div(text="""<div style="text-align:left;font-size: 11pt;font-weight: bold;">{}""".format(desc_text), css_classes=['bk-width-auto']) # width=DIV_WIDTH, height=DIV_HEIGHT)
+        html_columns = column(title, data_desc_div, tabs, responsive=True, css_classes=['bk-width-auto-main'])
+    else:
+        html_columns = column(title, tabs, responsive=True, css_classes=['bk-width-auto-main'])
     script, div = components(html_columns)
     js_resources = INLINE.render_js()
     css_resources = INLINE.render_css()
