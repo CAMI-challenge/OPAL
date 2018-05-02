@@ -386,15 +386,7 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
     return select_sample, select_rank, heatmap_legend_div, mytable1
 
 
-def create_plots_html(plots_list):
-    message_no_spdplot = 'Spider plots of performance require at least 3 profiles.'
-
-    text = '<img src="spider_plot.png" />' if 'spider_plot' in plots_list else message_no_spdplot
-    plot1 = Panel(child=Div(text=text), title='Relative performance', width=780)
-
-    text = '<img src="spider_plot_recall_precision.png" />' if 'spider_plot_recall_precision' in plots_list else message_no_spdplot
-    plot2 = Panel(child=Div(text=text), title='Absolute performance')
-
+def create_alpha_diversity_tab():
     img_shannon = '<img src="plot_shannon.png" />'
     img_shannon_diff = '<img src="plot_shannon_diff.png" />'
     div_plot_shannon = Div(text=img_shannon)
@@ -410,10 +402,23 @@ def create_plots_html(plots_list):
     checkbox_group.js_on_click(checkbox_callback)
     checkbox_callback.args["div_plot_shannon"] = div_plot_shannon
 
-    shannon_column = column(checkbox_group, div_plot_shannon, responsive=True, css_classes=['bk-shannon-plots'])
+    shannon_column = column(checkbox_group, div_plot_shannon, responsive=True, css_classes=['bk-shannon-plots', 'bk-width-auto', 'bk-width-auto-main'])
 
-    plot3 = Panel(child=shannon_column, title='Shannon')
-    tabs_plots = Tabs(tabs=[plot1, plot2, plot3], width=780, css_classes=['bk-tabs-margin'])
+    shannon_panel = Panel(child=shannon_column, title='Shannon')
+    tabs_plots = Tabs(tabs=[shannon_panel], css_classes=['bk-tabs-margin', 'bk-tabs-margin-lr'])
+    return tabs_plots
+
+
+def create_plots_html(plots_list):
+    message_no_spdplot = 'Spider plots of performance require at least 3 profiles.'
+
+    text = '<img src="spider_plot.png" />' if 'spider_plot' in plots_list else message_no_spdplot
+    plot1 = Panel(child=Div(text=text), title='Relative performance', width=780)
+
+    text = '<img src="spider_plot_recall_precision.png" />' if 'spider_plot_recall_precision' in plots_list else message_no_spdplot
+    plot2 = Panel(child=Div(text=text), title='Absolute performance')
+
+    tabs_plots = Tabs(tabs=[plot1, plot2], width=780, css_classes=['bk-tabs-margin'])
     return tabs_plots
 
 
@@ -484,6 +489,7 @@ def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, ou
 
     tabs_list = [Panel(child=metrics_row, title="Metrics"),
                  Panel(child=col_rankings, title="Rankings"),
+                 Panel(child=create_alpha_diversity_tab(), title="Alpha diversity"),
                  Panel(child=beta_div_column, title="Beta diversity")]
 
     create_gs_tab(plots_list, tabs_list)
