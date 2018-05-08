@@ -318,7 +318,7 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
                 xticklabels[toolindex].set_color([1, 0, 0])
 
     ax = axes[0, 0]
-    ax.legend(metrics, loc=(1.68 - 0.353 * len(metrics), 1.3), labelspacing=0.1, fontsize='small', ncol=len(metrics))
+    ax.legend(metrics, loc=(1.6 - 0.353 * len(metrics), 1.3), labelspacing=0.1, fontsize='small', ncol=len(metrics))
     fig.savefig(os.path.join(output_dir, file_name + '.pdf'), dpi=100, format='pdf', bbox_inches='tight')
     fig.savefig(os.path.join(output_dir, file_name + '.png'), dpi=100, format='png', bbox_inches='tight')
     plt.close(fig)
