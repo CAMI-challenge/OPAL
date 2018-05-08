@@ -277,7 +277,7 @@ def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir, f
     plt.close(fig)
 
 
-def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_name, colors, grid_points=None, fill=False):
+def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_name, colors, grid_points=None, fill=False, absolute=False):
     N = len(labels)
     if N < 3:
         return []
@@ -293,8 +293,12 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
         ax.set_title(rank, weight='bold', size='medium', position=(0.5, 1.1),
                      horizontalalignment='center', verticalalignment='center')
 
+        if absolute:
+            metric_suffix = 'absolute'
+        else:
+            metric_suffix = ''
         # select only metrics in metrics list
-        metrics_subdict = OrderedDict((metric, rank_to_metric_to_toolvalues[rank][metric]) for metric in metrics)
+        metrics_subdict = OrderedDict((metric, rank_to_metric_to_toolvalues[rank][metric + metric_suffix]) for metric in metrics)
         it = 1
         metric_to_toolindex = []
         for d, color in zip(metrics_subdict.values(), colors):
@@ -374,24 +378,51 @@ def plot_all(pd_metrics, labels, output_dir):
     cols = pd_grouped.columns
     pd_grouped = pd_grouped.groupby(['rank', 'tool'], sort=False)[cols].mean()
 
-    # store maximum precision per rank
+    # store maximum values per rank
     rank_to_max_fp = defaultdict()
+    rank_to_max_unifrac = defaultdict()
+    rank_to_max_l1norm = defaultdict()
+    rank_to_max_recall = defaultdict()
+    rank_to_max_precision = defaultdict()
     for rank in c.PHYLUM_SPECIES:
-        pd_rank = pd_grouped.loc[(pd_grouped.index.get_level_values('rank') == rank)]
+        pd_rank = pd_grouped.loc[(pd_grouped.index.get_level_values('rank') == rank) & (pd_grouped.index.get_level_values('tool') != c.GS)]
         rank_to_max_fp[rank] = pd_rank[c.FP].max()
+        rank_to_max_l1norm[rank] = pd_rank[c.L1NORM].max()
+        rank_to_max_recall[rank] = pd_rank[c.RECALL].max()
+        rank_to_max_precision[rank] = pd_rank[c.PRECISION].max()
+    pd_rank = pd_grouped.loc[(pd_grouped.index.get_level_values('rank') == 'rank independent') & (pd_grouped.index.get_level_values('tool') != c.GS)]
+    rank_to_max_unifrac['rank independent'] = pd_rank[c.UNIFRAC].max()
 
     tool_to_rank_to_metric_to_value = defaultdict(lambda: defaultdict(dict))
     for (rank, tool), g in pd_grouped.groupby(['rank', 'tool']):
         if tool not in labels:
             continue
         if rank == 'rank independent':
-            tool_to_rank_to_metric_to_value[tool][rank][c.UNIFRAC] = g[c.UNIFRAC].values[0] /16
+            # relative values
+            tool_to_rank_to_metric_to_value[tool][rank][c.UNIFRAC] = (g[c.UNIFRAC].values[0] / (rank_to_max_unifrac[rank]) if rank_to_max_unifrac[rank] > 0 else g[c.UNIFRAC].values[0])
         elif rank in c.PHYLUM_SPECIES:
-            tool_to_rank_to_metric_to_value[tool][rank][c.L1NORM] = g[c.L1NORM].values[0] / 2.0 if len(g[c.L1NORM].values) > 0 else None
-            tool_to_rank_to_metric_to_value[tool][rank][c.RECALL] = g[c.RECALL].values[0] if len(g[c.RECALL].values) > 0 else None
-            tool_to_rank_to_metric_to_value[tool][rank][c.PRECISION] = g[c.PRECISION].values[0] if len(g[c.PRECISION].values) > 0 else None
+            # absolute values
+            tool_to_rank_to_metric_to_value[tool][rank][c.RECALL+'absolute'] = g[c.RECALL].values[0] if len(g[c.RECALL].values) > 0 else None
+            tool_to_rank_to_metric_to_value[tool][rank][c.PRECISION+'absolute'] = g[c.PRECISION].values[0] if len(g[c.PRECISION].values) > 0 else None
+
+            # relative values
+            if rank_to_max_recall[rank] > 0:
+                tool_to_rank_to_metric_to_value[tool][rank][c.RECALL] = (g[c.RECALL].values[0] / rank_to_max_recall[rank]) if len(g[c.RECALL].values) > 0 else None
+            else:
+                tool_to_rank_to_metric_to_value[tool][rank][c.RECALL] = g[c.RECALL].values[0] if len(g[c.RECALL].values) > 0 else None
+
+            if rank_to_max_precision[rank] > 0:
+                tool_to_rank_to_metric_to_value[tool][rank][c.PRECISION] = (g[c.PRECISION].values[0] / rank_to_max_precision[rank]) if len(g[c.PRECISION].values) > 0 else None
+            else:
+                tool_to_rank_to_metric_to_value[tool][rank][c.PRECISION] = g[c.PRECISION].values[0] if len(g[c.PRECISION].values) > 0 else None
+
+            if rank_to_max_l1norm[rank] > 0:
+                tool_to_rank_to_metric_to_value[tool][rank][c.L1NORM] = (g[c.L1NORM].values[0] / rank_to_max_l1norm[rank]) if len(g[c.L1NORM].values) > 0 else None
+            else:
+                tool_to_rank_to_metric_to_value[tool][rank][c.L1NORM] = g[c.L1NORM].values[0] if len(g[c.L1NORM].values) > 0 else None
+
             if rank_to_max_fp[rank] > 0:
-                tool_to_rank_to_metric_to_value[tool][rank][c.FP] = g[c.FP].values[0] / rank_to_max_fp[rank] if len(g[c.FP].values) else None
+                tool_to_rank_to_metric_to_value[tool][rank][c.FP] = (g[c.FP].values[0] / rank_to_max_fp[rank]) if len(g[c.FP].values) else None
             else:
                 tool_to_rank_to_metric_to_value[tool][rank][c.FP] = g[c.FP].values[0] if len(g[c.FP].values) else None
 
@@ -402,7 +433,7 @@ def plot_all(pd_metrics, labels, output_dir):
         else:
             present_labels.append(label)
         for rank in c.PHYLUM_SPECIES:
-            for metric in metrics:
+            for metric in metrics + [c.RECALL+'absolute', c.PRECISION+'absolute']:
                 if metric in tool_to_rank_to_metric_to_value[label][rank]:
                     rank_to_metric_to_toolvalues[rank][metric].append(tool_to_rank_to_metric_to_value[label][rank][metric])
             rank_to_metric_to_toolvalues[rank][c.UNIFRAC].append(tool_to_rank_to_metric_to_value[label]['rank independent'][c.UNIFRAC])
@@ -421,7 +452,8 @@ def plot_all(pd_metrics, labels, output_dir):
                               'spider_plot_recall_precision',
                               ['r', 'k'],
                               grid_points=[0.2, 0.4, 0.6, 0.8, 1.0],
-                              fill=True)
+                              fill=True,
+                              absolute=True)
 
     # compute average shannon for gold standard
     pd_shannon_equit = pd_metrics[pd_metrics['metric'] == c.SHANNON_EQUIT]
