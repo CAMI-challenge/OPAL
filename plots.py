@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 from matplotlib.ticker import MaxNLocator
 from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.lines import Line2D
 import braycurtis as bc
 from utils import spider_plot_functions as spl
 from utils import constants as c
@@ -31,6 +32,19 @@ def create_colors_list():
     for color in plt.cm.Set3(np.linspace(0, 1, 12)):
         colors_list.append(tuple(color))
     return colors_list
+
+
+def create_legend_rarefaction(output_dir):
+    colors_iter = iter(create_colors_list())
+    circles = []
+    for x in c.ALL_RANKS:
+        nextcolor = next(colors_iter)
+        circles.append(Line2D([], [], markeredgewidth=2.0, linestyle="None", marker=0, markersize=15, markeredgecolor=nextcolor, markerfacecolor=nextcolor))
+
+    fig = plt.figure(figsize=(0.5, 0.5))
+    fig.legend(circles, c.ALL_RANKS, loc='center', frameon=False, ncol=8, handletextpad=-0.5, columnspacing=2.0)
+    fig.savefig(os.path.join(output_dir, 'gold_standard', 'legend.eps'), dpi=100, format='eps', bbox_inches='tight')
+    plt.close(fig)
 
 
 def plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=False):
@@ -92,6 +106,8 @@ def plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=False):
         file_name = 'rarefaction_curves_log_scale'
     else:
         file_name = 'rarefaction_curves'
+
+    # fig.savefig(os.path.join(output_dir, 'gold_standard', file_name + '_wolegend.pdf'), dpi=100, format='pdf', bbox_inches='tight')
 
     lgd = plt.legend(c.ALL_RANKS, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handlelength=2, frameon=False)
     fig.savefig(os.path.join(output_dir, 'gold_standard', file_name + '.pdf'), dpi=100, format='pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')
@@ -238,6 +254,20 @@ def plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_i
     return plots_list
 
 
+def create_legend_shannon(labels, output_dir):
+    colors_iter = iter(create_colors_list())
+    labels = ['Gold standard'] + labels
+    circles = []
+    for x in c.ALL_RANKS:
+        nextcolor = next(colors_iter)
+        circles.append(Line2D([], [], markeredgewidth=2.0, linestyle="None", marker="o", markersize=6, markeredgecolor=nextcolor, markerfacecolor=nextcolor))
+
+    fig = plt.figure(figsize=(0.5, 0.5))
+    fig.legend(circles, labels, loc='center', frameon=False, ncol=8, handletextpad=0, columnspacing=1.0)
+    fig.savefig(os.path.join(output_dir, 'legend_shannon.eps'), dpi=100, format='eps', bbox_inches='tight')
+    plt.close(fig)
+
+
 def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir, file_name):
     colors_list = create_colors_list()
 
@@ -270,6 +300,8 @@ def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir, f
     plt.setp(axs.get_xticklabels(), fontsize=9, rotation=25)
 
     axs.set_ylabel(ylabel)
+
+    # fig.savefig(os.path.join(output_dir, file_name + 'wolegend.pdf'), dpi=100, format='pdf', bbox_inches='tight')
 
     lgd = plt.legend(labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handlelength=0, frameon=False)
     fig.savefig(os.path.join(output_dir, file_name + '.pdf'), dpi=100, format='pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')

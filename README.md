@@ -2,7 +2,9 @@
 
 # OPAL - Profiling Assessment
 
-Example page produced by OPAL: *https://cami-challenge.github.io/OPAL/*
+Example pages produced by OPAL:
+* CAMI II mouse gut toy data set: *https://cami-challenge.github.io/OPAL/cami_ii_mg/*
+* CAMI I high complexity challenge data set: *https://cami-challenge.github.io/OPAL/cami_i_hc/*
 
 
 # Requirements
@@ -82,7 +84,7 @@ optional arguments:
   -o OUTPUT_DIR, --output_dir OUTPUT_DIR
                         Directory to write the results to
 ~~~
-**Example:**
+**Example:** To run the example, please download the files given in the [_data_](https://github.com/CAMI-challenge/OPAL/tree/master/data) directory.
 ~~~BASH
 python3 opal.py -g data/goldstandard_low_1.bin \
 data/cranky_wozniak_13 \
@@ -141,7 +143,7 @@ tox
 
 # Citation
 
-A part of OPAL's functionality was also described in the CAMI manuscript. Please cite:
+Part of OPAL's functionality was also described in the CAMI manuscript. Please cite:
 * Sczyrba, Hofmann, Belmann, et al. (2017). **Critical Assessment of Metagenome Interpretation—a benchmark of metagenomics software.** *Nature Methods*, 14, 11:1063–1071. doi:[10.1038/nmeth.4458](https://doi.org/10.1038/nmeth.4458)
 
 (A stand-alone manuscript describing the full scope of OPAL is currently in preparation.)
