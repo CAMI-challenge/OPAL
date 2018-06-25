@@ -11,7 +11,7 @@ import unifrac_distance as uf
 import shannon as sh
 import braycurtis as bc
 import rankings as rk
-import html as html
+import html_opal as html
 import plots as pl
 from utils import load_data
 from utils import ProfilingTools as PF
@@ -171,7 +171,7 @@ def evaluate(gs_samples_list, profiles_list_to_samples_list, labels):
 
 def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac):
     """Reformats metrics data into one unified pandas DataFrame.
-    
+
     Parameters
     ----------
     sample_id : str
@@ -182,7 +182,7 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
     binary_metrics : ?
     l1norm : float
     unifrac : ?
-    
+
     Returns
     -------
     Pandas.DataFrame with following columns: metric, rank, tool, value
