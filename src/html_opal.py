@@ -1,6 +1,6 @@
 import os
 from collections import defaultdict
-from utils import constants as c
+from src.utils import constants as c
 import pandas as pd
 import datetime
 import numpy as np
@@ -84,15 +84,15 @@ def get_rank_to_sample_pd(pd_metrics):
     df_columns = pd_sem_over_samples.columns.values
     for index, row in pd_sem_over_samples.iterrows():
         for j, item in enumerate(row):
-            sem_value = pd_sem_over_samples.get_value(index, df_columns[j])
-            mean_value = '{:>.{precision}g}'.format(pd_mean_over_samples.get_value(index, df_columns[j]), precision=3)
+            sem_value = pd_sem_over_samples.at[index, df_columns[j]]
+            mean_value = '{:>.{precision}g}'.format(pd_mean_over_samples.at[index, df_columns[j]], precision=3)
             # if standard error is nan because there is only one sample, then just copy mean
             if np.isnan(sem_value):
-                pd_mean_over_samples_str.set_value(index, df_columns[j], mean_value)
+                pd_mean_over_samples_str.at[index, df_columns[j]] = mean_value
             else:
                 sem_value = '{:>.{precision}g}'.format(sem_value, precision=3)
                 sem_value = '<div class="tooltip tooltip-sem">{}<span class="tooltiptext">standard error: {}</span></div>'.format(sem_value, sem_value)
-                pd_mean_over_samples_str.set_value(index, df_columns[j], "{} ({})".format(mean_value, sem_value))
+                pd_mean_over_samples_str.at[index, df_columns[j]] = "{} ({})".format(mean_value, sem_value)
     pd_mean_over_samples_str['sample'] = '(average over samples)'
     pd_mean_over_samples_str = pd_mean_over_samples_str.reset_index().set_index(['rank', 'tool', 'sample'])
 
@@ -310,20 +310,20 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
               {'selector': 'expand-toggle:checked ~ * .data', 'props': [('background-color', 'white !important')]}]
     styles_hidden_thead = styles + [{'selector': 'thead', 'props': [('display', 'none')]}]
 
-    d = {c.RECALL: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.RECALL, c.RECALL),
-         c.PRECISION: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.PRECISION, c.PRECISION),
-         c.F1_SCORE: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.F1_SCORE, c.F1_SCORE),
-         c.TP: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.TP, c.TP),
-         c.FP: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.FP, c.FP),
-         c.FN: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.FN, c.FN),
-         c.JACCARD: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.JACCARD, c.JACCARD),
-         c.UNIFRAC: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.UNIFRAC, c.UNIFRAC),
-         c.UNW_UNIFRAC: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.UNW_UNIFRAC, c.UNW_UNIFRAC),
-         c.L1NORM: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.L1NORM, c.L1NORM),
-         c.BRAY_CURTIS: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.BRAY_CURTIS, c.BRAY_CURTIS),
-         c.OTUS: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.OTUS, c.OTUS),
-         c.SHANNON_DIVERSITY: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.SHANNON_DIVERSITY, c.SHANNON_DIVERSITY),
-         c.SHANNON_EQUIT: '<div class="tooltip">{}<span class="tooltiptext">{}</span></div>'.format(c.SHANNON_EQUIT, c.SHANNON_EQUIT)}
+    d = {c.RECALL: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.RECALL, c.RECALL, c.TOOLTIP_RECALL),
+         c.PRECISION: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.PRECISION, c.PRECISION, c.TOOLTIP_PRECISION),
+         c.F1_SCORE: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.F1_SCORE, c.F1_SCORE, c.TOOLTIP_F1_SCORE),
+         c.TP: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.TP, c.TP, c.TOOLTIP_TP),
+         c.FP: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.FP, c.FP, c.TOOLTIP_FP),
+         c.FN: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.FN, c.FN, c.TOOLTIP_FN),
+         c.JACCARD: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.JACCARD, c.JACCARD, c.TOOLTIP_JACCARD),
+         c.UNIFRAC: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.UNIFRAC, c.UNIFRAC, c.TOOLTIP_UNIFRAC),
+         c.UNW_UNIFRAC: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.UNW_UNIFRAC, c.UNW_UNIFRAC, c.TOOLTIP_UNW_UNIFRAC),
+         c.L1NORM: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.L1NORM, c.L1NORM, c.TOOLTIP_L1NORM),
+         c.BRAY_CURTIS: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.BRAY_CURTIS, c.BRAY_CURTIS, c.TOOLTIP_BRAY_CURTIS),
+         c.OTUS: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.OTUS, c.OTUS, c.TOOLTIP_OTUS),
+         c.SHANNON_DIVERSITY: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.SHANNON_DIVERSITY, c.SHANNON_DIVERSITY, c.TOOLTIP_SHANNON_DIVERSITY),
+         c.SHANNON_EQUIT: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.SHANNON_EQUIT, c.SHANNON_EQUIT, c.TOOLTIP_SHANNON_EQUIT)}
     pattern = re.compile('|'.join(map(re.escape, d)))
 
     def translate(match):
@@ -332,36 +332,36 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
     rank_to_sample_to_html = defaultdict(list)
     for rank in rank_to_sample_pd:
         for sample_id in all_sample_ids:
-            if sample_id in rank_to_sample_pd[rank]:
-                mydf = rank_to_sample_pd[rank][sample_id]
-                mydf.index.name = None
-                html = ''
-                first_metrics = True
-                for metrics, metrics_label in zip(all_metrics, all_metrics_labels):
-                    if rank == 'rank independent':
-                        metrics = rank_independent_metrics
-                        metrics_label = estimates_metrics_label
-                    html += '<p style="margin-bottom: auto"><b>{}</b></p>'.format(metrics_label)
-                    mydf_metrics = mydf.loc[metrics]
-
-                    sorted_columns = get_columns(labels, mydf_metrics.columns.tolist())
-                    mydf_metrics = mydf_metrics.loc[:, sorted_columns]
-
-                    if first_metrics:
-                        this_style = styles
-                    else:
-                        this_style = styles_hidden_thead
-                    if metrics_label == presence_metrics_label or metrics_label == estimates_metrics_label:
-                        html += mydf_metrics.style.apply(get_heatmap_colors, df_metrics=mydf_metrics, axis=1).set_precision(3).set_table_styles(this_style).render()
-                    else:
-                        html += mydf_metrics.style.set_precision(3).set_table_styles(this_style).render()
-                    if rank == 'rank independent':
-                        break
-                    first_metrics = False
-                html = pattern.sub(translate, html)
-                rank_to_sample_to_html[rank].append(html)
-            else:
+            if sample_id not in rank_to_sample_pd[rank]:
                 rank_to_sample_to_html[rank].append("")
+                continue
+            mydf = rank_to_sample_pd[rank][sample_id]
+            mydf.index.name = None
+            html = ''
+            first_metrics = True
+            for metrics, metrics_label in zip(all_metrics, all_metrics_labels):
+                if rank == 'rank independent':
+                    metrics = rank_independent_metrics
+                    metrics_label = estimates_metrics_label
+                html += '<p style="margin-bottom: auto"><b>{}</b></p>'.format(metrics_label)
+                mydf_metrics = mydf.loc[metrics]
+
+                sorted_columns = get_columns(labels, mydf_metrics.columns.tolist())
+                mydf_metrics = mydf_metrics.loc[:, sorted_columns]
+
+                if first_metrics:
+                    this_style = styles
+                else:
+                    this_style = styles_hidden_thead
+                if metrics_label == presence_metrics_label or metrics_label == estimates_metrics_label:
+                    html += mydf_metrics.style.apply(get_heatmap_colors, df_metrics=mydf_metrics, axis=1).set_precision(3).set_table_styles(this_style).render()
+                else:
+                    html += mydf_metrics.style.set_precision(3).set_table_styles(this_style).render()
+                if rank == 'rank independent':
+                    break
+                first_metrics = False
+            html = pattern.sub(translate, html)
+            rank_to_sample_to_html[rank].append(html)
 
     mytable1 = Div(text="""<div>{}</div>""".format(rank_to_sample_to_html[c.ALL_RANKS[0]][0]), css_classes=['bk-width-auto'])
 
@@ -402,7 +402,7 @@ def create_alpha_diversity_tab():
     checkbox_group.js_on_click(checkbox_callback)
     checkbox_callback.args["div_plot_shannon"] = div_plot_shannon
 
-    shannon_column = column(checkbox_group, div_plot_shannon, responsive=True, css_classes=['bk-shannon-plots', 'bk-width-auto', 'bk-width-auto-main'])
+    shannon_column = column(checkbox_group, div_plot_shannon, sizing_mode='scale_width', css_classes=['bk-shannon-plots', 'bk-width-auto', 'bk-width-auto-main'])
 
     shannon_panel = Panel(child=shannon_column, title='Shannon')
     tabs_plots = Tabs(tabs=[shannon_panel], css_classes=['bk-tabs-margin', 'bk-tabs-margin-lr'])
@@ -442,7 +442,7 @@ def create_beta_diversity_tab(labels, plots_list):
     select2_rank_sample_callback.args["select2_rank"] = select2_rank
     select2_rank_sample_callback.args["div_plots"] = div_plots
 
-    beta_div_column = column(select2_rank, div_plots, responsive=True, css_classes=['bk-width-auto', 'bk-width-auto-main'])
+    beta_div_column = column(select2_rank, div_plots, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-width-auto-main'])
     return beta_div_column
 
 
@@ -451,7 +451,7 @@ def create_gs_tab(plots_list, tabs_list):
     imgs = '<img src="gold_standard/rarefaction_curves.png"/><img src="gold_standard/rarefaction_curves_log_scale.png"/>'
     div_plots_rarefaction = Div(text=imgs, css_classes=['bk-width-auto'])
     div_plots_text = Div(text="<div style='margin-top:18px; margin-bottom:0px;'><font color='navy'><ul style='list-style-type:square;margin-bottom:0;margin-top:0;'><li>OPAL always assumes that the samples are from the same environment.</li><li>Dotted lines are accumulation curves.</li></ul></font></div>", css_classes=['bk-width-auto'])
-    gs_column_rarefaction = column(div_plots_text, div_plots_rarefaction, responsive=True, css_classes=['bk-width-auto', 'bk-width-auto-main'])
+    gs_column_rarefaction = column(div_plots_text, div_plots_rarefaction, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-width-auto-main'])
     rarefaction_panel = Panel(child=gs_column_rarefaction, title="Rarefaction curves")
 
     # Proportions panel
@@ -464,7 +464,7 @@ def create_gs_tab(plots_list, tabs_list):
     if len(imgs_proportions) > 0:
         imgs_proportions = "<div style='margin-top:18px; margin-bottom:16px;'><font color='navy'><u>Hint:</u> click on a plot for its legend and drag it around the screen as necessary. Click on the same plot again to hide the legend.</font></div>" + imgs_proportions
         div_plots = Div(text=imgs_proportions, css_classes=['bk-width-auto'])
-        gs_column_prop = column(div_plots, responsive=True, css_classes=['bk-width-auto', 'bk-width-auto-main'])
+        gs_column_prop = column(div_plots, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-width-auto-main'])
         proportions_panel = Panel(child=gs_column_prop, title="Proportions")
 
         tabs_plots = Tabs(tabs=[proportions_panel, rarefaction_panel], css_classes=['bk-tabs-margin', 'bk-tabs-margin-lr'])
@@ -483,7 +483,7 @@ def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, ou
 
     tabs_plots = create_plots_html(plots_list)
 
-    metrics_row = row(column(select_sample, select_rank, heatmap_legend_div, mytable1, responsive=True, css_classes=['bk-width-auto']), column(tabs_plots, responsive=True, css_classes=['bk-width-auto']), css_classes=['bk-width-auto'], responsive=True)
+    metrics_row = row(column(select_sample, select_rank, heatmap_legend_div, mytable1, sizing_mode='scale_width', css_classes=['bk-width-auto']), column(tabs_plots, sizing_mode='scale_width', css_classes=['bk-width-auto']), css_classes=['bk-width-auto'], sizing_mode='scale_width')
 
     beta_div_column = create_beta_diversity_tab(labels, plots_list)
 
@@ -537,7 +537,7 @@ def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, ou
                 }
                 .tooltip .tooltiptext {
                     visibility: hidden;
-                    width: 120px;
+                    width: 260px;
                     background-color: #555;
                     color: #fff;
                     text-align: center;
@@ -629,9 +629,9 @@ def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, ou
 
     if desc_text:
         data_desc_div = Div(text="""<div style="text-align:left;font-size: 11pt;font-weight: bold;">{}""".format(desc_text), css_classes=['bk-width-auto'])
-        html_columns = column(title, data_desc_div, tabs, responsive=True, css_classes=['bk-width-auto-main'])
+        html_columns = column(title, data_desc_div, tabs, sizing_mode='scale_width', css_classes=['bk-width-auto-main'])
     else:
-        html_columns = column(title, tabs, responsive=True, css_classes=['bk-width-auto-main'])
+        html_columns = column(title, tabs, sizing_mode='scale_width', css_classes=['bk-width-auto-main'])
     script, div = components(html_columns)
     js_resources = INLINE.render_js()
     css_resources = INLINE.render_css()

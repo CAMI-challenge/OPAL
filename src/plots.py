@@ -15,10 +15,10 @@ import matplotlib.lines as mlines
 from matplotlib.ticker import MaxNLocator
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.lines import Line2D
-import braycurtis as bc
-from utils import spider_plot_functions as spl
-from utils import constants as c
-from utils import load_data
+from src import braycurtis as bc
+from src.utils import spider_plot_functions as spl
+from src.utils import constants as c
+from src.utils import load_data
 import scipy.special
 
 
@@ -32,6 +32,24 @@ def create_colors_list():
     for color in plt.cm.Set3(np.linspace(0, 1, 12)):
         colors_list.append(tuple(color))
     return colors_list
+
+
+def plot_time_memory(time, memory, output_dir):
+    time_label = 'Time (hours)'
+    memory_label = 'Memory (GB)'
+    df = pd.DataFrame({time_label: time, memory_label: memory}, columns=[time_label, memory_label]).sort_values(by=[time_label])
+    df.columns = ['Time (hours)', 'Memory (GB)']
+
+    ax = df.plot(kind='bar', secondary_y='Memory (GB)', mark_right=False, zorder=20)
+    ax.grid(which='major', linestyle='-', linewidth='0.5', color='lightgrey', zorder=0)
+    ax.set_ylabel('Time (hours)')
+    plt.setp(ax.get_xticklabels(), fontsize=9, rotation=15)
+
+    ax2 = ax.twinx()
+    ax2.set_ylabel('Memory (GB)', labelpad=23)
+    ax2.yaxis.set_ticks([])
+    plt.savefig(os.path.join(output_dir, 'time_memory.pdf'), dpi=100, format='pdf', bbox_inches='tight')
+    plt.savefig(os.path.join(output_dir, 'time_memory.png'), dpi=100, format='png', bbox_inches='tight')
 
 
 def create_legend_rarefaction(output_dir):

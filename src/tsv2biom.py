@@ -5,7 +5,7 @@ import argparse
 import biom
 from biom.util import biom_open
 from collections import OrderedDict
-from utils import load_data
+from src.utils import load_data
 
 
 def convert_to_biom(file_paths, output_file, is_json=False):

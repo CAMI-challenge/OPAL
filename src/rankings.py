@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from utils import constants as c
+from src.utils import constants as c
 import pandas as pd
 
 

@@ -5,19 +5,19 @@ import sys
 import errno
 import argparse
 import os.path
-import l1norm as l1
-import binary_metrics as bm
-import unifrac_distance as uf
-import shannon as sh
-import braycurtis as bc
-import rankings as rk
-import html_opal as html
-import plots as pl
-from utils import load_data
-from utils import ProfilingTools as PF
-from utils import constants as c
 import pandas as pd
 import numpy as np
+from src import l1norm as l1
+from src import binary_metrics as bm
+from src import unifrac_distance as uf
+from src import shannon as sh
+from src import braycurtis as bc
+from src import rankings as rk
+from src import html_opal as html
+from src import plots as pl
+from src.utils import load_data
+from src.utils import ProfilingTools as PF
+from src.utils import constants as c
 from version import __version__
 
 
@@ -232,7 +232,7 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
     pd_braycurtis['tool'] = label
     pd_braycurtis['metric'] = c.BRAY_CURTIS
 
-    return pd.concat([pd_braycurtis, pd_shannon, pd_binary_metrics, pd_l1norm, pd_unifrac], ignore_index=True)
+    return pd.concat([pd_braycurtis, pd_shannon, pd_binary_metrics, pd_l1norm, pd_unifrac], ignore_index=True, sort=False)
 
 
 def create_output_directories(output_dir, labels):
@@ -249,6 +249,8 @@ def main():
     parser.add_argument('-n', '--no_normalization', help="Do not normalize samples", action='store_true')
     parser.add_argument('-p', '--plot_abundances', help="Plot abundances in the gold standard (can take some minutes)", action='store_true')
     parser.add_argument('-l', '--labels', help="Comma-separated profiles names", required=False)
+    parser.add_argument('-t', '--time', help="Comma-separated running times", required=False)
+    parser.add_argument('-m', '--memory', help="Comma-separated memory usage", required=False)
     parser.add_argument('-d', '--desc', help="Description for HTML page", required=False)
     parser.add_argument('-o', '--output_dir', help="Directory to write the results to", required=True)
     parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)

@@ -9,6 +9,8 @@ Example pages produced by OPAL:
 
 # Requirements
 
+OPAL requires Python 3.5.
+
 See [default.txt](requirements/default.txt) for all dependencies.
 
 # User Guide
