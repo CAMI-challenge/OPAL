@@ -10,8 +10,8 @@ STRAIN = 'strain'
 PHYLUM_SPECIES = [PHYLUM, CLASS, ORDER, FAMILY, GENUS, SPECIES]
 ALL_RANKS = [SUPERKINGDOM, PHYLUM, CLASS, ORDER, FAMILY, GENUS, SPECIES, STRAIN]
 
-UNIFRAC = 'Weighted Unifrac error'
-UNW_UNIFRAC = 'Unweighted Unifrac error'
+UNIFRAC = 'Weighted UniFrac error'
+UNW_UNIFRAC = 'Unweighted UniFrac error'
 L1NORM = 'L1 norm error'
 PRECISION = 'Purity (precision)'
 RECALL = 'Completeness (recall)'

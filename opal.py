@@ -34,12 +34,29 @@ def get_labels(labels, profiles_files):
     if labels:
         labels_list = [x.strip() for x in labels.split(',')]
         if len(labels_list) != len(profiles_files):
-            exit('The number of labels does not match the number of files of profiles. Please check parameter -l, --labels.')
+            logging.getLogger('opal').critical('The number of labels does not match the number of files of profiles. Please check parameter -l, --labels.')
+            exit(1)
         return labels_list
     tool_id = []
     for profile_file in profiles_files:
         tool_id.append(profile_file.split('/')[-1])
     return tool_id
+
+
+def get_time_memory(time, memory, profiles_files):
+    time_list = []
+    memory_list = []
+    if time:
+        time_list = [float(x.strip()) for x in time.split(',')]
+        if len(time_list) != len(profiles_files):
+            logging.getLogger('opal').critical('The number of running times does not match the number of files of profiles. Please check parameter --time.')
+            exit(1)
+    if memory:
+        memory_list = [float(x.strip()) for x in memory.split(',')]
+        if len(memory_list) != len(profiles_files):
+            logging.getLogger('opal').critical('The number of memory usages does not match the number of files of profiles. Please check parameter --memory.')
+            exit(1)
+    return time_list, memory_list
 
 
 def compute_binary_metrics(query_profile, query_truth):
@@ -245,14 +262,14 @@ def create_output_directories(output_dir, labels):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Compute all metrics for one or more taxonomic profiles')
+    parser = argparse.ArgumentParser(description='OPAL: Open-community Profiling Assessment tooL')
     parser.add_argument('-g', '--gold_standard_file', help='Gold standard file', required=True)
     parser.add_argument('profiles_files', nargs='+', help='Files of profiles')
     parser.add_argument('-n', '--no_normalization', help='Do not normalize samples', action='store_true')
     parser.add_argument('-p', '--plot_abundances', help='Plot abundances in the gold standard (can take some minutes)', action='store_true')
     parser.add_argument('-l', '--labels', help='Comma-separated profiles names', required=False)
     parser.add_argument('-t', '--time', help='Comma-separated running times', required=False)
-    parser.add_argument('-m', '--memory', help='Comma-separated memory usage', required=False)
+    parser.add_argument('-m', '--memory', help='Comma-separated memory usages', required=False)
     parser.add_argument('-d', '--desc', help='Description for HTML page', required=False)
     parser.add_argument('-o', '--output_dir', help='Directory to write the results to', required=True)
     parser.add_argument('--silent', help='Silent mode', action='store_true')
@@ -273,52 +290,58 @@ def main():
         logging_stdout.setFormatter(formatter)
         logger.addHandler(logging_stdout)
 
-    logger.info('Loading profiles... ')
+    logger.info('Loading profiles...')
     sample_ids_list, gs_samples_list, profiles_list_to_samples_list = load_profiles(args.gold_standard_file,
                                                                                     args.profiles_files,
                                                                                     args.no_normalization)
     logger.info('done')
 
-    logger.info('Creating output directories... ')
+    logger.info('Creating output directories...')
     create_output_directories(output_dir, labels)
     logger.info('done')
 
     plots_list = []
     if args.plot_abundances:
-        logger.info('Plotting gold standard abundances... ')
+        logger.info('Plotting gold standard abundances...')
         plots_list += pl.plot_samples_hist(gs_samples_list, sample_ids_list, output_dir)
         logger.info('done')
 
-    logger.info('Computing metrics... ')
+    logger.info('Computing metrics...')
     pd_metrics = evaluate(gs_samples_list,
                           profiles_list_to_samples_list,
                           labels)
     logger.info('done')
 
-    logger.info('Saving computed metrics... ')
+    logger.info('Saving computed metrics...')
     pd_metrics[['tool', 'rank', 'metric', 'sample', 'value']].fillna('na').to_csv(os.path.join(output_dir, 'results.tsv'), sep='\t', index=False)
     print_by_tool(output_dir, pd_metrics)
     print_by_rank(output_dir, labels, pd_metrics)
     logger.info('done')
 
-    logger.info('Creating beta diversity plots... ')
+    logger.info('Creating beta diversity plots...')
     plots_list += pl.plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_ids_list, labels, output_dir)
     logger.info('done')
 
-    logger.info('Creating rarefaction curves... ')
+    logger.info('Creating rarefaction curves...')
     plots_list += pl.plot_rarefaction_curves(gs_samples_list, output_dir)
     plots_list += pl.plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=True)
     logger.info('done')
 
-    logger.info('Creating spider plots... ')
+    logger.info('Creating spider plots...')
     plots_list += pl.plot_all(pd_metrics, labels, output_dir)
     logger.info('done')
 
-    logger.info('Computing rankings... ')
+    logger.info('Computing rankings...')
     pd_rankings = rk.highscore_table(pd_metrics)
     logger.info('done')
 
-    logger.info('Creating HTML page... ')
+    time_list, memory_list = get_time_memory(args.time, args.memory, args.profiles_files)
+    if time_list or memory_list:
+        logger.info('Plotting computing efficiency...')
+        plots_list += pl.plot_time_memory(time_list, memory_list, labels, output_dir)
+        logger.info('done')
+
+    logger.info('Creating HTML page...')
     html.create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, output_dir, args.desc)
     logger.info('done')
 

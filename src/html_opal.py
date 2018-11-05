@@ -443,8 +443,8 @@ def create_gs_tab(plots_list, tabs_list):
     # Proportions panel
     imgs_proportions = ''
     for rank in c.ALL_RANKS:
-        fig_name = 'gold_standard/' + rank
-        if fig_name in plots_list:
+        if os.path.join('gold_standard', rank) in plots_list:
+            fig_name = 'gold_standard/' + rank
             imgs_proportions = imgs_proportions + '<img src="' + fig_name + '.png" onclick="showlegend(this, \'' + rank + '_legend\')" class="proportions"/>'
             imgs_proportions = imgs_proportions + '<img src="' + fig_name + '_legend.png" style="visibility:hidden;display:none;" id="' + rank + '_legend" class="legend">'
     if len(imgs_proportions) > 0:
@@ -458,6 +458,13 @@ def create_gs_tab(plots_list, tabs_list):
     else:
         tabs_plots = Tabs(tabs=[rarefaction_panel], css_classes=['bk-tabs-margin', 'bk-tabs-margin-lr'])
         tabs_list.append(Panel(child=tabs_plots, title="Gold standard"))
+
+
+def create_computing_efficiency_tab(plots_list, tabs_list):
+    if 'time_memory' in plots_list:
+        div_time_memory = Div(text='<img src="time_memory.png"/>', css_classes=['bk-width-auto'])
+        column_time_memory = column(div_time_memory, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-width-auto-main'])
+        tabs_list.append(Panel(child=column_time_memory, title="Computing efficiency"))
 
 
 def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, output_dir, desc_text):
@@ -477,6 +484,8 @@ def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, ou
                  Panel(child=col_rankings, title="Rankings"),
                  Panel(child=create_alpha_diversity_tab(), title="Alpha diversity"),
                  Panel(child=beta_div_column, title="Beta diversity")]
+
+    create_computing_efficiency_tab(plots_list, tabs_list)
 
     create_gs_tab(plots_list, tabs_list)
 

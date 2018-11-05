@@ -1,6 +1,8 @@
 [![CircleCI](https://circleci.com/gh/CAMI-challenge/OPAL.svg?style=svg)](https://circleci.com/gh/CAMI-challenge/OPAL)
 
-# OPAL - Profiling Assessment
+# OPAL: Open-community Profiling Assessment tooL
+
+Taxonomic metagenome profilers predict the presence and relative abundance of microorganisms from shotgun sequence samples of DNA isolated directly from a microbial community. Over the past years, there has been an explosive growth of software and algorithms for this task, resulting in a need for more systematic comparisons of these methods based on relevant performance criteria. OPAL implements commonly used performance metrics, including those of the first challenge of the Initiative for the [Critical Assessment of Metagenome Interpretation (CAMI)](http://cami-challenge.org), together with convenient visualizations.
 
 Example pages produced by OPAL:
 * CAMI II mouse gut toy data set: *https://cami-challenge.github.io/OPAL/cami_ii_mg/*
@@ -64,10 +66,11 @@ The BIOM format used by OPAL is a sparse matrix stored in a JSON or HDF5 file, w
 
 ## Running _opal.py_
 ~~~BASH
-usage: opal.py [-h] -g GOLD_STANDARD_FILE [-n] [-p] [-l LABELS] -o OUTPUT_DIR
+usage: opal.py [-h] -g GOLD_STANDARD_FILE [-n] [-p] [-l LABELS] [-t TIME]
+               [-m MEMORY] [-d DESC] -o OUTPUT_DIR [--silent] [-v]
                profiles_files [profiles_files ...]
 
-Compute all metrics for one or more taxonomic profiles
+OPAL: Open-community Profiling Assessment tooL
 
 positional arguments:
   profiles_files        Files of profiles
@@ -83,8 +86,14 @@ optional arguments:
                         minutes)
   -l LABELS, --labels LABELS
                         Comma-separated profiles names
+  -t TIME, --time TIME  Comma-separated running times
+  -m MEMORY, --memory MEMORY
+                        Comma-separated memory usages
+  -d DESC, --desc DESC  Description for HTML page
   -o OUTPUT_DIR, --output_dir OUTPUT_DIR
                         Directory to write the results to
+  --silent              Silent mode
+  -v, --version         show program's version number and exit
 ~~~
 **Example:** To run the example, please download the files given in the [_data_](https://github.com/CAMI-challenge/OPAL/tree/master/data) directory.
 ~~~BASH

@@ -34,22 +34,45 @@ def create_colors_list():
     return colors_list
 
 
-def plot_time_memory(time, memory, output_dir):
+def plot_time_memory(time, memory, labels, output_dir):
     time_label = 'Time (hours)'
     memory_label = 'Memory (GB)'
-    df = pd.DataFrame({time_label: time, memory_label: memory}, columns=[time_label, memory_label]).sort_values(by=[time_label])
-    df.columns = ['Time (hours)', 'Memory (GB)']
 
-    ax = df.plot(kind='bar', secondary_y='Memory (GB)', mark_right=False, zorder=20)
+    df = pd.DataFrame(index=labels)
+    if time:
+        df[time_label] = time
+    if memory:
+        df[memory_label] = memory
+
+    if time:
+        df.sort_values(by=[time_label], inplace=True)
+    else:
+        df.sort_values(by=[memory_label], inplace=True)
+
+    label2 = ''
+    if time:
+        label1 = time_label
+        if memory:
+            label2 = memory_label
+    else:
+        label1 = memory_label
+
+    if label2:
+        ax = df.plot(kind='bar', secondary_y=label2, mark_right=False, zorder=20)
+    else:
+        ax = df.plot(kind='bar', mark_right=False, zorder=20)
     ax.grid(which='major', linestyle='-', linewidth='0.5', color='lightgrey', zorder=0)
-    ax.set_ylabel('Time (hours)')
+    ax.set_ylabel(label1)
     plt.setp(ax.get_xticklabels(), fontsize=9, rotation=15)
 
-    ax2 = ax.twinx()
-    ax2.set_ylabel('Memory (GB)', labelpad=23)
-    ax2.yaxis.set_ticks([])
-    plt.savefig(os.path.join(output_dir, 'time_memory.pdf'), dpi=100, format='pdf', bbox_inches='tight')
-    plt.savefig(os.path.join(output_dir, 'time_memory.png'), dpi=100, format='png', bbox_inches='tight')
+    if label2:
+        ax2 = ax.twinx()
+        ax2.set_ylabel(memory_label, labelpad=23)
+        ax2.yaxis.set_ticks([])
+    fig_name = 'time_memory'
+    plt.savefig(os.path.join(output_dir, fig_name + '.pdf'), dpi=100, format='pdf', bbox_inches='tight')
+    plt.savefig(os.path.join(output_dir, fig_name + '.png'), dpi=100, format='png', bbox_inches='tight')
+    return [fig_name]
 
 
 def create_legend_rarefaction(output_dir):
