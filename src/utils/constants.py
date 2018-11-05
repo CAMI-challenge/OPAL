@@ -28,7 +28,7 @@ ALL_METRICS = [UNIFRAC, UNW_UNIFRAC, L1NORM, PRECISION, RECALL, F1_SCORE, TP, FP
 
 TOOLTIP_UNIFRAC = 'tree-based measure of similarity between the true and predicted abundances at all taxonomic ranks ranging from 0 (high similarity) to 16 (low similarity)'
 TOOLTIP_UNW_UNIFRAC = 'similar to the weighted UniFrac error, but measuring how well a profiler correctly identified the presence and absence of taxa instead of their relative abundances. The maximal value is the product of the number of taxonomic ranks minus 1 and the number of true taxa at all taxonomic ranks'
-TOOLTIP_L1NORM = 'sum of the absolute differences between between the true and predicted abundances at the selected taxonomic rank ranging from 0 (perfect reconstruction of the relative abundances) to 2 (totally incorrect reconstruction)'
+TOOLTIP_L1NORM = 'sum of the absolute differences between the true and predicted abundances at the selected taxonomic rank ranging from 0 (perfect reconstruction of the relative abundances) to 2 (totally incorrect reconstruction)'
 TOOLTIP_PRECISION = 'ratio of taxa correctly predicted as present and all predicted taxa at the selected taxonomic rank'
 TOOLTIP_RECALL = 'ratio of taxa correctly predicted as present and all taxa present at the selected taxonomic rank'
 TOOLTIP_F1_SCORE = 'harmonic average of completeness and purity at the selected taxonomic rank, i.e. two times the product of completess and purity devided by their sum'

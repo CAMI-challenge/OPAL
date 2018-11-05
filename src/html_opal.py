@@ -387,23 +387,9 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
 
 
 def create_alpha_diversity_tab():
-    img_shannon = '<img src="plot_shannon.png" />'
-    img_shannon_diff = '<img src="plot_shannon_diff.png" />'
-    div_plot_shannon = Div(text=img_shannon)
-    source = ColumnDataSource(data=dict(active=[img_shannon, img_shannon_diff]))
-    checkbox_callback = CustomJS(args=dict(source=source), code="""
-        if(this.active.length > 0) {
-            div_plot_shannon.text = source.data['active'][1];
-        } else {
-            div_plot_shannon.text = source.data['active'][0];
-        }
-    """)
-    checkbox_group = CheckboxGroup(labels=["Absolute differences to gold standard"], active=[], width=300, css_classes=['bk-checkbox-shannon'])
-    checkbox_group.js_on_click(checkbox_callback)
-    checkbox_callback.args["div_plot_shannon"] = div_plot_shannon
-
-    shannon_column = column(checkbox_group, div_plot_shannon, sizing_mode='scale_width', css_classes=['bk-shannon-plots', 'bk-width-auto', 'bk-width-auto-main'])
-
+    imgs_shannon = '<img src="plot_shannon.png"/><img src="plot_shannon_diff.png"/>'
+    div_plots_shannon = Div(text=imgs_shannon, css_classes=['bk-width-auto'])
+    shannon_column = column(div_plots_shannon, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-width-auto-main'])
     shannon_panel = Panel(child=shannon_column, title='Shannon')
     tabs_plots = Tabs(tabs=[shannon_panel], css_classes=['bk-tabs-margin', 'bk-tabs-margin-lr'])
     return tabs_plots
@@ -496,14 +482,14 @@ def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, ou
 
     tabs = Tabs(tabs=tabs_list, css_classes=['bk-tabs-margin'])
 
-    title = create_title_div("main", "OPAL: Profiling Assessment", " produced on {0} with OPAL version {1} ".format(
+    title = create_title_div("main", "OPAL: Open-community Profiling Assessment tooL", " produced on {0} with OPAL version {1} ".format(
             datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), __version__))
 
     template = Template('''<!DOCTYPE html>
         <html lang="en">
             <head>
                 <meta charset="utf-8">
-                <title>OPAL: Profiling Assessment</title>
+                <title>OPAL: Open-community Profiling Assessment tooL</title>
                 {{ js_resources }}
                 {{ css_resources }}
                 <style>.bk-fit-content {width: fit-content; width: -moz-fit-content;}
@@ -514,17 +500,6 @@ def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, ou
                 .bk-tabs-margin-lr{margin-left: 10px; margin-right: 10px}
                 .bk-root {display: flex; justify-content: center;}
                 .bk-padding-top {padding-top: 10px;}
-                .bk-shannon-plots > div:first-child {
-                    padding-bottom: 0px;
-                    padding-left: 20px;
-                    padding-top: 14px;
-                }
-                .bk-shannon-plots > div:last-child {
-                    padding-top: 0px;
-                }
-                .bk-checkbox-shannon input[type="checkbox"] {
-                    margin: 2px 0 0;
-                } 
                 html {overflow: -moz-scrollbars-vertical; overflow-y: scroll;}
                 .tooltip {
                     position: relative;

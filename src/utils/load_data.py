@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import biom
-import sys
 import os
+import logging
 from collections import defaultdict
 
 
@@ -62,13 +62,17 @@ class Prediction:
 
 def get_column_indices(column_name_to_index):
     if "TAXID" not in column_name_to_index:
-        raise RuntimeError("Column not found: {}".format("TAXID"))
+        logging.getLogger('opal').critical("Column not found: {}".format("TAXID"))
+        raise RuntimeError
     if "RANK" not in column_name_to_index:
-        raise RuntimeError("Column not found: {}".format("RANK"))
+        logging.getLogger('opal').critical("Column not found: {}".format("RANK"))
+        raise RuntimeError
     if "PERCENTAGE" not in column_name_to_index:
-        raise RuntimeError("Column not found: {}".format("PERCENTAGE"))
+        logging.getLogger('opal').critical("Column not found: {}".format("PERCENTAGE"))
+        raise RuntimeError
     if "TAXPATH" not in column_name_to_index:
-        raise RuntimeError("Column not found: {}".format("TAXPATH"))
+        logging.getLogger('opal').critical("Column not found: {}".format("TAXPATH"))
+        raise RuntimeError
     index_taxid = column_name_to_index["TAXID"]
     index_rank = column_name_to_index["RANK"]
     index_percentage = column_name_to_index["PERCENTAGE"]
@@ -125,7 +129,8 @@ def open_profile_from_tsv(file_path, normalize):
                             profile = []
                             predictions_dict = {}
                     else:
-                        sys.exit("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.\n".format(file_path))
+                        logging.getLogger('opal').critical("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.\n".format(file_path))
+                        raise RuntimeError
                     header = {}
                 reading_data = False
                 got_column_indices = False
@@ -134,7 +139,8 @@ def open_profile_from_tsv(file_path, normalize):
                 continue
 
             if not got_column_indices:
-                sys.exit("Header line starting with @@ in file {} is missing or at wrong position.\n".format(file_path))
+                logging.getLogger('opal').critical("Header line starting with @@ in file {} is missing or at wrong position.\n".format(file_path))
+                raise RuntimeError
 
             reading_data = True
             row_data = line.split('\t')
@@ -162,7 +168,8 @@ def open_profile_from_tsv(file_path, normalize):
         if reading_data and len(profile) > 0:
             samples_list.append((header['SAMPLEID'], header, profile))
     else:
-        sys.exit("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.\n".format(file_path))
+        logging.getLogger('opal').critical("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.\n".format(file_path))
+        raise RuntimeError
 
     if normalize:
         normalize_samples(samples_list)
@@ -172,14 +179,16 @@ def open_profile_from_tsv(file_path, normalize):
 
 def open_profile(file_path, normalize):
     if not os.path.exists(file_path):
-        sys.exit("Input file {} does not exist.".format(file_path))
+        logging.getLogger('opal').critical("Input file {} does not exist.".format(file_path))
+        exit(1)
     try:
         table = biom.load_table(file_path)
     except:
         try:
             return open_profile_from_tsv(file_path, normalize)
         except:
-            sys.exit("Input file could not be read.")
+            logging.getLogger('opal').critical("Input file could not be read.")
+            exit(1)
 
     samples_list = []
     samples = table.ids(axis='sample')

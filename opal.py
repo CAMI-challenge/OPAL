@@ -7,6 +7,7 @@ import argparse
 import os.path
 import pandas as pd
 import numpy as np
+import logging
 from src import l1norm as l1
 from src import binary_metrics as bm
 from src import unifrac_distance as uf
@@ -164,7 +165,8 @@ def evaluate(gs_samples_list, profiles_list_to_samples_list, labels):
             one_profile_assessed = True
 
     if not one_profile_assessed:
-        sys.exit("No profile could be evaluated.")
+        logging.getLogger('opal').critical("No profile could be evaluated.")
+        exit(1)
 
     return pd_metrics
 
@@ -243,46 +245,84 @@ def create_output_directories(output_dir, labels):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Compute all metrics for one or more taxonomic profiles")
-    parser.add_argument("-g", "--gold_standard_file", help="Gold standard file", required=True)
-    parser.add_argument("profiles_files", nargs='+', help="Files of profiles")
-    parser.add_argument('-n', '--no_normalization', help="Do not normalize samples", action='store_true')
-    parser.add_argument('-p', '--plot_abundances', help="Plot abundances in the gold standard (can take some minutes)", action='store_true')
-    parser.add_argument('-l', '--labels', help="Comma-separated profiles names", required=False)
-    parser.add_argument('-t', '--time', help="Comma-separated running times", required=False)
-    parser.add_argument('-m', '--memory', help="Comma-separated memory usage", required=False)
-    parser.add_argument('-d', '--desc', help="Description for HTML page", required=False)
-    parser.add_argument('-o', '--output_dir', help="Directory to write the results to", required=True)
+    parser = argparse.ArgumentParser(description='Compute all metrics for one or more taxonomic profiles')
+    parser.add_argument('-g', '--gold_standard_file', help='Gold standard file', required=True)
+    parser.add_argument('profiles_files', nargs='+', help='Files of profiles')
+    parser.add_argument('-n', '--no_normalization', help='Do not normalize samples', action='store_true')
+    parser.add_argument('-p', '--plot_abundances', help='Plot abundances in the gold standard (can take some minutes)', action='store_true')
+    parser.add_argument('-l', '--labels', help='Comma-separated profiles names', required=False)
+    parser.add_argument('-t', '--time', help='Comma-separated running times', required=False)
+    parser.add_argument('-m', '--memory', help='Comma-separated memory usage', required=False)
+    parser.add_argument('-d', '--desc', help='Description for HTML page', required=False)
+    parser.add_argument('-o', '--output_dir', help='Directory to write the results to', required=True)
+    parser.add_argument('--silent', help='Silent mode', action='store_true')
     parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
     args = parser.parse_args()
     labels = get_labels(args.labels, args.profiles_files)
     output_dir = os.path.abspath(args.output_dir)
 
+    logger = logging.getLogger('opal')
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    logging_fh = logging.FileHandler(os.path.join(args.output_dir, 'log.txt'))
+    logging_fh.setFormatter(formatter)
+    logger.addHandler(logging_fh)
+
+    if not args.silent:
+        logging_stdout = logging.StreamHandler(sys.stdout)
+        logging_stdout.setFormatter(formatter)
+        logger.addHandler(logging_stdout)
+
+    logger.info('Loading profiles... ')
     sample_ids_list, gs_samples_list, profiles_list_to_samples_list = load_profiles(args.gold_standard_file,
                                                                                     args.profiles_files,
                                                                                     args.no_normalization)
+    logger.info('done')
+
+    logger.info('Creating output directories... ')
     create_output_directories(output_dir, labels)
+    logger.info('done')
+
     plots_list = []
     if args.plot_abundances:
+        logger.info('Plotting gold standard abundances... ')
         plots_list += pl.plot_samples_hist(gs_samples_list, sample_ids_list, output_dir)
+        logger.info('done')
 
+    logger.info('Computing metrics... ')
     pd_metrics = evaluate(gs_samples_list,
                           profiles_list_to_samples_list,
                           labels)
+    logger.info('done')
 
-    pd_metrics[['tool', 'rank', 'metric', 'sample', 'value']].fillna('na').to_csv(os.path.join(output_dir, "results.tsv"), sep='\t', index=False)
-
-    plots_list += pl.plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_ids_list, labels, output_dir)
-
-    plots_list += pl.plot_rarefaction_curves(gs_samples_list, output_dir)
-    plots_list += pl.plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=True)
-
+    logger.info('Saving computed metrics... ')
+    pd_metrics[['tool', 'rank', 'metric', 'sample', 'value']].fillna('na').to_csv(os.path.join(output_dir, 'results.tsv'), sep='\t', index=False)
     print_by_tool(output_dir, pd_metrics)
     print_by_rank(output_dir, labels, pd_metrics)
-    plots_list += pl.plot_all(pd_metrics, labels, output_dir)
+    logger.info('done')
 
+    logger.info('Creating beta diversity plots... ')
+    plots_list += pl.plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_ids_list, labels, output_dir)
+    logger.info('done')
+
+    logger.info('Creating rarefaction curves... ')
+    plots_list += pl.plot_rarefaction_curves(gs_samples_list, output_dir)
+    plots_list += pl.plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=True)
+    logger.info('done')
+
+    logger.info('Creating spider plots... ')
+    plots_list += pl.plot_all(pd_metrics, labels, output_dir)
+    logger.info('done')
+
+    logger.info('Computing rankings... ')
     pd_rankings = rk.highscore_table(pd_metrics)
+    logger.info('done')
+
+    logger.info('Creating HTML page... ')
     html.create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, output_dir, args.desc)
+    logger.info('done')
+
+    logger.info('OPAL finished successfully. All results have been saved to {}'.format(output_dir))
 
 
 if __name__ == "__main__":
