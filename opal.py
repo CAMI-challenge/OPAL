@@ -255,10 +255,25 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
 
 
 def create_output_directories(output_dir, labels):
-    make_sure_path_exists(output_dir)
     make_sure_path_exists(os.path.join(output_dir, 'gold_standard'))
     for label in labels:
         make_sure_path_exists(os.path.join(output_dir, "by_tool", label))
+
+
+def concat_pd(labels, metric, values, pd_metrics):
+    df = pd.DataFrame({'tool': labels, 'value': values})
+    df['sample'] = np.nan
+    df['metric'] = metric
+    df['rank'] = np.nan
+    return pd.concat([pd_metrics, df], ignore_index=True, sort=False)
+
+
+def concat_time_memory(labels, time_list, memory_list, pd_metrics):
+    if time_list:
+        pd_metrics = concat_pd(labels, 'time', time_list, pd_metrics)
+    if memory_list:
+        pd_metrics = concat_pd(labels, 'memory', memory_list, pd_metrics)
+    return pd_metrics
 
 
 def main():
@@ -275,8 +290,11 @@ def main():
     parser.add_argument('--silent', help='Silent mode', action='store_true')
     parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
     args = parser.parse_args()
-    labels = get_labels(args.labels, args.profiles_files)
     output_dir = os.path.abspath(args.output_dir)
+    make_sure_path_exists(output_dir)
+    labels = get_labels(args.labels, args.profiles_files)
+
+    create_output_directories(output_dir, labels)
 
     logger = logging.getLogger('opal')
     logger.setLevel(logging.INFO)
@@ -284,6 +302,8 @@ def main():
     logging_fh = logging.FileHandler(os.path.join(args.output_dir, 'log.txt'))
     logging_fh.setFormatter(formatter)
     logger.addHandler(logging_fh)
+
+    time_list, memory_list = get_time_memory(args.time, args.memory, args.profiles_files)
 
     if not args.silent:
         logging_stdout = logging.StreamHandler(sys.stdout)
@@ -296,10 +316,6 @@ def main():
                                                                                     args.no_normalization)
     logger.info('done')
 
-    logger.info('Creating output directories...')
-    create_output_directories(output_dir, labels)
-    logger.info('done')
-
     plots_list = []
     if args.plot_abundances:
         logger.info('Plotting gold standard abundances...')
@@ -310,6 +326,8 @@ def main():
     pd_metrics = evaluate(gs_samples_list,
                           profiles_list_to_samples_list,
                           labels)
+    if time_list or memory_list:
+        pd_metrics = concat_time_memory(labels, time_list, memory_list, pd_metrics)
     logger.info('done')
 
     logger.info('Saving computed metrics...')
@@ -335,7 +353,6 @@ def main():
     pd_rankings = rk.highscore_table(pd_metrics)
     logger.info('done')
 
-    time_list, memory_list = get_time_memory(args.time, args.memory, args.profiles_files)
     if time_list or memory_list:
         logger.info('Plotting computing efficiency...')
         plots_list += pl.plot_time_memory(time_list, memory_list, labels, output_dir)

@@ -71,6 +71,8 @@ def get_rank_to_sample_pd(pd_metrics):
     # label ranks, so that the rows don't get lost
     pd_copy.loc[pd_copy[pd.isnull(pd_copy['rank'])].index, 'rank'] = 'rank independent'
 
+    pd_copy = pd_copy[-pd_copy['metric'].isin(['time', 'memory'])]
+
     # transform table
     pd_grouped = pd_copy.pivot_table(index=['rank', 'tool', 'sample'], columns='metric', values='value')
 
@@ -460,11 +462,24 @@ def create_gs_tab(plots_list, tabs_list):
         tabs_list.append(Panel(child=tabs_plots, title="Gold standard"))
 
 
-def create_computing_efficiency_tab(plots_list, tabs_list):
-    if 'time_memory' in plots_list:
-        div_time_memory = Div(text='<img src="time_memory.png"/>', css_classes=['bk-width-auto'])
-        column_time_memory = column(div_time_memory, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-width-auto-main'])
-        tabs_list.append(Panel(child=column_time_memory, title="Computing efficiency"))
+def create_computing_efficiency_tab(pd_metrics, plots_list, tabs_list):
+    if 'time_memory' not in plots_list:
+        return
+
+    styles = [{'selector': 'td', 'props': [('width', '77pt'), ('padding-left', '10px')]},
+              {'selector': 'th', 'props': [('width', 'auto'), ('text-align', 'left'), ('padding-left', '10px')]},
+              {'selector': '', 'props': [('width', 'max-content'), ('width', '-moz-max-content'), ('border-spacing', '0px')]}]
+    df = pd_metrics[pd_metrics['metric'].isin(['time', 'memory'])]
+    df = df.pivot_table(index=['tool'], columns='metric', values='value').reset_index().sort_values(by=['time'])
+    df = df[['tool', 'time', 'memory']]
+    df.rename(index=str, columns={'tool': 'Tool', 'time': 'Time (hours)', 'memory': 'Memory (GB)'}, inplace=True)
+
+    html = df.style.set_table_styles(styles).hide_index().render()
+    div_html = Div(text=html, css_classes=['bk-width-auto', 'bk-inline-block'])
+
+    div_time_memory = Div(text='<img src="time_memory.png"/>', css_classes=['bk-width-auto', 'bk-inline-block'])
+    column_time_memory = row(div_html, div_time_memory, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-width-auto-main', 'bk-inline-block'])
+    tabs_list.append(Panel(child=column_time_memory, title="Computing efficiency"))
 
 
 def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, output_dir, desc_text):
@@ -476,7 +491,7 @@ def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, ou
 
     tabs_plots = create_plots_html(plots_list)
 
-    metrics_row = row(column(select_sample, select_rank, heatmap_legend_div, mytable1, sizing_mode='scale_width', css_classes=['bk-width-auto']), column(tabs_plots, sizing_mode='scale_width', css_classes=['bk-width-auto']), css_classes=['bk-width-auto'], sizing_mode='scale_width')
+    metrics_row = row(column(select_sample, select_rank, heatmap_legend_div, mytable1, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-height-auto', 'bk-inline-block']), column(tabs_plots, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-inline-block']), css_classes=['bk-width-auto', 'bk-inline-block'], sizing_mode='scale_width')
 
     beta_div_column = create_beta_diversity_tab(labels, plots_list)
 
@@ -485,7 +500,7 @@ def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, ou
                  Panel(child=create_alpha_diversity_tab(), title="Alpha diversity"),
                  Panel(child=beta_div_column, title="Beta diversity")]
 
-    create_computing_efficiency_tab(plots_list, tabs_list)
+    create_computing_efficiency_tab(pd_metrics, plots_list, tabs_list)
 
     create_gs_tab(plots_list, tabs_list)
 
@@ -503,6 +518,8 @@ def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, ou
                 {{ css_resources }}
                 <style>.bk-fit-content {width: fit-content; width: -moz-fit-content;}
                 .bk-width-auto {width: auto !important;}
+                .bk-height-auto {height: auto !important;}
+                .bk-inline-block {display: inline-block !important; float: left;}
                 .bk-width-auto-main>div {width: -webkit-fill-available !important;}
                 div.bk-width-auto-main {width: -webkit-fill-available !important;}
                 .bk-tabs-margin{margin-top: 20px !important;}
