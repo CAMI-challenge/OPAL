@@ -3,6 +3,16 @@
 import docker
 import time
 import argparse
+import os
+import errno
+
+
+def make_sure_path_exists(path):
+    try:
+        os.makedirs(path)
+    except OSError as exception:
+        if exception.errno != errno.EEXIST:
+            raise
 
 
 def run_docker(image, volumes, yaml):
@@ -26,32 +36,39 @@ def run_docker(image, volumes, yaml):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--image', help='Docker image of profiler', required=True)
-    parser.add_argument('-v', '--volume', type=lambda x: x.split(':'), action='append', required=True)
-    parser.add_argument('-y', '--yaml', help='Bioboxes YAML file', required=True)
+    parser.add_argument('--image', help='Docker image of profiler', required=True)
+    parser.add_argument('--yaml', help='Bioboxes YAML file', required=False)
+    parser.add_argument('--input_dir', help='Input directory containing gzipped FASTQ files', required=True)
+    parser.add_argument('--output_dir', help='Output directory', required=True)
+
     args = parser.parse_args()
 
-    if args.output_file and not args.label:
-        print("Option --output_file requires --label")
-        exit(2)
-
     volumes = dict()
-    for i in range(0, len(args.volume)):
-        if len(args.volume[0]) < 3:
-            print("Missing required volumes")
-            exit(2)
-        volumes[args.volume[i][0]] = {'bind': args.volume[i][1], 'mode': args.volume[i][2]}
-
+    volumes[args.input_dir] = {'bind': '/bbx/mnt/input', 'mode': 'ro'}
     yaml = None
     if args.yaml:
-        yaml = {'YAML': args.yaml}
+        if os.path.dirname(args.yaml) == args.input_dir:
+            yaml = {'YAML': '/bbx/mnt/input/' + os.path.basename(args.yaml)}
+        else:
+            yaml = {'YAML': '/bbx/mnt/yaml/' + os.path.basename(args.yaml)}
+            volumes[os.path.dirname(args.yaml)] = {'bind': '/bbx/mnt/yaml', 'mode': 'ro'}
+    volumes[args.output_dir] = {'bind': '/bbx/mnt/output', 'mode': 'rw'}
+    volumes[os.path.join(args.output_dir, 'metadata')] = {'bind': '/bbx/metadata', 'mode': 'rw'}
+    volumes[os.path.join(args.output_dir, 'cache')] = {'bind': '/cache', 'mode': 'rw'}
+
+    make_sure_path_exists(args.output_dir)
+    make_sure_path_exists(os.path.join(args.output_dir, 'metadata'))
+    make_sure_path_exists(os.path.join(args.output_dir, 'cache'))
 
     start_time = time.time()
     max_total_rss = run_docker(args.image, volumes, yaml)
     elapsed_time = time.time() - start_time
     memory = max_total_rss / 1048576.0
-    print("{} MB".format(memory))
-    print("{:.2f} seconds".format(elapsed_time))
+
+    print('{} MB\n{:.2f} seconds\n'.format(memory, elapsed_time))
+
+    with open(os.path.join(args.output_dir, 'maxmemory_runtime.txt'), 'w') as f:
+        f.write('{} MB\n{:.2f} seconds\n'.format(memory, elapsed_time))
 
 
 if __name__ == "__main__":
