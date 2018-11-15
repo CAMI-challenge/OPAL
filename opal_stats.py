@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import docker
 import time
@@ -40,35 +40,39 @@ def main():
     parser.add_argument('--yaml', help='Bioboxes YAML file', required=False)
     parser.add_argument('--input_dir', help='Input directory containing gzipped FASTQ files', required=True)
     parser.add_argument('--output_dir', help='Output directory', required=True)
-
     args = parser.parse_args()
+    input_dir = args.input_dir
+    output_dir = args.output_dir
+    image_dir_name = args.image.replace('/', '-')
 
     volumes = dict()
-    volumes[args.input_dir] = {'bind': '/bbx/mnt/input', 'mode': 'ro'}
     yaml = None
     if args.yaml:
-        if os.path.dirname(args.yaml) == args.input_dir:
+        if os.path.dirname(args.yaml) == input_dir:
             yaml = {'YAML': '/bbx/mnt/input/' + os.path.basename(args.yaml)}
         else:
             yaml = {'YAML': '/bbx/mnt/yaml/' + os.path.basename(args.yaml)}
             volumes[os.path.dirname(args.yaml)] = {'bind': '/bbx/mnt/yaml', 'mode': 'ro'}
-    volumes[args.output_dir] = {'bind': '/bbx/mnt/output', 'mode': 'rw'}
-    volumes[os.path.join(args.output_dir, 'metadata')] = {'bind': '/bbx/metadata', 'mode': 'rw'}
-    volumes[os.path.join(args.output_dir, 'cache')] = {'bind': '/cache', 'mode': 'rw'}
 
-    make_sure_path_exists(args.output_dir)
-    make_sure_path_exists(os.path.join(args.output_dir, 'metadata'))
-    make_sure_path_exists(os.path.join(args.output_dir, 'cache'))
+    volumes[input_dir] = {'bind': '/bbx/mnt/input', 'mode': 'ro'}
+    volumes[os.path.join(output_dir, image_dir_name)] = {'bind': '/bbx/mnt/output', 'mode': 'rw'}
+    volumes[os.path.join(output_dir, image_dir_name, 'metadata')] = {'bind': '/bbx/metadata', 'mode': 'rw'}
+    volumes[os.path.join(output_dir, image_dir_name, 'cache')] = {'bind': '/cache', 'mode': 'rw'}
+
+    make_sure_path_exists(output_dir)
+    make_sure_path_exists(os.path.join(output_dir, image_dir_name))
+    make_sure_path_exists(os.path.join(output_dir, image_dir_name, 'metadata'))
+    make_sure_path_exists(os.path.join(output_dir, image_dir_name, 'cache'))
 
     start_time = time.time()
     max_total_rss = run_docker(args.image, volumes, yaml)
     elapsed_time = time.time() - start_time
     memory = max_total_rss / 1048576.0
 
-    print('{} MB\n{:.2f} seconds\n'.format(memory, elapsed_time))
+    print('{:.2f} seconds\n{} MB'.format(elapsed_time, memory))
 
-    with open(os.path.join(args.output_dir, 'maxmemory_runtime.txt'), 'w') as f:
-        f.write('{} MB\n{:.2f} seconds\n'.format(memory, elapsed_time))
+    with open(os.path.join(output_dir, image_dir_name, 'runtime_maxmemory.txt'), 'w') as f:
+        f.write('{:.2f} seconds\n{} MB\n'.format(elapsed_time, memory))
 
 
 if __name__ == "__main__":
