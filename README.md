@@ -66,19 +66,20 @@ The BIOM format used by OPAL is a sparse matrix stored in a JSON or HDF5 file, w
 
 ## Running _opal.py_
 ~~~BASH
-usage: opal.py [-h] -g GOLD_STANDARD_FILE [-n] [-p] [-l LABELS] [-t TIME]
-               [-m MEMORY] [-d DESC] -o OUTPUT_DIR [--silent] [-v]
+usage: opal.py -g GOLD_STANDARD_FILE -o OUTPUT_DIR [-n] [-p] [-l LABELS]
+               [-t TIME] [-m MEMORY] [-d DESC] [--silent] [-v] [-h]
                profiles_files [profiles_files ...]
 
 OPAL: Open-community Profiling Assessment tooL
 
-positional arguments:
+required arguments:
   profiles_files        Files of profiles
-
-optional arguments:
-  -h, --help            show this help message and exit
   -g GOLD_STANDARD_FILE, --gold_standard_file GOLD_STANDARD_FILE
                         Gold standard file
+  -o OUTPUT_DIR, --output_dir OUTPUT_DIR
+                        Directory to write the results to
+
+optional arguments:
   -n, --no_normalization
                         Do not normalize samples
   -p, --plot_abundances
@@ -90,10 +91,9 @@ optional arguments:
   -m MEMORY, --memory MEMORY
                         Comma-separated memory usages
   -d DESC, --desc DESC  Description for HTML page
-  -o OUTPUT_DIR, --output_dir OUTPUT_DIR
-                        Directory to write the results to
   --silent              Silent mode
   -v, --version         show program's version number and exit
+  -h, --help            Show this help message and exit
 ~~~
 **Example:** To run the example, please download the files given in the [_data_](https://github.com/CAMI-challenge/OPAL/tree/master/data) directory.
 ~~~BASH
@@ -108,17 +108,6 @@ data/jolly_pasteur_3 \
 -l "TIPP, Quikr, MP2.0, MetaPhyler, mOTU, CLARK, FOCUS" \
 -o output_dir
 ~~~
-**Output:**
-Directory _output_dir_ will contain:
-* results.html
-* results.tsv
-* subdirectory per_rank with a .tsv file per taxonomic rank
-* subdirectory per_tool with a .tsv file per tool (CLARK.tsv, FOCUS.tsv, MetaPhyler.tsv, mOTU.tsv, MP2.0.tsv, Quikr.tsv, and TIPP.tsv)
-* spider_plot.pdf
-* spider_plot_recall_precision.pdf
-* plot_shannon.pdf
-
-__Note__: spider plots will only be generated if at least 3 profiles are provided, so that the plots can form a triangle.
 
 ## Running _tsv2biom.py_
 ~~~BASH

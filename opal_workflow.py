@@ -5,6 +5,9 @@ import os
 import re
 import sys
 import subprocess
+import logging
+from opal import get_labels
+from version import __version__
 
 
 def get_sorted_list_of_profiles_files(path):
@@ -66,40 +69,72 @@ def get_profiles_list(results_dir, images_list):
     return profiles_list
 
 
+def get_logger(output_dir):
+    logger = logging.getLogger('opal_workflow')
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    logging_fh = logging.FileHandler(os.path.join(output_dir, 'log.txt'))
+    logging_fh.setFormatter(formatter)
+    logger.addHandler(logging_fh)
+
+    logging_stdout = logging.StreamHandler(sys.stdout)
+    logging_stdout.setFormatter(formatter)
+    logger.addHandler(logging_stdout)
+    return logger
+
+
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-g', '--gold_standard_file', help='Gold standard file', required=True)
-    parser.add_argument('--images', help='Comma-separated list of Docker images of profilers', required=True)
-    parser.add_argument('--yaml', help='Bioboxes YAML file', required=False)
-    parser.add_argument('--input_dir', help='Input directory containing gzipped FASTQ files', required=True)
-    parser.add_argument('--output_dir', help='Output directory', required=True)
-    parser.add_argument('-d', '--desc', help='Description for HTML page (optional)', required=False)
-    parser.add_argument('-l', '--labels', help='Comma-separated names of profilers to be shown in OPAL (optional)', required=False)
+    parser = argparse.ArgumentParser(add_help=False)
+    group1 = parser.add_argument_group('required arguments')
+    group1.add_argument('images', nargs='+', help='Docker images (bioboxes) of profilers')
+    group1.add_argument('--input_dir', help='Input directory containing gzipped FASTQ files', required=True)
+    group1.add_argument('--output_dir', help='Output directory', required=True)
+    group1.add_argument('-g', '--gold_standard_file', help='Gold standard file', required=True)
+    group2 = parser.add_argument_group('optional arguments')
+    group2.add_argument('--yaml', help='Bioboxes YAML file (default: INPUT_DIR/biobox.yaml)', required=False)
+    group2.add_argument('-n', '--no_normalization', help='Do not normalize samples', action='store_true')
+    group2.add_argument('-p', '--plot_abundances', help='Plot abundances in the gold standard', action='store_true')
+    group2.add_argument('-l', '--labels', help='Comma-separated names of profilers to be shown in OPAL', required=False)
+    group2.add_argument('-d', '--desc', help='Description for HTML page', required=False)
+    group2.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
+    group2.add_argument('-h', '--help', action='help', help='Show this help message and exit')
     args = parser.parse_args()
 
-    images_list = [x.strip() for x in args.images.split(',')]
+    logger = get_logger(args.output_dir)
 
-    for image in images_list:
+    for image in args.images:
+        logger.info('Running {}...'.format(image))
         image_dir_name = image.replace('/', '-')
-        parameters = ['--image=' + image,
-                      '--yaml=' + args.yaml,
+        parameters = [image,
                       '--input_dir=' + args.input_dir,
                       '--output_dir=' + os.path.join(args.output_dir, image_dir_name)]
+        if args.yaml:
+            parameters.append('--yaml=' + args.yaml)
         try:
             subprocess.run([sys.executable, 'opal_stats.py'] + parameters, check=True)
         except subprocess.CalledProcessError:
-            print('Error: opal_stats.py returned non-zero exit status 1 for ' + image, file=sys.stderr)
+            logger.error('Error: opal_stats.py returned non-zero exit status for ' + image)
+    logger.info('done')
 
-    preprocess_results(args.output_dir, images_list)
-    profiles_list = get_profiles_list(args.output_dir, images_list)
-    time, memory = read_stats(args.output_dir, images_list)
+    logger.info('Reading results...')
+    preprocess_results(args.output_dir, args.images)
+    profiles_list = get_profiles_list(args.output_dir, args.images)
+    time, memory = read_stats(args.output_dir, args.images)
+    logger.info('done')
 
+    logger.info('Running OPAL...')
     parameters = ['--gold_standard_file=' + args.gold_standard_file,
                   '--time=' + time,
                   '--memory=' + memory,
                   '--output_dir=' + os.path.join(args.output_dir, 'opal_output')]
+    if args.no_normalization:
+        parameters.append('--no_normalization')
+    if args.plot_abundances:
+        parameters.append('--plot_abundances')
     if args.labels:
         parameters.append('--labels=' + args.labels)
+    else:
+        parameters.append('--labels=' + ','.join(get_labels(None, args.images)))
     if args.desc:
         parameters.append('--desc=' + args.desc)
     parameters += profiles_list

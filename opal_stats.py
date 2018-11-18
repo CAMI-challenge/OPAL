@@ -5,6 +5,7 @@ import time
 import argparse
 import os
 import errno
+from version import __version__
 
 
 def make_sure_path_exists(path):
@@ -35,11 +36,15 @@ def run_docker(image, volumes, yaml):
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--image', help='Docker image of profiler', required=True)
-    parser.add_argument('--yaml', help='Bioboxes YAML file', required=False)
-    parser.add_argument('--input_dir', help='Input directory containing gzipped FASTQ files', required=True)
-    parser.add_argument('--output_dir', help='Output directory', required=True)
+    parser = argparse.ArgumentParser(add_help=False)
+    group1 = parser.add_argument_group('required arguments')
+    group1.add_argument('image', nargs=1, help='Docker image (biobox) of profiler')
+    group1.add_argument('--input_dir', help='Input directory containing gzipped FASTQ files', required=True)
+    group1.add_argument('--output_dir', help='Output directory', required=True)
+    group2 = parser.add_argument_group('optional arguments')
+    group2.add_argument('--yaml', help='Bioboxes YAML file (default: INPUT_DIR/biobox.yaml)', required=False)
+    group2.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
+    group2.add_argument('-h', '--help', action='help', help='Show this help message and exit')
     args = parser.parse_args()
     input_dir = args.input_dir
     output_dir = args.output_dir
