@@ -7,6 +7,8 @@ import sys
 import subprocess
 import logging
 from opal import get_labels
+from opal import make_sure_path_exists
+from opal_stats import get_image_dir_name
 from version import __version__
 
 
@@ -27,10 +29,10 @@ def read_stats(results_dir, images_list):
     memory = ''
     comma = ''
     for image in images_list:
-        image_dir_name = image.replace('/', '-')
+        image_dir_name = get_image_dir_name(image)
         with open(os.path.join(results_dir, image_dir_name, 'runtime_maxmemory.txt')) as f_input:
             # assumes first line is time and second, memory
-            time += comma + f_input.readline().split(' ', 1)[0]
+            time += comma + str(float(f_input.readline().split(' ', 1)[0])/3600)
             memory += comma + f_input.readline().split(' ', 1)[0]
         comma = ','
     return time, memory
@@ -40,7 +42,7 @@ def preprocess_results(results_dir, images_list):
     p1 = re.compile('[0-9]+')
     p2 = re.compile('^@[^@]')
     for image in images_list:
-        image_dir_name = image.replace('/', '-')
+        image_dir_name = get_image_dir_name(image)
         f_output = open(os.path.join(results_dir, image_dir_name, 'all_results.profile'), 'w')
         sorted_files = get_sorted_list_of_profiles_files(os.path.join(results_dir, image_dir_name))
 
@@ -64,12 +66,13 @@ def preprocess_results(results_dir, images_list):
 def get_profiles_list(results_dir, images_list):
     profiles_list = []
     for image in images_list:
-        image_dir_name = image.replace('/', '-')
+        image_dir_name = get_image_dir_name(image)
         profiles_list.append(os.path.join(results_dir, image_dir_name, 'all_results.profile'))
     return profiles_list
 
 
 def get_logger(output_dir):
+    make_sure_path_exists(output_dir)
     logger = logging.getLogger('opal_workflow')
     logger.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
@@ -84,7 +87,7 @@ def get_logger(output_dir):
 
 
 def main():
-    parser = argparse.ArgumentParser(add_help=False)
+    parser = argparse.ArgumentParser(description='Run bioboxes of profilers with opal_stats and assess results with OPAL', add_help=False)
     group1 = parser.add_argument_group('required arguments')
     group1.add_argument('images', nargs='+', help='Docker images (bioboxes) of profilers')
     group1.add_argument('--input_dir', help='Input directory containing gzipped FASTQ files', required=True)
@@ -92,6 +95,7 @@ def main():
     group1.add_argument('-g', '--gold_standard_file', help='Gold standard file', required=True)
     group2 = parser.add_argument_group('optional arguments')
     group2.add_argument('--yaml', help='Bioboxes YAML file (default: INPUT_DIR/biobox.yaml)', required=False)
+    group2.add_argument("--volume", help='Docker volume', action='append')
     group2.add_argument('-n', '--no_normalization', help='Do not normalize samples', action='store_true')
     group2.add_argument('-p', '--plot_abundances', help='Plot abundances in the gold standard', action='store_true')
     group2.add_argument('-l', '--labels', help='Comma-separated names of profilers to be shown in OPAL', required=False)
@@ -104,12 +108,14 @@ def main():
 
     for image in args.images:
         logger.info('Running {}...'.format(image))
-        image_dir_name = image.replace('/', '-')
         parameters = [image,
                       '--input_dir=' + args.input_dir,
-                      '--output_dir=' + os.path.join(args.output_dir, image_dir_name)]
+                      '--output_dir=' + args.output_dir]
         if args.yaml:
             parameters.append('--yaml=' + args.yaml)
+        if args.volume:
+            for volume in args.volume:
+                parameters.append('--volume=' + volume)
         try:
             subprocess.run([sys.executable, 'opal_stats.py'] + parameters, check=True)
         except subprocess.CalledProcessError:
