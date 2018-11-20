@@ -33,7 +33,7 @@ def read_stats(results_dir, images_list):
         with open(os.path.join(results_dir, image_dir_name, 'runtime_maxmemory.txt')) as f_input:
             # assumes first line is time and second, memory
             time += comma + str(float(f_input.readline().split(' ', 1)[0])/3600)
-            memory += comma + f_input.readline().split(' ', 1)[0]
+            memory += comma + str(float(f_input.readline().split(' ', 1)[0])/1024)
         comma = ','
     return time, memory
 

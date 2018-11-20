@@ -77,10 +77,10 @@ def main():
     elapsed_time = time.time() - start_time
     memory = max_total_rss / 1048576.0
 
-    print('{:.2f} seconds ({:.2f} hours)\n{} MB'.format(elapsed_time, elapsed_time/3600, memory))
+    print('{:.2f} seconds ({:.2f} hours)\n{} MB ({} GB)'.format(elapsed_time, elapsed_time/3600, memory, memory/1024))
 
     with open(os.path.join(output_dir, image_dir_name, 'runtime_maxmemory.txt'), 'w') as f:
-        f.write('{:.2f} seconds ({:.2f} hours)\n{} MB\n'.format(elapsed_time, elapsed_time/3600, memory))
+        f.write('{:.2f} seconds ({:.2f} hours)\n{} MB ({} GB)\n'.format(elapsed_time, elapsed_time/3600, memory, memory/1024))
 
 
 if __name__ == "__main__":
