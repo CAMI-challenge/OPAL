@@ -39,11 +39,13 @@ def read_stats(results_dir, images_list):
 
 
 def preprocess_results(results_dir, images_list):
+    index_empty_results = []
     p1 = re.compile('[0-9]+')
     p2 = re.compile('^@[^@]')
-    for image in images_list:
+    for i, image in enumerate(images_list):
         image_dir_name = get_image_dir_name(image)
-        f_output = open(os.path.join(results_dir, image_dir_name, 'all_results.profile'), 'w')
+        file_path = os.path.join(results_dir, image_dir_name, 'all_results.profile')
+        f_output = open(file_path, 'w')
         sorted_files = get_sorted_list_of_profiles_files(os.path.join(results_dir, image_dir_name))
 
         for file in sorted_files:
@@ -61,6 +63,9 @@ def preprocess_results(results_dir, images_list):
                     f_output.write(line)
             f_input.close()
         f_output.close()
+        if os.stat(file_path).st_size == 0:
+            index_empty_results.append(i)
+    return index_empty_results
 
 
 def get_profiles_list(results_dir, images_list):
@@ -105,8 +110,10 @@ def main():
     args = parser.parse_args()
 
     logger = get_logger(args.output_dir)
+    images = args.images[:]
+    labels = get_labels(args.labels, images)
 
-    for image in args.images:
+    for image in images:
         logger.info('Running {}...'.format(image))
         parameters = [image,
                       '--input_dir=' + args.input_dir,
@@ -123,9 +130,13 @@ def main():
     logger.info('done')
 
     logger.info('Reading results...')
-    preprocess_results(args.output_dir, args.images)
-    profiles_list = get_profiles_list(args.output_dir, args.images)
-    time, memory = read_stats(args.output_dir, args.images)
+    index_empty_results = preprocess_results(args.output_dir, images)
+    for index in sorted(index_empty_results, reverse=True):
+        logger.warning('No results available for ' + images[index])
+        del images[index]
+        del labels[index]
+    profiles_list = get_profiles_list(args.output_dir, images)
+    time, memory = read_stats(args.output_dir, images)
     logger.info('done')
 
     logger.info('Running OPAL...')
@@ -137,10 +148,7 @@ def main():
         parameters.append('--no_normalization')
     if args.plot_abundances:
         parameters.append('--plot_abundances')
-    if args.labels:
-        parameters.append('--labels=' + args.labels)
-    else:
-        parameters.append('--labels=' + ','.join(get_labels(None, args.images)))
+    parameters.append('--labels=' + ','.join(labels))
     if args.desc:
         parameters.append('--desc=' + args.desc)
     parameters += profiles_list
