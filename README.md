@@ -5,9 +5,9 @@
 Taxonomic metagenome profilers predict the presence and relative abundance of microorganisms from shotgun sequence samples of DNA isolated directly from a microbial community. Over the past years, there has been an explosive growth of software and algorithms for this task, resulting in a need for more systematic comparisons of these methods based on relevant performance criteria. OPAL implements commonly used performance metrics, including those of the first challenge of the Initiative for the [Critical Assessment of Metagenome Interpretation (CAMI)](http://cami-challenge.org), together with convenient visualizations.
 
 Example pages produced by OPAL:
-* CAMI II mouse gut toy data set: *https://cami-challenge.github.io/OPAL/cami_ii_mg/*
-* CAMI I high complexity challenge data set: *https://cami-challenge.github.io/OPAL/cami_i_hc/*
-
+* CAMI I high complexity challenge dataset: *https://cami-challenge.github.io/OPAL/cami_i_hc/*
+* CAMI II mouse gut toy dataset: *https://cami-challenge.github.io/OPAL/cami_ii_mg/*
+* Human Microbiome Project Mock Community dataset: *https://cami-challenge.github.io/OPAL/hmp_hc/*
 
 # Requirements
 
@@ -17,18 +17,35 @@ See [default.txt](requirements/default.txt) for all dependencies.
 
 # User Guide
 
+* [Installation](#installation)
+* [Inputs](#inputs)
+* [Computed metrics](#computed-metrics)
+* [Running opal.py](#running-_opalpy_)
+* [Running opal.py using Docker](#running-_opalpy_-using-docker)
+* [Running tsv2biom.py](#running-_tsv2biompy_)
+* [Measuring runtime and maximum main memory usage](#measuring-runtime-and-maximum-main-memory-usage)
+* [More examples](EXAMPLES.md)
+
 ## Installation
 
-Install pip first (tested on Linux Ubuntu 16.04):
+You can run [OPAL using Docker (see below)](#running-opalpy-using-docker) or install it as follows.
+
+Install pip if not already installed (tested on Linux Ubuntu 18.04):
 
 ~~~BASH
 sudo apt install python3-pip
+~~~
+Should you receive the message `Unable to locate package python3-pip`, enter the following commands and repeat the previous step.
+
+~~~BASH
+sudo add-apt-repository universe
+sudo apt update
 ~~~
 
 Then run:
 
 ~~~BASH
-pip3 install numpy
+pip3 install numpy==1.15.3
 pip3 install cami-opal
 ~~~
 
@@ -39,7 +56,7 @@ echo 'PATH=$PATH:${HOME}/.local/bin' >> ~/.bashrc
 source ~/.bashrc
 ~~~
 
-## Input
+## Inputs
 OPAL uses at least two files:
 1. A gold standard taxonomic profile
 2. One or more taxonomic profiles to be assessed
@@ -109,6 +126,30 @@ data/jolly_pasteur_3 \
 -o output_dir
 ~~~
 
+## Running _opal.py_ using Docker
+
+Download or git-clone OPAL from GitHub. In OPAL's directory, build the Docker image with the command:
+
+~~~BASH
+docker build -t opal:latest .
+~~~
+
+_opal.py_ can then be run with the `docker run` command. Example:
+
+~~~BASH
+docker run -v /path/to/OPAL:/host opal:latest \
+opal.py \
+/host/data/cranky_wozniak_13 \
+/host/data/grave_wright_13 \
+/host/data/furious_elion_13 \
+/host/data/focused_archimedes_13 \
+/host/data/evil_darwin_13 \
+/host/data/agitated_blackwell_7 \
+/host/data/jolly_pasteur_3 \
+-l "TIPP, Quikr, MP2.0, MetaPhyler, mOTU, CLARK, FOCUS" \
+-o /host/output_dir
+~~~
+
 ## Running _tsv2biom.py_
 ~~~BASH
 usage: tsv2biom.py [-h] -o OUTPUT_FILE [-j] files [files ...]
@@ -128,6 +169,26 @@ optional arguments:
 ~~~BASH
 python3 tsv2biom.py data/cranky_wozniak_13 -o output_dir/cranky_wozniak_13.biom
 ~~~
+
+## Measuring runtime and maximum main memory usage
+
+To measure the runtime and maximum main memory usage of a taxonomic profiler using OPAL, it must be converted to a Biobox docker image. Several Bioboxes are already available on Docker Hub (see [Examples page](EXAMPLES.md)). 
+
+To build your own Biobox, general instructions are available at <http://bioboxes.org/>. Most importantly, the Biobox of a profiler must satisfy specific input and output formats (see section [Inputs](#inputs) above). Useful examples of scripts and Dockerfiles are available at <https://github.com/CAMI-challenge/docker_profiling_tools>.
+
+OPAL's tools to measure runtime and maximum main memory usage are:
+
+* `opal_stats.py:` Runs the Biobox of a taxonomic profiler and tracks its runtime and main memory usage.
+
+* `opal_workflow.py:` Runs the Bioboxes of one of more taxonomic profilers, tracks their runtimes and main memory usages using `opal_stats.py`, and automatically assesses their results with `opal.py`.
+
+See example usage of these tools in the [examples page](EXAMPLES.md).
+
+Runtimes and memory usages can also be manually provided to `opal.py` using options `--time` and `--memory`. They will then be incorporated in the results files and the HTML report.
+
+## More examples
+
+See [Examples page](EXAMPLES.md).
 
 # Developer Guide
 
