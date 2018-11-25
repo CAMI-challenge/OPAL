@@ -1,0 +1,21 @@
+version: 1.0.0
+arguments:
+  reads:
+    - format: bioboxes.org:/fastq
+      path: /bbx/mnt/input/SRR172903.fastq.gz
+  databases:
+    taxonomy:
+      path: ${PREFIX}/share/taxonomy/
+      format: bioboxes.org:/taxonomy_ncbi_dumps
+    commonkmers:
+      path: /exchange/db/
+      format: unknown
+      #download from http://math.oregonstate.edu/~koslickd/CommonKmersData.tar.gz
+        #Contents should look like
+        #   Bcalms
+        #   CommonKmerMatrix-30mers.h5
+        #   CommonKmerMatrix-50mers.h5
+        #   FileNames.txt
+        #   Info.txt
+        #   Taxonomy.txt
+  cache: /cache

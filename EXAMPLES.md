@@ -1,6 +1,12 @@
-The following examples show how to run the Bioboxes of taxonomic profilers on different datasets, tracking their runtimes and memory usages, and automatically assessing their results. The assessed taxonomic profilers are:
+# Examples: running Bioboxes of taxonomic profilers and assessing their results with OPAL
 
-| Taxonomic profiler | Docker Hub image |
+The following examples show how to run Bioboxes of taxonomic profilers on different datasets, tracking their runtimes and maximum main memory usages, and automatically assessing their results.
+
+If you have already run a profiler and want to assess its results, you only need to run [opal.py](README.md#running-opalpy) and can probably skip these examples.
+
+The assessed taxonomic profilers, in these examples, are:
+
+| Taxonomic profiler | Biobox docker image |
 |---|---|
 | CommonKmers | stefanjanssen/dockerprofilingtools:commonkmers |
 | FOCUS 0.31 adapted for CAMI | stefanjanssen/dockerprofilingtools:focus |
@@ -38,10 +44,10 @@ docker pull stefanjanssen/docker_profiling_tools:motu
 
 - OPAL's tool to run Bioboxes of profilers, measure their run time and maximum memory usage, and automatically assess their results is `opal_workflow.py`. To run it, you also need the gold standard file [gs_cami_i_hc.profile](data/gs_cami_i_hc.profile) and the Biobox YAML file [biobox_cami_i_hc.yaml](data/biobox_cami_i_hc.yaml).
 
-- Run `opal_workflow.py` as follows, modifying the options in red to match your system's paths.
+- Run `opal_workflow.py` as follows, modifying the options to match your system's paths.
 
-<div class="highlight highlight-source-shell">
-<pre>python3 ./opal_workflow.py \
+~~~BASH
+python3 ./opal_workflow.py \
 stefanjanssen/docker_profiling_tools:commonkmers \
 stefanjanssen/docker_profiling_tools:focus \
 stefanjanssen/docker_profiling_tools:metaphlan2 \
@@ -50,14 +56,14 @@ stefanjanssen/docker_profiling_tools:quickr \
 stefanjanssen/docker_profiling_tools:tipp \
 stefanjanssen/docker_profiling_tools:motu \
 --labels "CommonKmers, FOCUS, Metaphlan, MetaPhyler, Quikr, TIPP, mOTU" \
---input_dir <font color="red">/path/to/gzipped/fastq/files<font> \
---output_dir <font color="red">/path/to/output_dir<font> \
---yaml <font color="red">/path/to/biobox_cami_i_hc.yaml<font> \
---volume <font color="red">/path/to/CommonKmersData<font>:/exchange/db:ro \
---gold_standard_file <font color="red">data/gs_cami_i_hc.profile<font> \
+--input_dir /path/to/gzipped/fastq/files \
+--output_dir /path/to/output_dir \
+--yaml /path/to/biobox_cami_i_hc.yaml \
+--volume /path/to/CommonKmersData:/exchange/db:ro \
+--gold_standard_file data/gs_cami_i_hc.profile \
 --plot_abundances \
---desc "1st CAMI Challenge Dataset 3 CAMI high"</pre>
-</div>
+--desc "1st CAMI Challenge Dataset 3 CAMI high"
+~~~
 
 The output directory, `output_dir` in this example, will be created if does not exist. It will contain the predictions of all profilers and OPAL's assessments.
 

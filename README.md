@@ -7,7 +7,7 @@ Taxonomic metagenome profilers predict the presence and relative abundance of mi
 Example pages produced by OPAL:
 * CAMI I high complexity challenge dataset: *https://cami-challenge.github.io/OPAL/cami_i_hc/*
 * CAMI II mouse gut toy dataset: *https://cami-challenge.github.io/OPAL/cami_ii_mg/*
-* Human Microbiome Project Mock Community dataset: *https://cami-challenge.github.io/OPAL/hmp_hc/*
+* Human Microbiome Project Mock Community dataset: *https://cami-challenge.github.io/OPAL/hmp_mc/*
 
 # Requirements
 
@@ -20,9 +20,9 @@ See [default.txt](requirements/default.txt) for all dependencies.
 * [Installation](#installation)
 * [Inputs](#inputs)
 * [Computed metrics](#computed-metrics)
-* [Running opal.py](#running-_opalpy_)
-* [Running opal.py using Docker](#running-_opalpy_-using-docker)
-* [Running tsv2biom.py](#running-_tsv2biompy_)
+* [Running opal.py](#running-opalpy)
+* [Running opal.py using Docker](#running-opalpy-using-docker)
+* [Running tsv2biom.py](#running-tsv2biompy)
 * [Measuring runtime and maximum main memory usage](#measuring-runtime-and-maximum-main-memory-usage)
 * [More examples](EXAMPLES.md)
 
@@ -88,25 +88,25 @@ usage: opal.py -g GOLD_STANDARD_FILE -o OUTPUT_DIR [-n] [-p] [-l LABELS]
                profiles_files [profiles_files ...]
 
 OPAL: Open-community Profiling Assessment tooL
-
-required arguments:
-  profiles_files        Files of profiles
-  -g GOLD_STANDARD_FILE, --gold_standard_file GOLD_STANDARD_FILE
-                        Gold standard file
-  -o OUTPUT_DIR, --output_dir OUTPUT_DIR
-                        Directory to write the results to
-
-optional arguments:
-  -n, --no_normalization
-                        Do not normalize samples
-  -p, --plot_abundances
+                                                                                                                                            
+required arguments:                                                                                                                            
+  profiles_files        Files of profiles                                                                                                          
+  -g GOLD_STANDARD_FILE, --gold_standard_file GOLD_STANDARD_FILE                                                                                     
+                        Gold standard file                                                                                                              
+  -o OUTPUT_DIR, --output_dir OUTPUT_DIR                                                                                                                  
+                        Directory to write the results to                                                                                                     
+                                                                                                                                                                
+optional arguments:                                                                                                                                               
+  -n, --no_normalization                                                                                                                                            
+                        Do not normalize samples                                                                                                                     
+  -p, --plot_abundances                                                                                                                                                
                         Plot abundances in the gold standard (can take some
                         minutes)
   -l LABELS, --labels LABELS
                         Comma-separated profiles names
-  -t TIME, --time TIME  Comma-separated running times
+  -t TIME, --time TIME  Comma-separated runtimes in hours
   -m MEMORY, --memory MEMORY
-                        Comma-separated memory usages
+                        Comma-separated memory usages in gigabytes
   -d DESC, --desc DESC  Description for HTML page
   --silent              Silent mode
   -v, --version         show program's version number and exit
@@ -174,7 +174,7 @@ python3 tsv2biom.py data/cranky_wozniak_13 -o output_dir/cranky_wozniak_13.biom
 
 To measure the runtime and maximum main memory usage of a taxonomic profiler using OPAL, it must be converted to a Biobox docker image. Several Bioboxes are already available on Docker Hub (see [Examples page](EXAMPLES.md)). 
 
-To build your own Biobox, general instructions are available at <http://bioboxes.org/>. Most importantly, the Biobox of a profiler must satisfy specific input and output formats (see section [Inputs](#inputs) above). Useful examples of scripts and Dockerfiles are available at <https://github.com/CAMI-challenge/docker_profiling_tools>.
+To build your own Biobox, general instructions are available at <http://bioboxes.org/>. Most importantly, the Biobox of a profiler must satisfy specific input and output formats (see section [Inputs](#inputs) above). Helpful examples of scripts and Dockerfiles are available at <https://github.com/CAMI-challenge/docker_profiling_tools>.
 
 OPAL's tools to measure runtime and maximum main memory usage are:
 

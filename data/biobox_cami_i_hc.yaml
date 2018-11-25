@@ -1,0 +1,29 @@
+version: 1.0.0
+arguments:
+  reads:
+    - format: bioboxes.org:/fastq
+      path: /bbx/mnt/input/RH_S001__insert_270.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /bbx/mnt/input/RH_S002__insert_270.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /bbx/mnt/input/RH_S003__insert_270.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /bbx/mnt/input/RH_S004__insert_270.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /bbx/mnt/input/RH_S005__insert_270.fq.gz
+  databases:
+    taxonomy:
+      path: ${PREFIX}/share/taxonomy/
+      format: bioboxes.org:/taxonomy_ncbi_dumps
+    commonkmers:
+      path: /exchange/db/
+      format: unknown
+      #download from http://math.oregonstate.edu/~koslickd/CommonKmersData.tar.gz
+        #Contents should look like
+        #   Bcalms
+        #   CommonKmerMatrix-30mers.h5
+        #   CommonKmerMatrix-50mers.h5
+        #   FileNames.txt
+        #   Info.txt
+        #   Taxonomy.txt
+  cache: /cache
