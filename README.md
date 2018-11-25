@@ -138,7 +138,7 @@ _opal.py_ can then be run with the `docker run` command. Example:
 
 ~~~BASH
 docker run -v /path/to/OPAL:/host opal:latest \
-opal.py \
+opal.py -g /host/data/goldstandard_low_1.bin \
 /host/data/cranky_wozniak_13 \
 /host/data/grave_wright_13 \
 /host/data/furious_elion_13 \
