@@ -182,7 +182,7 @@ OPAL's tools to measure runtime and maximum main memory usage are:
 
 * `opal_workflow.py:` Runs the Bioboxes of one of more taxonomic profilers, tracks their runtimes and main memory usages using `opal_stats.py`, and automatically assesses their results with `opal.py`.
 
-See example usage of these tools in the [examples page](EXAMPLES.md).
+See example usage of these tools in the [Examples page](EXAMPLES.md).
 
 Runtimes and memory usages can also be manually provided to `opal.py` using options `--time` and `--memory`. They will then be incorporated in the results files and the HTML report.
 
