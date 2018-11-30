@@ -7,3 +7,4 @@ ADD requirements /requirements
 RUN apt-get update && apt-get install -y gcc
 RUN head -n 1 /requirements/default.txt | xargs pip install
 RUN pip install -r /requirements/default.txt
+RUN apt-get remove --purge -y gcc && apt-get autoremove -y
