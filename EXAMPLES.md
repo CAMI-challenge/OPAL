@@ -40,7 +40,12 @@ docker pull stefanjanssen/docker_profiling_tools:tipp
 docker pull stefanjanssen/docker_profiling_tools:motu
 ~~~
 
-- CommonKmers uses a database that is not stored inside its Biobox. Download it from <http://math.oregonstate.edu/~koslickd/CommonKmersData.tar.gz> and extract the files. Make sure to set the path to the files with option `--volume` for `opal_workflow.py`, as shown below.
+- CommonKmers uses a database that is not stored inside its Biobox. Download it from <https://zenodo.org/record/1749272/files/CommonKmersData.tar.gz?download=1> (DOI: <http://doi.org/10.5281/zenodo.1749272>) and extract the files. Make sure to set the path to the files with option `--volume` for `opal_workflow.py`, as shown below.
+
+~~~BASH
+wget --content-disposition https://zenodo.org/record/1749272/files/CommonKmersData.tar.gz?download=1
+tar -xzf CommonKmersData.tar.gz
+~~~
 
 - OPAL's tool to run Bioboxes of profilers, measure their run time and maximum memory usage, and automatically assess their results is `opal_workflow.py`. To run it, you also need the gold standard file [gs_cami_i_hc.profile](data/gs_cami_i_hc.profile) and the Biobox YAML file [biobox_cami_i_hc.yaml](data/biobox_cami_i_hc.yaml).
 
