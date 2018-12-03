@@ -12,7 +12,7 @@ def dependencies():
 setup(
     name                 = 'cami-opal',
     version              = __version__,
-    description          = 'OPAL: Assessment of metagenomic taxonomic profiling',
+    description          = 'OPAL: Open-community Profiling Assessment tooL',
     author               = 'CAMI',
     author_email         = 'contact@cami-challenge.org',
     url                  = 'http://cami-challenge.org',
