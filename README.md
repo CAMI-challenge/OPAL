@@ -4,16 +4,22 @@
 
 Taxonomic metagenome profilers predict the presence and relative abundance of microorganisms from shotgun sequence samples of DNA isolated directly from a microbial community. Over the past years, there has been an explosive growth of software and algorithms for this task, resulting in a need for more systematic comparisons of these methods based on relevant performance criteria. OPAL implements commonly used performance metrics, including those of the first challenge of the Initiative for the [Critical Assessment of Metagenome Interpretation (CAMI)](http://cami-challenge.org), together with convenient visualizations.
 
-Example pages produced by OPAL:
+**Computed metrics**
+
+* Unifrac error
+* L1 norm error
+* True positives, false positives, false negatives
+* Precision
+* Recall
+* F1 score
+* Jaccard index
+* Shannon diversity and equitability indices
+* Bray–Curtis distance
+
+**Example pages produced by OPAL**
 * CAMI I high complexity challenge dataset: *https://cami-challenge.github.io/OPAL/cami_i_hc/*
 * CAMI II mouse gut toy dataset: *https://cami-challenge.github.io/OPAL/cami_ii_mg/*
 * Human Microbiome Project Mock Community dataset: *https://cami-challenge.github.io/OPAL/hmp_mc/*
-
-# Requirements
-
-OPAL requires Python 3.5.
-
-See [default.txt](requirements/default.txt) for all dependencies.
 
 # User Guide
 
@@ -27,6 +33,14 @@ See [default.txt](requirements/default.txt) for all dependencies.
 * [More examples](EXAMPLES.md)
 
 ## Installation
+
+### Requirements
+
+OPAL requires Python 3.5.
+
+See [default.txt](requirements/default.txt) for all dependencies.
+
+### Steps
 
 You can run [OPAL using Docker (see below)](#running-opalpy-using-docker) or install it as follows.
 
@@ -68,18 +82,6 @@ Files must be in the [CAMI profiling Bioboxes format](https://github.com/bioboxe
 The BIOM format used by OPAL is a sparse matrix stored in a JSON or HDF5 file, with a column per sample and a row per taxonomy ID, storing the corresponding abundances. RANK, TAXPATH, and TAXPATHSN are stored as metadata of each row and have the same meaning as in the CAMI profiling Bioboxes format:
 * RANK: taxonomic rank
 * TAXPATH and TAXPATHSN: path from the root of the taxonomy to the respective current taxon, including the current taxon, separated by a `|`. TAXPATH and TAXPATHSN contain identifiers and plain names, respectively, of the taxonomies. For more details and examples, see [CAMI profiling Bioboxes format](https://github.com/bioboxes/rfc/tree/master/data-format).
-
-## Computed metrics
-
-* Unifrac error
-* L1 norm error
-* True positives, false positives, false negatives
-* Precision
-* Recall
-* F1 score
-* Jaccard index
-* Shannon diversity and equitability indices
-* Bray–Curtis distance
 
 ## Running _opal.py_
 ~~~BASH
@@ -204,7 +206,7 @@ tox
 
 # Citation
 Please cite:
-* Fernando Meyer, Andreas Bremges, Peter Belmann, Stefan Janssen, Alice Carolyn McHardy, and David Koslicki (2018). **Assessing taxonomic metagenome profilers with OPAL.** bioRxiv. doi:[10.1101/372680](https://doi.org/10.1101/372680)
+* Fernando Meyer, Andreas Bremges, Peter Belmann, Stefan Janssen, Alice Carolyn McHardy, and David Koslicki (2019). **Assessing taxonomic metagenome profilers with OPAL.** Genome Biology, 20:51. doi:[10.1101/372680](https://doi.org/10.1186/s13059-019-1646-y)
 
 Part of OPAL's functionality was described in the CAMI manuscript. Thus please also cite:
 * Alexander Sczyrba, Peter Hofmann, Peter Belmann, et al. (2017). **Critical Assessment of Metagenome Interpretation—a benchmark of metagenomics software.** *Nature Methods*, 14, 11:1063–1071. doi:[10.1038/nmeth.4458](https://doi.org/10.1038/nmeth.4458)
