@@ -25,7 +25,6 @@ Taxonomic metagenome profilers predict the presence and relative abundance of mi
 
 * [Installation](#installation)
 * [Inputs](#inputs)
-* [Computed metrics](#computed-metrics)
 * [Running opal.py](#running-opalpy)
 * [Running opal.py using Docker](#running-opalpy-using-docker)
 * [Running tsv2biom.py](#running-tsv2biompy)
