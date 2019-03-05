@@ -206,7 +206,7 @@ tox
 
 # Citation
 Please cite:
-* Fernando Meyer, Andreas Bremges, Peter Belmann, Stefan Janssen, Alice Carolyn McHardy, and David Koslicki (2019). **Assessing taxonomic metagenome profilers with OPAL.** Genome Biology, 20:51. doi:[10.1101/372680](https://doi.org/10.1186/s13059-019-1646-y)
+* Fernando Meyer, Andreas Bremges, Peter Belmann, Stefan Janssen, Alice Carolyn McHardy, and David Koslicki (2019). **Assessing taxonomic metagenome profilers with OPAL.** *Genome Biology*, 20:51. doi:[10.1101/372680](https://doi.org/10.1186/s13059-019-1646-y)
 
 Part of OPAL's functionality was described in the CAMI manuscript. Thus please also cite:
 * Alexander Sczyrba, Peter Hofmann, Peter Belmann, et al. (2017). **Critical Assessment of Metagenome Interpretation—a benchmark of metagenomics software.** *Nature Methods*, 14, 11:1063–1071. doi:[10.1038/nmeth.4458](https://doi.org/10.1038/nmeth.4458)
