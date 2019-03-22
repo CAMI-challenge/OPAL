@@ -17,9 +17,12 @@ Taxonomic metagenome profilers predict the presence and relative abundance of mi
 * Bray–Curtis distance
 
 **Example pages produced by OPAL**
-* CAMI I high complexity challenge dataset: *https://cami-challenge.github.io/OPAL/cami_i_hc/*
-* CAMI II mouse gut toy dataset: *https://cami-challenge.github.io/OPAL/cami_ii_mg/*
-* Human Microbiome Project Mock Community dataset: *https://cami-challenge.github.io/OPAL/hmp_mc/*
+* [CAMI I high complexity challenge dataset](https://cami-challenge.github.io/OPAL/cami_i_hc/)
+* [CAMI II mouse gut toy dataset](https://cami-challenge.github.io/OPAL/cami_ii_mg/)
+* [Human Microbiome Project Mock Community dataset](https://cami-challenge.github.io/OPAL/hmp_mc/)
+
+**See also**
+* [Assessments of profiling submissions to the 1st CAMI Challenge](https://cami-challenge.github.io/OPAL/cami_i_challenge_submissions/)
 
 # User Guide
 

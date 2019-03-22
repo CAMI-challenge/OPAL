@@ -1,0 +1,2263 @@
+tool	rank	metric	sample	value
+Gold standard	class	Bray-Curtis distance	1	0.0
+Gold standard	family	Bray-Curtis distance	1	0.0
+Gold standard	genus	Bray-Curtis distance	1	0.0
+Gold standard	order	Bray-Curtis distance	1	0.0
+Gold standard	phylum	Bray-Curtis distance	1	0.0
+Gold standard	species	Bray-Curtis distance	1	0.0
+Gold standard	strain	Bray-Curtis distance	1	0.0
+Gold standard	superkingdom	Bray-Curtis distance	1	0.0
+Gold standard	superkingdom	Shannon diversity	1	0.01474959880809422
+Gold standard	superkingdom	Shannon equitability	1	0.021279173055539297
+Gold standard	phylum	Shannon diversity	1	0.9526574893130146
+Gold standard	phylum	Shannon equitability	1	0.5316882682492248
+Gold standard	class	Shannon diversity	1	1.5306223912307921
+Gold standard	class	Shannon equitability	1	0.5652119708149465
+Gold standard	order	Shannon diversity	1	2.182215825794208
+Gold standard	order	Shannon equitability	1	0.6480618086362117
+Gold standard	family	Shannon diversity	1	2.961120541952459
+Gold standard	family	Shannon equitability	1	0.7458193519335503
+Gold standard	genus	Shannon diversity	1	3.117776347407407
+Gold standard	genus	Shannon equitability	1	0.7314122658376648
+Gold standard	species	Shannon diversity	1	2.951481731808406
+Gold standard	species	Shannon equitability	1	0.6947122601424148
+Gold standard	strain	Shannon diversity	1	3.6287848368084616
+Gold standard	strain	Shannon equitability	1	0.7431767444881997
+Gold standard	class	F1 score	1	1.0
+Gold standard	class	False negatives	1	0.0
+Gold standard	class	False positives	1	0.0
+Gold standard	class	Jaccard index	1	1.0
+Gold standard	class	Taxon counts	1	15.0
+Gold standard	class	Purity (precision)	1	1.0
+Gold standard	class	Completeness (recall)	1	1.0
+Gold standard	class	True positives	1	15.0
+Gold standard	species	F1 score	1	1.0
+Gold standard	species	False negatives	1	0.0
+Gold standard	species	False positives	1	0.0
+Gold standard	species	Jaccard index	1	1.0
+Gold standard	species	Taxon counts	1	70.0
+Gold standard	species	Purity (precision)	1	1.0
+Gold standard	species	Completeness (recall)	1	1.0
+Gold standard	species	True positives	1	70.0
+Gold standard	superkingdom	F1 score	1	1.0
+Gold standard	superkingdom	False negatives	1	0.0
+Gold standard	superkingdom	False positives	1	0.0
+Gold standard	superkingdom	Jaccard index	1	1.0
+Gold standard	superkingdom	Taxon counts	1	2.0
+Gold standard	superkingdom	Purity (precision)	1	1.0
+Gold standard	superkingdom	Completeness (recall)	1	1.0
+Gold standard	superkingdom	True positives	1	2.0
+Gold standard	order	F1 score	1	1.0
+Gold standard	order	False negatives	1	0.0
+Gold standard	order	False positives	1	0.0
+Gold standard	order	Jaccard index	1	1.0
+Gold standard	order	Taxon counts	1	29.0
+Gold standard	order	Purity (precision)	1	1.0
+Gold standard	order	Completeness (recall)	1	1.0
+Gold standard	order	True positives	1	29.0
+Gold standard	phylum	F1 score	1	1.0
+Gold standard	phylum	False negatives	1	0.0
+Gold standard	phylum	False positives	1	0.0
+Gold standard	phylum	Jaccard index	1	1.0
+Gold standard	phylum	Taxon counts	1	6.0
+Gold standard	phylum	Purity (precision)	1	1.0
+Gold standard	phylum	Completeness (recall)	1	1.0
+Gold standard	phylum	True positives	1	6.0
+Gold standard	family	F1 score	1	1.0
+Gold standard	family	False negatives	1	0.0
+Gold standard	family	False positives	1	0.0
+Gold standard	family	Jaccard index	1	1.0
+Gold standard	family	Taxon counts	1	53.0
+Gold standard	family	Purity (precision)	1	1.0
+Gold standard	family	Completeness (recall)	1	1.0
+Gold standard	family	True positives	1	53.0
+Gold standard	strain	F1 score	1	1.0
+Gold standard	strain	False negatives	1	0.0
+Gold standard	strain	False positives	1	0.0
+Gold standard	strain	Jaccard index	1	1.0
+Gold standard	strain	Taxon counts	1	132.0
+Gold standard	strain	Purity (precision)	1	1.0
+Gold standard	strain	Completeness (recall)	1	1.0
+Gold standard	strain	True positives	1	132.0
+Gold standard	genus	F1 score	1	1.0
+Gold standard	genus	False negatives	1	0.0
+Gold standard	genus	False positives	1	0.0
+Gold standard	genus	Jaccard index	1	1.0
+Gold standard	genus	Taxon counts	1	71.0
+Gold standard	genus	Purity (precision)	1	1.0
+Gold standard	genus	Completeness (recall)	1	1.0
+Gold standard	genus	True positives	1	71.0
+Gold standard	class	L1 norm error	1	0.0
+Gold standard	family	L1 norm error	1	0.0
+Gold standard	genus	L1 norm error	1	0.0
+Gold standard	order	L1 norm error	1	0.0
+Gold standard	phylum	L1 norm error	1	0.0
+Gold standard	species	L1 norm error	1	0.0
+Gold standard	strain	L1 norm error	1	0.0
+Gold standard	superkingdom	L1 norm error	1	0.0
+Gold standard	na	Weighted UniFrac error	1	0.0
+Gold standard	na	Unweighted UniFrac error	1	0.0
+Gold standard	class	Bray-Curtis distance	2	0.0
+Gold standard	family	Bray-Curtis distance	2	0.0
+Gold standard	genus	Bray-Curtis distance	2	0.0
+Gold standard	order	Bray-Curtis distance	2	0.0
+Gold standard	phylum	Bray-Curtis distance	2	0.0
+Gold standard	species	Bray-Curtis distance	2	0.0
+Gold standard	strain	Bray-Curtis distance	2	0.0
+Gold standard	superkingdom	Bray-Curtis distance	2	0.0
+Gold standard	superkingdom	Shannon diversity	2	0.19554241634517422
+Gold standard	superkingdom	Shannon equitability	2	0.2821080743446278
+Gold standard	phylum	Shannon diversity	2	1.4256816000957593
+Gold standard	phylum	Shannon equitability	2	0.795688051092029
+Gold standard	class	Shannon diversity	2	2.059308202046567
+Gold standard	class	Shannon equitability	2	0.760439448725287
+Gold standard	order	Shannon diversity	2	2.534141897048884
+Gold standard	order	Shannon equitability	2	0.752574773645315
+Gold standard	family	Shannon diversity	2	3.052288658249972
+Gold standard	family	Shannon equitability	2	0.7687819245308753
+Gold standard	genus	Shannon diversity	2	3.221604979259784
+Gold standard	genus	Shannon equitability	2	0.7557698612582348
+Gold standard	species	Shannon diversity	2	3.078219519393193
+Gold standard	species	Shannon equitability	2	0.7245434781064609
+Gold standard	strain	Shannon diversity	2	3.593184483437769
+Gold standard	strain	Shannon equitability	2	0.7358857763237907
+Gold standard	class	F1 score	2	1.0
+Gold standard	class	False negatives	2	0.0
+Gold standard	class	False positives	2	0.0
+Gold standard	class	Jaccard index	2	1.0
+Gold standard	class	Taxon counts	2	15.0
+Gold standard	class	Purity (precision)	2	1.0
+Gold standard	class	Completeness (recall)	2	1.0
+Gold standard	class	True positives	2	15.0
+Gold standard	species	F1 score	2	1.0
+Gold standard	species	False negatives	2	0.0
+Gold standard	species	False positives	2	0.0
+Gold standard	species	Jaccard index	2	1.0
+Gold standard	species	Taxon counts	2	70.0
+Gold standard	species	Purity (precision)	2	1.0
+Gold standard	species	Completeness (recall)	2	1.0
+Gold standard	species	True positives	2	70.0
+Gold standard	superkingdom	F1 score	2	1.0
+Gold standard	superkingdom	False negatives	2	0.0
+Gold standard	superkingdom	False positives	2	0.0
+Gold standard	superkingdom	Jaccard index	2	1.0
+Gold standard	superkingdom	Taxon counts	2	2.0
+Gold standard	superkingdom	Purity (precision)	2	1.0
+Gold standard	superkingdom	Completeness (recall)	2	1.0
+Gold standard	superkingdom	True positives	2	2.0
+Gold standard	order	F1 score	2	1.0
+Gold standard	order	False negatives	2	0.0
+Gold standard	order	False positives	2	0.0
+Gold standard	order	Jaccard index	2	1.0
+Gold standard	order	Taxon counts	2	29.0
+Gold standard	order	Purity (precision)	2	1.0
+Gold standard	order	Completeness (recall)	2	1.0
+Gold standard	order	True positives	2	29.0
+Gold standard	phylum	F1 score	2	1.0
+Gold standard	phylum	False negatives	2	0.0
+Gold standard	phylum	False positives	2	0.0
+Gold standard	phylum	Jaccard index	2	1.0
+Gold standard	phylum	Taxon counts	2	6.0
+Gold standard	phylum	Purity (precision)	2	1.0
+Gold standard	phylum	Completeness (recall)	2	1.0
+Gold standard	phylum	True positives	2	6.0
+Gold standard	family	F1 score	2	1.0
+Gold standard	family	False negatives	2	0.0
+Gold standard	family	False positives	2	0.0
+Gold standard	family	Jaccard index	2	1.0
+Gold standard	family	Taxon counts	2	53.0
+Gold standard	family	Purity (precision)	2	1.0
+Gold standard	family	Completeness (recall)	2	1.0
+Gold standard	family	True positives	2	53.0
+Gold standard	strain	F1 score	2	1.0
+Gold standard	strain	False negatives	2	0.0
+Gold standard	strain	False positives	2	0.0
+Gold standard	strain	Jaccard index	2	1.0
+Gold standard	strain	Taxon counts	2	132.0
+Gold standard	strain	Purity (precision)	2	1.0
+Gold standard	strain	Completeness (recall)	2	1.0
+Gold standard	strain	True positives	2	132.0
+Gold standard	genus	F1 score	2	1.0
+Gold standard	genus	False negatives	2	0.0
+Gold standard	genus	False positives	2	0.0
+Gold standard	genus	Jaccard index	2	1.0
+Gold standard	genus	Taxon counts	2	71.0
+Gold standard	genus	Purity (precision)	2	1.0
+Gold standard	genus	Completeness (recall)	2	1.0
+Gold standard	genus	True positives	2	71.0
+Gold standard	class	L1 norm error	2	0.0
+Gold standard	family	L1 norm error	2	0.0
+Gold standard	genus	L1 norm error	2	0.0
+Gold standard	order	L1 norm error	2	0.0
+Gold standard	phylum	L1 norm error	2	0.0
+Gold standard	species	L1 norm error	2	0.0
+Gold standard	strain	L1 norm error	2	0.0
+Gold standard	superkingdom	L1 norm error	2	0.0
+Gold standard	na	Weighted UniFrac error	2	0.0
+Gold standard	na	Unweighted UniFrac error	2	0.0
+CLARK_v1.1.3	class	Bray-Curtis distance	1	0.24515366892841187
+CLARK_v1.1.3	family	Bray-Curtis distance	1	0.5492991505906683
+CLARK_v1.1.3	genus	Bray-Curtis distance	1	0.6231722667034998
+CLARK_v1.1.3	order	Bray-Curtis distance	1	0.3645132406835614
+CLARK_v1.1.3	phylum	Bray-Curtis distance	1	0.16076242348658554
+CLARK_v1.1.3	superkingdom	Bray-Curtis distance	1	0.01348271201441072
+CLARK_v1.1.3	superkingdom	Shannon diversity	1	0.08285667158046857
+CLARK_v1.1.3	superkingdom	Shannon equitability	1	0.07541939266027956
+CLARK_v1.1.3	phylum	Shannon diversity	1	1.1416997251071979
+CLARK_v1.1.3	phylum	Shannon equitability	1	0.3035466579785185
+CLARK_v1.1.3	class	Shannon diversity	1	1.7330684267838565
+CLARK_v1.1.3	class	Shannon equitability	1	0.4250282065156992
+CLARK_v1.1.3	order	Shannon diversity	1	2.2499360398823125
+CLARK_v1.1.3	order	Shannon equitability	1	0.45596269640334974
+CLARK_v1.1.3	family	Shannon diversity	1	2.7019815825074764
+CLARK_v1.1.3	family	Shannon equitability	1	0.46568880669069124
+CLARK_v1.1.3	genus	Shannon diversity	1	3.0456768303493367
+CLARK_v1.1.3	genus	Shannon equitability	1	0.4213070760588204
+CLARK_v1.1.3	class	F1 score	1	0.4054054054054054
+CLARK_v1.1.3	class	False negatives	1	0.0
+CLARK_v1.1.3	class	False positives	1	44.0
+CLARK_v1.1.3	class	Jaccard index	1	0.2542372881355932
+CLARK_v1.1.3	class	Taxon counts	1	59.0
+CLARK_v1.1.3	class	Purity (precision)	1	0.2542372881355932
+CLARK_v1.1.3	class	Completeness (recall)	1	1.0
+CLARK_v1.1.3	class	True positives	1	15.0
+CLARK_v1.1.3	species	False negatives	1	70.0
+CLARK_v1.1.3	species	False positives	1	0.0
+CLARK_v1.1.3	species	Jaccard index	1	0.0
+CLARK_v1.1.3	species	Taxon counts	1	0.0
+CLARK_v1.1.3	species	Purity (precision)	1	0.0
+CLARK_v1.1.3	species	Completeness (recall)	1	0.0
+CLARK_v1.1.3	species	True positives	1	0.0
+CLARK_v1.1.3	superkingdom	F1 score	1	0.8
+CLARK_v1.1.3	superkingdom	False negatives	1	0.0
+CLARK_v1.1.3	superkingdom	False positives	1	1.0
+CLARK_v1.1.3	superkingdom	Jaccard index	1	0.6666666666666666
+CLARK_v1.1.3	superkingdom	Taxon counts	1	3.0
+CLARK_v1.1.3	superkingdom	Purity (precision)	1	0.6666666666666666
+CLARK_v1.1.3	superkingdom	Completeness (recall)	1	1.0
+CLARK_v1.1.3	superkingdom	True positives	1	2.0
+CLARK_v1.1.3	order	F1 score	1	0.34523809523809523
+CLARK_v1.1.3	order	False negatives	1	0.0
+CLARK_v1.1.3	order	False positives	1	110.0
+CLARK_v1.1.3	order	Jaccard index	1	0.20863309352517986
+CLARK_v1.1.3	order	Taxon counts	1	139.0
+CLARK_v1.1.3	order	Purity (precision)	1	0.20863309352517986
+CLARK_v1.1.3	order	Completeness (recall)	1	1.0
+CLARK_v1.1.3	order	True positives	1	29.0
+CLARK_v1.1.3	phylum	F1 score	1	0.24489795918367346
+CLARK_v1.1.3	phylum	False negatives	1	0.0
+CLARK_v1.1.3	phylum	False positives	1	37.0
+CLARK_v1.1.3	phylum	Jaccard index	1	0.13953488372093023
+CLARK_v1.1.3	phylum	Taxon counts	1	43.0
+CLARK_v1.1.3	phylum	Purity (precision)	1	0.13953488372093023
+CLARK_v1.1.3	phylum	Completeness (recall)	1	1.0
+CLARK_v1.1.3	phylum	True positives	1	6.0
+CLARK_v1.1.3	family	F1 score	1	0.26041666666666663
+CLARK_v1.1.3	family	False negatives	1	3.0
+CLARK_v1.1.3	family	False positives	1	281.0
+CLARK_v1.1.3	family	Jaccard index	1	0.1497005988023952
+CLARK_v1.1.3	family	Taxon counts	1	331.0
+CLARK_v1.1.3	family	Purity (precision)	1	0.1510574018126888
+CLARK_v1.1.3	family	Completeness (recall)	1	0.9433962264150944
+CLARK_v1.1.3	family	True positives	1	50.0
+CLARK_v1.1.3	strain	False negatives	1	132.0
+CLARK_v1.1.3	strain	False positives	1	0.0
+CLARK_v1.1.3	strain	Jaccard index	1	0.0
+CLARK_v1.1.3	strain	Taxon counts	1	0.0
+CLARK_v1.1.3	strain	Purity (precision)	1	0.0
+CLARK_v1.1.3	strain	Completeness (recall)	1	0.0
+CLARK_v1.1.3	strain	True positives	1	0.0
+CLARK_v1.1.3	genus	F1 score	1	0.07172413793103448
+CLARK_v1.1.3	genus	False negatives	1	19.0
+CLARK_v1.1.3	genus	False positives	1	1327.0
+CLARK_v1.1.3	genus	Jaccard index	1	0.03719599427753934
+CLARK_v1.1.3	genus	Taxon counts	1	1379.0
+CLARK_v1.1.3	genus	Purity (precision)	1	0.03770848440899202
+CLARK_v1.1.3	genus	Completeness (recall)	1	0.7323943661971831
+CLARK_v1.1.3	genus	True positives	1	52.0
+CLARK_v1.1.3	class	L1 norm error	1	0.49030733785682373
+CLARK_v1.1.3	family	L1 norm error	1	1.0985983011813374
+CLARK_v1.1.3	genus	L1 norm error	1	1.246344533406997
+CLARK_v1.1.3	order	L1 norm error	1	0.7290264813671229
+CLARK_v1.1.3	phylum	L1 norm error	1	0.3215248469731711
+CLARK_v1.1.3	superkingdom	L1 norm error	1	0.02696542402882144
+CLARK_v1.1.3	na	Weighted UniFrac error	1	6.626845924814272
+CLARK_v1.1.3	na	Unweighted UniFrac error	1	8945.835894447415
+CLARK_v1.1.3	class	Bray-Curtis distance	2	0.32540998311890407
+CLARK_v1.1.3	family	Bray-Curtis distance	2	0.5261059373390516
+CLARK_v1.1.3	genus	Bray-Curtis distance	2	0.6037861901111481
+CLARK_v1.1.3	order	Bray-Curtis distance	2	0.3578791807495953
+CLARK_v1.1.3	phylum	Bray-Curtis distance	2	0.162704769448687
+CLARK_v1.1.3	superkingdom	Bray-Curtis distance	2	0.03382690775800187
+CLARK_v1.1.3	superkingdom	Shannon diversity	2	0.08375083722837887
+CLARK_v1.1.3	superkingdom	Shannon equitability	2	0.07623329730810971
+CLARK_v1.1.3	phylum	Shannon diversity	2	1.1426587360445313
+CLARK_v1.1.3	phylum	Shannon equitability	2	0.30380163269611776
+CLARK_v1.1.3	class	Shannon diversity	2	1.7332901624942088
+CLARK_v1.1.3	class	Shannon equitability	2	0.4250825863254257
+CLARK_v1.1.3	order	Shannon diversity	2	2.2517217553646867
+CLARK_v1.1.3	order	Shannon equitability	2	0.4556626244469798
+CLARK_v1.1.3	family	Shannon diversity	2	2.714032101038038
+CLARK_v1.1.3	family	Shannon equitability	2	0.46444964003830086
+CLARK_v1.1.3	genus	Shannon diversity	2	3.0629673654521663
+CLARK_v1.1.3	genus	Shannon equitability	2	0.4211770588065544
+CLARK_v1.1.3	class	F1 score	2	0.4054054054054054
+CLARK_v1.1.3	class	False negatives	2	0.0
+CLARK_v1.1.3	class	False positives	2	44.0
+CLARK_v1.1.3	class	Jaccard index	2	0.2542372881355932
+CLARK_v1.1.3	class	Taxon counts	2	59.0
+CLARK_v1.1.3	class	Purity (precision)	2	0.2542372881355932
+CLARK_v1.1.3	class	Completeness (recall)	2	1.0
+CLARK_v1.1.3	class	True positives	2	15.0
+CLARK_v1.1.3	species	False negatives	2	70.0
+CLARK_v1.1.3	species	False positives	2	0.0
+CLARK_v1.1.3	species	Jaccard index	2	0.0
+CLARK_v1.1.3	species	Taxon counts	2	0.0
+CLARK_v1.1.3	species	Purity (precision)	2	0.0
+CLARK_v1.1.3	species	Completeness (recall)	2	0.0
+CLARK_v1.1.3	species	True positives	2	0.0
+CLARK_v1.1.3	superkingdom	F1 score	2	0.8
+CLARK_v1.1.3	superkingdom	False negatives	2	0.0
+CLARK_v1.1.3	superkingdom	False positives	2	1.0
+CLARK_v1.1.3	superkingdom	Jaccard index	2	0.6666666666666666
+CLARK_v1.1.3	superkingdom	Taxon counts	2	3.0
+CLARK_v1.1.3	superkingdom	Purity (precision)	2	0.6666666666666666
+CLARK_v1.1.3	superkingdom	Completeness (recall)	2	1.0
+CLARK_v1.1.3	superkingdom	True positives	2	2.0
+CLARK_v1.1.3	order	F1 score	2	0.3431952662721894
+CLARK_v1.1.3	order	False negatives	2	0.0
+CLARK_v1.1.3	order	False positives	2	111.0
+CLARK_v1.1.3	order	Jaccard index	2	0.20714285714285716
+CLARK_v1.1.3	order	Taxon counts	2	140.0
+CLARK_v1.1.3	order	Purity (precision)	2	0.20714285714285716
+CLARK_v1.1.3	order	Completeness (recall)	2	1.0
+CLARK_v1.1.3	order	True positives	2	29.0
+CLARK_v1.1.3	phylum	F1 score	2	0.24489795918367346
+CLARK_v1.1.3	phylum	False negatives	2	0.0
+CLARK_v1.1.3	phylum	False positives	2	37.0
+CLARK_v1.1.3	phylum	Jaccard index	2	0.13953488372093023
+CLARK_v1.1.3	phylum	Taxon counts	2	43.0
+CLARK_v1.1.3	phylum	Purity (precision)	2	0.13953488372093023
+CLARK_v1.1.3	phylum	Completeness (recall)	2	1.0
+CLARK_v1.1.3	phylum	True positives	2	6.0
+CLARK_v1.1.3	family	F1 score	2	0.25125628140703515
+CLARK_v1.1.3	family	False negatives	2	3.0
+CLARK_v1.1.3	family	False positives	2	295.0
+CLARK_v1.1.3	family	Jaccard index	2	0.14367816091954022
+CLARK_v1.1.3	family	Taxon counts	2	345.0
+CLARK_v1.1.3	family	Purity (precision)	2	0.14492753623188406
+CLARK_v1.1.3	family	Completeness (recall)	2	0.9433962264150944
+CLARK_v1.1.3	family	True positives	2	50.0
+CLARK_v1.1.3	strain	False negatives	2	132.0
+CLARK_v1.1.3	strain	False positives	2	0.0
+CLARK_v1.1.3	strain	Jaccard index	2	0.0
+CLARK_v1.1.3	strain	Taxon counts	2	0.0
+CLARK_v1.1.3	strain	Purity (precision)	2	0.0
+CLARK_v1.1.3	strain	Completeness (recall)	2	0.0
+CLARK_v1.1.3	strain	True positives	2	0.0
+CLARK_v1.1.3	genus	F1 score	2	0.06882859033752481
+CLARK_v1.1.3	genus	False negatives	2	19.0
+CLARK_v1.1.3	genus	False positives	2	1388.0
+CLARK_v1.1.3	genus	Jaccard index	2	0.03564084989718986
+CLARK_v1.1.3	genus	Taxon counts	2	1440.0
+CLARK_v1.1.3	genus	Purity (precision)	2	0.03611111111111111
+CLARK_v1.1.3	genus	Completeness (recall)	2	0.7323943661971831
+CLARK_v1.1.3	genus	True positives	2	52.0
+CLARK_v1.1.3	class	L1 norm error	2	0.6508199662378081
+CLARK_v1.1.3	family	L1 norm error	2	1.0522118746781037
+CLARK_v1.1.3	genus	L1 norm error	2	1.2075723802222955
+CLARK_v1.1.3	order	L1 norm error	2	0.7157583614991914
+CLARK_v1.1.3	phylum	L1 norm error	2	0.32540953889737395
+CLARK_v1.1.3	superkingdom	L1 norm error	2	0.06765381551600376
+CLARK_v1.1.3	na	Weighted UniFrac error	2	6.350909925954727
+CLARK_v1.1.3	na	Unweighted UniFrac error	2	9199.968141252732
+CommonKmers	class	Bray-Curtis distance	1	0.09837040787777764
+CommonKmers	family	Bray-Curtis distance	1	0.5843170897569298
+CommonKmers	genus	Bray-Curtis distance	1	0.6352072826723477
+CommonKmers	order	Bray-Curtis distance	1	0.23562630798281245
+CommonKmers	phylum	Bray-Curtis distance	1	0.05102115325158671
+CommonKmers	species	Bray-Curtis distance	1	0.6353527518182638
+CommonKmers	strain	Bray-Curtis distance	1	1.0
+CommonKmers	superkingdom	Bray-Curtis distance	1	0.0008402490230288117
+CommonKmers	superkingdom	Shannon diversity	1	0.009348759067761149
+CommonKmers	superkingdom	Shannon equitability	1	0.013487408345524738
+CommonKmers	phylum	Shannon diversity	1	0.8956053916242922
+CommonKmers	phylum	Shannon equitability	1	0.6460427285448922
+CommonKmers	class	Shannon diversity	1	1.4154647414990191
+CommonKmers	class	Shannon equitability	1	0.7274049843391737
+CommonKmers	order	Shannon diversity	1	1.7547375024333627
+CommonKmers	order	Shannon equitability	1	0.7061583188982443
+CommonKmers	family	Shannon diversity	1	1.9918597602593116
+CommonKmers	family	Shannon equitability	1	0.6443974129488973
+CommonKmers	genus	Shannon diversity	1	2.523440875835235
+CommonKmers	genus	Shannon equitability	1	0.7097591662454871
+CommonKmers	species	Shannon diversity	1	2.8472904660905796
+CommonKmers	species	Shannon equitability	1	0.701226555500262
+CommonKmers	strain	Shannon diversity	1	2.110240101081732
+CommonKmers	strain	Shannon equitability	1	0.6402744392018583
+CommonKmers	class	F1 score	1	0.6363636363636364
+CommonKmers	class	False negatives	1	8.0
+CommonKmers	class	False positives	1	0.0
+CommonKmers	class	Jaccard index	1	0.4666666666666667
+CommonKmers	class	Taxon counts	1	7.0
+CommonKmers	class	Purity (precision)	1	1.0
+CommonKmers	class	Completeness (recall)	1	0.4666666666666667
+CommonKmers	class	True positives	1	7.0
+CommonKmers	species	F1 score	1	0.25
+CommonKmers	species	False negatives	1	54.0
+CommonKmers	species	False positives	1	42.0
+CommonKmers	species	Jaccard index	1	0.14285714285714285
+CommonKmers	species	Taxon counts	1	58.0
+CommonKmers	species	Purity (precision)	1	0.27586206896551724
+CommonKmers	species	Completeness (recall)	1	0.22857142857142856
+CommonKmers	species	True positives	1	16.0
+CommonKmers	superkingdom	F1 score	1	1.0
+CommonKmers	superkingdom	False negatives	1	0.0
+CommonKmers	superkingdom	False positives	1	0.0
+CommonKmers	superkingdom	Jaccard index	1	1.0
+CommonKmers	superkingdom	Taxon counts	1	2.0
+CommonKmers	superkingdom	Purity (precision)	1	1.0
+CommonKmers	superkingdom	Completeness (recall)	1	1.0
+CommonKmers	superkingdom	True positives	1	2.0
+CommonKmers	order	F1 score	1	0.5853658536585366
+CommonKmers	order	False negatives	1	17.0
+CommonKmers	order	False positives	1	0.0
+CommonKmers	order	Jaccard index	1	0.41379310344827586
+CommonKmers	order	Taxon counts	1	12.0
+CommonKmers	order	Purity (precision)	1	1.0
+CommonKmers	order	Completeness (recall)	1	0.41379310344827586
+CommonKmers	order	True positives	1	12.0
+CommonKmers	phylum	F1 score	1	0.8
+CommonKmers	phylum	False negatives	1	2.0
+CommonKmers	phylum	False positives	1	0.0
+CommonKmers	phylum	Jaccard index	1	0.6666666666666666
+CommonKmers	phylum	Taxon counts	1	4.0
+CommonKmers	phylum	Purity (precision)	1	1.0
+CommonKmers	phylum	Completeness (recall)	1	0.6666666666666666
+CommonKmers	phylum	True positives	1	4.0
+CommonKmers	family	F1 score	1	0.5333333333333334
+CommonKmers	family	False negatives	1	33.0
+CommonKmers	family	False positives	1	2.0
+CommonKmers	family	Jaccard index	1	0.36363636363636365
+CommonKmers	family	Taxon counts	1	22.0
+CommonKmers	family	Purity (precision)	1	0.9090909090909091
+CommonKmers	family	Completeness (recall)	1	0.37735849056603776
+CommonKmers	family	True positives	1	20.0
+CommonKmers	strain	False negatives	1	132.0
+CommonKmers	strain	False positives	1	27.0
+CommonKmers	strain	Jaccard index	1	0.0
+CommonKmers	strain	Taxon counts	1	27.0
+CommonKmers	strain	Purity (precision)	1	0.0
+CommonKmers	strain	Completeness (recall)	1	0.0
+CommonKmers	strain	True positives	1	0.0
+CommonKmers	genus	F1 score	1	0.4339622641509434
+CommonKmers	genus	False negatives	1	48.0
+CommonKmers	genus	False positives	1	12.0
+CommonKmers	genus	Jaccard index	1	0.27710843373493976
+CommonKmers	genus	Taxon counts	1	35.0
+CommonKmers	genus	Purity (precision)	1	0.6571428571428571
+CommonKmers	genus	Completeness (recall)	1	0.323943661971831
+CommonKmers	genus	True positives	1	23.0
+CommonKmers	class	L1 norm error	1	0.1967408157555553
+CommonKmers	family	L1 norm error	1	1.1686341795138595
+CommonKmers	genus	L1 norm error	1	1.270414565344695
+CommonKmers	order	L1 norm error	1	0.4712526159656249
+CommonKmers	phylum	L1 norm error	1	0.10204230650317342
+CommonKmers	species	L1 norm error	1	1.270705503636527
+CommonKmers	strain	L1 norm error	1	2.0
+CommonKmers	superkingdom	L1 norm error	1	0.0016804980460576233
+CommonKmers	na	Weighted UniFrac error	1	7.2393604433146415
+CommonKmers	na	Unweighted UniFrac error	1	1439.2129863809776
+CommonKmers	class	Bray-Curtis distance	2	0.2713206325574441
+CommonKmers	family	Bray-Curtis distance	2	0.48489622047959585
+CommonKmers	genus	Bray-Curtis distance	2	0.5391092790605275
+CommonKmers	order	Bray-Curtis distance	2	0.4130231021753611
+CommonKmers	phylum	Bray-Curtis distance	2	0.20311193619592552
+CommonKmers	species	Bray-Curtis distance	2	0.5952684612767088
+CommonKmers	strain	Bray-Curtis distance	2	1.0
+CommonKmers	superkingdom	Bray-Curtis distance	2	0.025096964762499646
+CommonKmers	superkingdom	Shannon diversity	2	0.26409471104154947
+CommonKmers	superkingdom	Shannon equitability	2	0.3810081299446472
+CommonKmers	phylum	Shannon diversity	2	1.194609704559339
+CommonKmers	phylum	Shannon equitability	2	0.861728748282794
+CommonKmers	class	Shannon diversity	2	1.7518029407229823
+CommonKmers	class	Shannon equitability	2	0.7972798769831534
+CommonKmers	order	Shannon diversity	2	2.0613430796290264
+CommonKmers	order	Shannon equitability	2	0.7275636633413108
+CommonKmers	family	Shannon diversity	2	2.3042702798269135
+CommonKmers	family	Shannon equitability	2	0.699145732482952
+CommonKmers	genus	Shannon diversity	2	2.5533159440480433
+CommonKmers	genus	Shannon equitability	2	0.6560724155962723
+CommonKmers	species	Shannon diversity	2	2.835668844592106
+CommonKmers	species	Shannon equitability	2	0.622693347249328
+CommonKmers	strain	Shannon diversity	2	2.234266901248438
+CommonKmers	strain	Shannon equitability	2	0.5654591466330968
+CommonKmers	class	F1 score	2	0.7499999999999999
+CommonKmers	class	False negatives	2	6.0
+CommonKmers	class	False positives	2	0.0
+CommonKmers	class	Jaccard index	2	0.6
+CommonKmers	class	Taxon counts	2	9.0
+CommonKmers	class	Purity (precision)	2	1.0
+CommonKmers	class	Completeness (recall)	2	0.6
+CommonKmers	class	True positives	2	9.0
+CommonKmers	species	F1 score	2	0.2545454545454545
+CommonKmers	species	False negatives	2	49.0
+CommonKmers	species	False positives	2	74.0
+CommonKmers	species	Jaccard index	2	0.14583333333333334
+CommonKmers	species	Taxon counts	2	95.0
+CommonKmers	species	Purity (precision)	2	0.22105263157894736
+CommonKmers	species	Completeness (recall)	2	0.3
+CommonKmers	species	True positives	2	21.0
+CommonKmers	superkingdom	F1 score	2	1.0
+CommonKmers	superkingdom	False negatives	2	0.0
+CommonKmers	superkingdom	False positives	2	0.0
+CommonKmers	superkingdom	Jaccard index	2	1.0
+CommonKmers	superkingdom	Taxon counts	2	2.0
+CommonKmers	superkingdom	Purity (precision)	2	1.0
+CommonKmers	superkingdom	Completeness (recall)	2	1.0
+CommonKmers	superkingdom	True positives	2	2.0
+CommonKmers	order	F1 score	2	0.7391304347826086
+CommonKmers	order	False negatives	2	12.0
+CommonKmers	order	False positives	2	0.0
+CommonKmers	order	Jaccard index	2	0.5862068965517241
+CommonKmers	order	Taxon counts	2	17.0
+CommonKmers	order	Purity (precision)	2	1.0
+CommonKmers	order	Completeness (recall)	2	0.5862068965517241
+CommonKmers	order	True positives	2	17.0
+CommonKmers	phylum	F1 score	2	0.8
+CommonKmers	phylum	False negatives	2	2.0
+CommonKmers	phylum	False positives	2	0.0
+CommonKmers	phylum	Jaccard index	2	0.6666666666666666
+CommonKmers	phylum	Taxon counts	2	4.0
+CommonKmers	phylum	Purity (precision)	2	1.0
+CommonKmers	phylum	Completeness (recall)	2	0.6666666666666666
+CommonKmers	phylum	True positives	2	4.0
+CommonKmers	family	F1 score	2	0.65
+CommonKmers	family	False negatives	2	27.0
+CommonKmers	family	False positives	2	1.0
+CommonKmers	family	Jaccard index	2	0.48148148148148145
+CommonKmers	family	Taxon counts	2	27.0
+CommonKmers	family	Purity (precision)	2	0.9629629629629629
+CommonKmers	family	Completeness (recall)	2	0.49056603773584906
+CommonKmers	family	True positives	2	26.0
+CommonKmers	strain	False negatives	2	132.0
+CommonKmers	strain	False positives	2	52.0
+CommonKmers	strain	Jaccard index	2	0.0
+CommonKmers	strain	Taxon counts	2	52.0
+CommonKmers	strain	Purity (precision)	2	0.0
+CommonKmers	strain	Completeness (recall)	2	0.0
+CommonKmers	strain	True positives	2	0.0
+CommonKmers	genus	F1 score	2	0.5333333333333333
+CommonKmers	genus	False negatives	2	39.0
+CommonKmers	genus	False positives	2	17.0
+CommonKmers	genus	Jaccard index	2	0.36363636363636365
+CommonKmers	genus	Taxon counts	2	49.0
+CommonKmers	genus	Purity (precision)	2	0.6530612244897959
+CommonKmers	genus	Completeness (recall)	2	0.4507042253521127
+CommonKmers	genus	True positives	2	32.0
+CommonKmers	class	L1 norm error	2	0.5426412651148883
+CommonKmers	family	L1 norm error	2	0.9697924409591917
+CommonKmers	genus	L1 norm error	2	1.0782185581210544
+CommonKmers	order	L1 norm error	2	0.826046204350722
+CommonKmers	phylum	L1 norm error	2	0.40622387239185104
+CommonKmers	species	L1 norm error	2	1.1905369225534175
+CommonKmers	strain	L1 norm error	2	2.0000000000000013
+CommonKmers	superkingdom	L1 norm error	2	0.05019392952499929
+CommonKmers	na	Weighted UniFrac error	2	7.3999015545039075
+CommonKmers	na	Unweighted UniFrac error	2	1335.5188378565817
+CommonKmers sjanssen	class	Bray-Curtis distance	1	0.09662261860301292
+CommonKmers sjanssen	family	Bray-Curtis distance	1	0.544019733537341
+CommonKmers sjanssen	genus	Bray-Curtis distance	1	0.6220916318374353
+CommonKmers sjanssen	order	Bray-Curtis distance	1	0.22841121776396292
+CommonKmers sjanssen	phylum	Bray-Curtis distance	1	0.059526423147130594
+CommonKmers sjanssen	species	Bray-Curtis distance	1	0.6413903994612994
+CommonKmers sjanssen	strain	Bray-Curtis distance	1	1.0
+CommonKmers sjanssen	superkingdom	Bray-Curtis distance	1	0.0009152262721331696
+CommonKmers sjanssen	superkingdom	Shannon diversity	1	0.008842954291552099
+CommonKmers sjanssen	superkingdom	Shannon equitability	1	0.01275768630322999
+CommonKmers sjanssen	phylum	Shannon diversity	1	0.8842169597471409
+CommonKmers sjanssen	phylum	Shannon equitability	1	0.5493948868209887
+CommonKmers sjanssen	class	Shannon diversity	1	1.4034682015631934
+CommonKmers sjanssen	class	Shannon equitability	1	0.6749255381468572
+CommonKmers sjanssen	order	Shannon diversity	1	1.7897992684328494
+CommonKmers sjanssen	order	Shannon equitability	1	0.6781964333809224
+CommonKmers sjanssen	family	Shannon diversity	1	2.1906213796382756
+CommonKmers sjanssen	family	Shannon equitability	1	0.6113045353632378
+CommonKmers sjanssen	genus	Shannon diversity	1	2.789703147858426
+CommonKmers sjanssen	genus	Shannon equitability	1	0.6588646612524872
+CommonKmers sjanssen	species	Shannon diversity	1	3.268046172578752
+CommonKmers sjanssen	species	Shannon equitability	1	0.6566648612769158
+CommonKmers sjanssen	strain	Shannon diversity	1	2.3792790112182387
+CommonKmers sjanssen	strain	Shannon equitability	1	0.574270249061023
+CommonKmers sjanssen	class	F1 score	1	0.6956521739130436
+CommonKmers sjanssen	class	False negatives	1	7.0
+CommonKmers sjanssen	class	False positives	1	0.0
+CommonKmers sjanssen	class	Jaccard index	1	0.5333333333333333
+CommonKmers sjanssen	class	Taxon counts	1	8.0
+CommonKmers sjanssen	class	Purity (precision)	1	1.0
+CommonKmers sjanssen	class	Completeness (recall)	1	0.5333333333333333
+CommonKmers sjanssen	class	True positives	1	8.0
+CommonKmers sjanssen	species	F1 score	1	0.16744186046511625
+CommonKmers sjanssen	species	False negatives	1	52.0
+CommonKmers sjanssen	species	False positives	1	127.0
+CommonKmers sjanssen	species	Jaccard index	1	0.09137055837563451
+CommonKmers sjanssen	species	Taxon counts	1	145.0
+CommonKmers sjanssen	species	Purity (precision)	1	0.12413793103448276
+CommonKmers sjanssen	species	Completeness (recall)	1	0.2571428571428571
+CommonKmers sjanssen	species	True positives	1	18.0
+CommonKmers sjanssen	superkingdom	F1 score	1	1.0
+CommonKmers sjanssen	superkingdom	False negatives	1	0.0
+CommonKmers sjanssen	superkingdom	False positives	1	0.0
+CommonKmers sjanssen	superkingdom	Jaccard index	1	1.0
+CommonKmers sjanssen	superkingdom	Taxon counts	1	2.0
+CommonKmers sjanssen	superkingdom	Purity (precision)	1	1.0
+CommonKmers sjanssen	superkingdom	Completeness (recall)	1	1.0
+CommonKmers sjanssen	superkingdom	True positives	1	2.0
+CommonKmers sjanssen	order	F1 score	1	0.6046511627906977
+CommonKmers sjanssen	order	False negatives	1	16.0
+CommonKmers sjanssen	order	False positives	1	1.0
+CommonKmers sjanssen	order	Jaccard index	1	0.43333333333333335
+CommonKmers sjanssen	order	Taxon counts	1	14.0
+CommonKmers sjanssen	order	Purity (precision)	1	0.9285714285714286
+CommonKmers sjanssen	order	Completeness (recall)	1	0.4482758620689655
+CommonKmers sjanssen	order	True positives	1	13.0
+CommonKmers sjanssen	phylum	F1 score	1	0.9090909090909091
+CommonKmers sjanssen	phylum	False negatives	1	1.0
+CommonKmers sjanssen	phylum	False positives	1	0.0
+CommonKmers sjanssen	phylum	Jaccard index	1	0.8333333333333334
+CommonKmers sjanssen	phylum	Taxon counts	1	5.0
+CommonKmers sjanssen	phylum	Purity (precision)	1	1.0
+CommonKmers sjanssen	phylum	Completeness (recall)	1	0.8333333333333334
+CommonKmers sjanssen	phylum	True positives	1	5.0
+CommonKmers sjanssen	family	F1 score	1	0.6067415730337078
+CommonKmers sjanssen	family	False negatives	1	26.0
+CommonKmers sjanssen	family	False positives	1	9.0
+CommonKmers sjanssen	family	Jaccard index	1	0.43548387096774194
+CommonKmers sjanssen	family	Taxon counts	1	36.0
+CommonKmers sjanssen	family	Purity (precision)	1	0.75
+CommonKmers sjanssen	family	Completeness (recall)	1	0.5094339622641509
+CommonKmers sjanssen	family	True positives	1	27.0
+CommonKmers sjanssen	strain	False negatives	1	132.0
+CommonKmers sjanssen	strain	False positives	1	63.0
+CommonKmers sjanssen	strain	Jaccard index	1	0.0
+CommonKmers sjanssen	strain	Taxon counts	1	63.0
+CommonKmers sjanssen	strain	Purity (precision)	1	0.0
+CommonKmers sjanssen	strain	Completeness (recall)	1	0.0
+CommonKmers sjanssen	strain	True positives	1	0.0
+CommonKmers sjanssen	genus	F1 score	1	0.42857142857142855
+CommonKmers sjanssen	genus	False negatives	1	41.0
+CommonKmers sjanssen	genus	False positives	1	39.0
+CommonKmers sjanssen	genus	Jaccard index	1	0.2727272727272727
+CommonKmers sjanssen	genus	Taxon counts	1	69.0
+CommonKmers sjanssen	genus	Purity (precision)	1	0.43478260869565216
+CommonKmers sjanssen	genus	Completeness (recall)	1	0.4225352112676056
+CommonKmers sjanssen	genus	True positives	1	30.0
+CommonKmers sjanssen	class	L1 norm error	1	0.19324523720602588
+CommonKmers sjanssen	family	L1 norm error	1	1.0880394670746818
+CommonKmers sjanssen	genus	L1 norm error	1	1.2441832636748713
+CommonKmers sjanssen	order	L1 norm error	1	0.4568224355279258
+CommonKmers sjanssen	phylum	L1 norm error	1	0.11905284629426119
+CommonKmers sjanssen	species	L1 norm error	1	1.2827807989225997
+CommonKmers sjanssen	strain	L1 norm error	1	1.9999999999999993
+CommonKmers sjanssen	superkingdom	L1 norm error	1	0.0018304525442663392
+CommonKmers sjanssen	na	Weighted UniFrac error	1	7.14463829529509
+CommonKmers sjanssen	na	Unweighted UniFrac error	1	1455.7841604952591
+CommonKmers sjanssen	class	Bray-Curtis distance	2	0.2399746009324369
+CommonKmers sjanssen	family	Bray-Curtis distance	2	0.473376073773977
+CommonKmers sjanssen	genus	Bray-Curtis distance	2	0.5369741602023982
+CommonKmers sjanssen	order	Bray-Curtis distance	2	0.38016666417630945
+CommonKmers sjanssen	phylum	Bray-Curtis distance	2	0.1807656350711787
+CommonKmers sjanssen	species	Bray-Curtis distance	2	0.5963345568847479
+CommonKmers sjanssen	strain	Bray-Curtis distance	2	1.0
+CommonKmers sjanssen	superkingdom	Bray-Curtis distance	2	0.021680573578015592
+CommonKmers sjanssen	superkingdom	Shannon diversity	2	0.2553803745355927
+CommonKmers sjanssen	superkingdom	Shannon equitability	2	0.36843599988286574
+CommonKmers sjanssen	phylum	Shannon diversity	2	1.2311003389334851
+CommonKmers sjanssen	phylum	Shannon equitability	2	0.764925648527553
+CommonKmers sjanssen	class	Shannon diversity	2	1.7708224640622885
+CommonKmers sjanssen	class	Shannon equitability	2	0.7690584245725713
+CommonKmers sjanssen	order	Shannon diversity	2	2.073310041675816
+CommonKmers sjanssen	order	Shannon equitability	2	0.717316046287738
+CommonKmers sjanssen	family	Shannon diversity	2	2.4098461121383745
+CommonKmers sjanssen	family	Shannon equitability	2	0.6673777057351266
+CommonKmers sjanssen	genus	Shannon diversity	2	2.677577209163858
+CommonKmers sjanssen	genus	Shannon equitability	2	0.6390925682503339
+CommonKmers sjanssen	species	Shannon diversity	2	3.0756364623367527
+CommonKmers sjanssen	species	Shannon equitability	2	0.6146421792500896
+CommonKmers sjanssen	strain	Shannon diversity	2	2.353604830863948
+CommonKmers sjanssen	strain	Shannon equitability	2	0.5521420558790735
+CommonKmers sjanssen	class	F1 score	2	0.8
+CommonKmers sjanssen	class	False negatives	2	5.0
+CommonKmers sjanssen	class	False positives	2	0.0
+CommonKmers sjanssen	class	Jaccard index	2	0.6666666666666666
+CommonKmers sjanssen	class	Taxon counts	2	10.0
+CommonKmers sjanssen	class	Purity (precision)	2	1.0
+CommonKmers sjanssen	class	Completeness (recall)	2	0.6666666666666666
+CommonKmers sjanssen	class	True positives	2	10.0
+CommonKmers sjanssen	species	F1 score	2	0.1917808219178082
+CommonKmers sjanssen	species	False negatives	2	49.0
+CommonKmers sjanssen	species	False positives	2	128.0
+CommonKmers sjanssen	species	Jaccard index	2	0.10606060606060606
+CommonKmers sjanssen	species	Taxon counts	2	149.0
+CommonKmers sjanssen	species	Purity (precision)	2	0.14093959731543623
+CommonKmers sjanssen	species	Completeness (recall)	2	0.3
+CommonKmers sjanssen	species	True positives	2	21.0
+CommonKmers sjanssen	superkingdom	F1 score	2	1.0
+CommonKmers sjanssen	superkingdom	False negatives	2	0.0
+CommonKmers sjanssen	superkingdom	False positives	2	0.0
+CommonKmers sjanssen	superkingdom	Jaccard index	2	1.0
+CommonKmers sjanssen	superkingdom	Taxon counts	2	2.0
+CommonKmers sjanssen	superkingdom	Purity (precision)	2	1.0
+CommonKmers sjanssen	superkingdom	Completeness (recall)	2	1.0
+CommonKmers sjanssen	superkingdom	True positives	2	2.0
+CommonKmers sjanssen	order	F1 score	2	0.7659574468085107
+CommonKmers sjanssen	order	False negatives	2	11.0
+CommonKmers sjanssen	order	False positives	2	0.0
+CommonKmers sjanssen	order	Jaccard index	2	0.6206896551724138
+CommonKmers sjanssen	order	Taxon counts	2	18.0
+CommonKmers sjanssen	order	Purity (precision)	2	1.0
+CommonKmers sjanssen	order	Completeness (recall)	2	0.6206896551724138
+CommonKmers sjanssen	order	True positives	2	18.0
+CommonKmers sjanssen	phylum	F1 score	2	0.9090909090909091
+CommonKmers sjanssen	phylum	False negatives	2	1.0
+CommonKmers sjanssen	phylum	False positives	2	0.0
+CommonKmers sjanssen	phylum	Jaccard index	2	0.8333333333333334
+CommonKmers sjanssen	phylum	Taxon counts	2	5.0
+CommonKmers sjanssen	phylum	Purity (precision)	2	1.0
+CommonKmers sjanssen	phylum	Completeness (recall)	2	0.8333333333333334
+CommonKmers sjanssen	phylum	True positives	2	5.0
+CommonKmers sjanssen	family	F1 score	2	0.6666666666666667
+CommonKmers sjanssen	family	False negatives	2	23.0
+CommonKmers sjanssen	family	False positives	2	7.0
+CommonKmers sjanssen	family	Jaccard index	2	0.5
+CommonKmers sjanssen	family	Taxon counts	2	37.0
+CommonKmers sjanssen	family	Purity (precision)	2	0.8108108108108109
+CommonKmers sjanssen	family	Completeness (recall)	2	0.5660377358490566
+CommonKmers sjanssen	family	True positives	2	30.0
+CommonKmers sjanssen	strain	False negatives	2	132.0
+CommonKmers sjanssen	strain	False positives	2	71.0
+CommonKmers sjanssen	strain	Jaccard index	2	0.0
+CommonKmers sjanssen	strain	Taxon counts	2	71.0
+CommonKmers sjanssen	strain	Purity (precision)	2	0.0
+CommonKmers sjanssen	strain	Completeness (recall)	2	0.0
+CommonKmers sjanssen	strain	True positives	2	0.0
+CommonKmers sjanssen	genus	F1 score	2	0.4963503649635036
+CommonKmers sjanssen	genus	False negatives	2	37.0
+CommonKmers sjanssen	genus	False positives	2	32.0
+CommonKmers sjanssen	genus	Jaccard index	2	0.3300970873786408
+CommonKmers sjanssen	genus	Taxon counts	2	66.0
+CommonKmers sjanssen	genus	Purity (precision)	2	0.5151515151515151
+CommonKmers sjanssen	genus	Completeness (recall)	2	0.4788732394366197
+CommonKmers sjanssen	genus	True positives	2	34.0
+CommonKmers sjanssen	class	L1 norm error	2	0.4799492018648738
+CommonKmers sjanssen	family	L1 norm error	2	0.946752147547954
+CommonKmers sjanssen	genus	L1 norm error	2	1.0739483204047964
+CommonKmers sjanssen	order	L1 norm error	2	0.7603333283526189
+CommonKmers sjanssen	phylum	L1 norm error	2	0.3615312701423574
+CommonKmers sjanssen	species	L1 norm error	2	1.192669113769496
+CommonKmers sjanssen	strain	L1 norm error	2	2.0000000000000013
+CommonKmers sjanssen	superkingdom	L1 norm error	2	0.043361147156031184
+CommonKmers sjanssen	na	Weighted UniFrac error	2	7.195327692017587
+CommonKmers sjanssen	na	Unweighted UniFrac error	2	1619.8027718475612
+FOCUS	class	Bray-Curtis distance	1	0.12755461748250016
+FOCUS	family	Bray-Curtis distance	1	0.47893437141765055
+FOCUS	genus	Bray-Curtis distance	1	0.7381071583999301
+FOCUS	order	Bray-Curtis distance	1	0.19855271941535182
+FOCUS	phylum	Bray-Curtis distance	1	0.1166374908877177
+FOCUS	species	Bray-Curtis distance	1	0.8576705186136414
+FOCUS	strain	Bray-Curtis distance	1	1.0
+FOCUS	superkingdom	Bray-Curtis distance	1	0.017966247794301383
+FOCUS	superkingdom	Shannon diversity	1	0.09811012192408088
+FOCUS	superkingdom	Shannon equitability	1	0.14154298636088306
+FOCUS	phylum	Shannon diversity	1	1.2276145049146976
+FOCUS	phylum	Shannon equitability	1	0.4169264547850235
+FOCUS	class	Shannon diversity	1	1.6702572605484882
+FOCUS	class	Shannon equitability	1	0.5188945928403057
+FOCUS	order	Shannon diversity	1	2.487321304706937
+FOCUS	order	Shannon equitability	1	0.6460327140710614
+FOCUS	family	Shannon diversity	1	3.6464391647210452
+FOCUS	family	Shannon equitability	1	0.8123712558472735
+FOCUS	genus	Shannon diversity	1	4.018395848155603
+FOCUS	genus	Shannon equitability	1	0.82555057166149
+FOCUS	species	Shannon diversity	1	4.4686040217716725
+FOCUS	species	Shannon equitability	1	0.8474501035211209
+FOCUS	strain	Shannon diversity	1	4.339725538014504
+FOCUS	strain	Shannon equitability	1	0.8582900644237083
+FOCUS	class	F1 score	1	0.7499999999999999
+FOCUS	class	False negatives	1	0.0
+FOCUS	class	False positives	1	10.0
+FOCUS	class	Jaccard index	1	0.6
+FOCUS	class	Taxon counts	1	25.0
+FOCUS	class	Purity (precision)	1	0.6
+FOCUS	class	Completeness (recall)	1	1.0
+FOCUS	class	True positives	1	15.0
+FOCUS	species	F1 score	1	0.045283018867924525
+FOCUS	species	False negatives	1	64.0
+FOCUS	species	False positives	1	189.0
+FOCUS	species	Jaccard index	1	0.023166023166023165
+FOCUS	species	Taxon counts	1	195.0
+FOCUS	species	Purity (precision)	1	0.03076923076923077
+FOCUS	species	Completeness (recall)	1	0.08571428571428572
+FOCUS	species	True positives	1	6.0
+FOCUS	superkingdom	F1 score	1	1.0
+FOCUS	superkingdom	False negatives	1	0.0
+FOCUS	superkingdom	False positives	1	0.0
+FOCUS	superkingdom	Jaccard index	1	1.0
+FOCUS	superkingdom	Taxon counts	1	2.0
+FOCUS	superkingdom	Purity (precision)	1	1.0
+FOCUS	superkingdom	Completeness (recall)	1	1.0
+FOCUS	superkingdom	True positives	1	2.0
+FOCUS	order	F1 score	1	0.5263157894736842
+FOCUS	order	False negatives	1	9.0
+FOCUS	order	False positives	1	27.0
+FOCUS	order	Jaccard index	1	0.35714285714285715
+FOCUS	order	Taxon counts	1	47.0
+FOCUS	order	Purity (precision)	1	0.425531914893617
+FOCUS	order	Completeness (recall)	1	0.6896551724137931
+FOCUS	order	True positives	1	20.0
+FOCUS	phylum	F1 score	1	0.4799999999999999
+FOCUS	phylum	False negatives	1	0.0
+FOCUS	phylum	False positives	1	13.0
+FOCUS	phylum	Jaccard index	1	0.3157894736842105
+FOCUS	phylum	Taxon counts	1	19.0
+FOCUS	phylum	Purity (precision)	1	0.3157894736842105
+FOCUS	phylum	Completeness (recall)	1	1.0
+FOCUS	phylum	True positives	1	6.0
+FOCUS	family	F1 score	1	0.4929577464788733
+FOCUS	family	False negatives	1	18.0
+FOCUS	family	False positives	1	54.0
+FOCUS	family	Jaccard index	1	0.32710280373831774
+FOCUS	family	Taxon counts	1	89.0
+FOCUS	family	Purity (precision)	1	0.39325842696629215
+FOCUS	family	Completeness (recall)	1	0.660377358490566
+FOCUS	family	True positives	1	35.0
+FOCUS	strain	False negatives	1	132.0
+FOCUS	strain	False positives	1	157.0
+FOCUS	strain	Jaccard index	1	0.0
+FOCUS	strain	Taxon counts	1	157.0
+FOCUS	strain	Purity (precision)	1	0.0
+FOCUS	strain	Completeness (recall)	1	0.0
+FOCUS	strain	True positives	1	0.0
+FOCUS	genus	F1 score	1	0.2288557213930348
+FOCUS	genus	False negatives	1	48.0
+FOCUS	genus	False positives	1	107.0
+FOCUS	genus	Jaccard index	1	0.12921348314606743
+FOCUS	genus	Taxon counts	1	130.0
+FOCUS	genus	Purity (precision)	1	0.17692307692307693
+FOCUS	genus	Completeness (recall)	1	0.323943661971831
+FOCUS	genus	True positives	1	23.0
+FOCUS	class	L1 norm error	1	0.25510923496500026
+FOCUS	family	L1 norm error	1	0.9578687428353014
+FOCUS	genus	L1 norm error	1	1.4762143167998605
+FOCUS	order	L1 norm error	1	0.3971054388307036
+FOCUS	phylum	L1 norm error	1	0.23327498177543532
+FOCUS	species	L1 norm error	1	1.7153410372272844
+FOCUS	strain	L1 norm error	1	2.0
+FOCUS	superkingdom	L1 norm error	1	0.035932495588602766
+FOCUS	na	Weighted UniFrac error	1	7.958697973990584
+FOCUS	na	Unweighted UniFrac error	1	2339.2849969063022
+FOCUS	class	Bray-Curtis distance	2	0.23660416272365845
+FOCUS	family	Bray-Curtis distance	2	0.4580387306847738
+FOCUS	genus	Bray-Curtis distance	2	0.624743125188512
+FOCUS	order	Bray-Curtis distance	2	0.3011895600997492
+FOCUS	phylum	Bray-Curtis distance	2	0.16611509154653897
+FOCUS	species	Bray-Curtis distance	2	0.8773349787733498
+FOCUS	strain	Bray-Curtis distance	2	1.0
+FOCUS	superkingdom	Bray-Curtis distance	2	0.005028619546325537
+FOCUS	superkingdom	Shannon diversity	2	0.18034777732556917
+FOCUS	superkingdom	Shannon equitability	2	0.26018684398294567
+FOCUS	phylum	Shannon diversity	2	1.6839712040843704
+FOCUS	phylum	Shannon equitability	2	0.594367948893494
+FOCUS	class	Shannon diversity	2	2.226544759672846
+FOCUS	class	Shannon equitability	2	0.6917150212726872
+FOCUS	order	Shannon diversity	2	2.922159522371273
+FOCUS	order	Shannon equitability	2	0.7227609369238535
+FOCUS	family	Shannon diversity	2	3.9789791116693136
+FOCUS	family	Shannon equitability	2	0.8432722397954493
+FOCUS	genus	Shannon diversity	2	4.327455091685237
+FOCUS	genus	Shannon equitability	2	0.842606100049889
+FOCUS	species	Shannon diversity	2	4.703697372387851
+FOCUS	species	Shannon equitability	2	0.8525124655620951
+FOCUS	strain	Shannon diversity	2	4.5612142265603834
+FOCUS	strain	Shannon equitability	2	0.8608797682370827
+FOCUS	class	F1 score	2	0.7000000000000001
+FOCUS	class	False negatives	2	1.0
+FOCUS	class	False positives	2	11.0
+FOCUS	class	Jaccard index	2	0.5384615384615384
+FOCUS	class	Taxon counts	2	25.0
+FOCUS	class	Purity (precision)	2	0.56
+FOCUS	class	Completeness (recall)	2	0.9333333333333333
+FOCUS	class	True positives	2	14.0
+FOCUS	species	F1 score	2	0.043887147335423204
+FOCUS	species	False negatives	2	63.0
+FOCUS	species	False positives	2	242.0
+FOCUS	species	Jaccard index	2	0.022435897435897436
+FOCUS	species	Taxon counts	2	249.0
+FOCUS	species	Purity (precision)	2	0.028112449799196786
+FOCUS	species	Completeness (recall)	2	0.1
+FOCUS	species	True positives	2	7.0
+FOCUS	superkingdom	F1 score	2	1.0
+FOCUS	superkingdom	False negatives	2	0.0
+FOCUS	superkingdom	False positives	2	0.0
+FOCUS	superkingdom	Jaccard index	2	1.0
+FOCUS	superkingdom	Taxon counts	2	2.0
+FOCUS	superkingdom	Purity (precision)	2	1.0
+FOCUS	superkingdom	Completeness (recall)	2	1.0
+FOCUS	superkingdom	True positives	2	2.0
+FOCUS	order	F1 score	2	0.5116279069767441
+FOCUS	order	False negatives	2	7.0
+FOCUS	order	False positives	2	35.0
+FOCUS	order	Jaccard index	2	0.34375
+FOCUS	order	Taxon counts	2	57.0
+FOCUS	order	Purity (precision)	2	0.38596491228070173
+FOCUS	order	Completeness (recall)	2	0.7586206896551724
+FOCUS	order	True positives	2	22.0
+FOCUS	phylum	F1 score	2	0.5217391304347826
+FOCUS	phylum	False negatives	2	0.0
+FOCUS	phylum	False positives	2	11.0
+FOCUS	phylum	Jaccard index	2	0.35294117647058826
+FOCUS	phylum	Taxon counts	2	17.0
+FOCUS	phylum	Purity (precision)	2	0.35294117647058826
+FOCUS	phylum	Completeness (recall)	2	1.0
+FOCUS	phylum	True positives	2	6.0
+FOCUS	family	F1 score	2	0.46060606060606063
+FOCUS	family	False negatives	2	15.0
+FOCUS	family	False positives	2	74.0
+FOCUS	family	Jaccard index	2	0.2992125984251969
+FOCUS	family	Taxon counts	2	112.0
+FOCUS	family	Purity (precision)	2	0.3392857142857143
+FOCUS	family	Completeness (recall)	2	0.7169811320754716
+FOCUS	family	True positives	2	38.0
+FOCUS	strain	False negatives	2	132.0
+FOCUS	strain	False positives	2	200.0
+FOCUS	strain	Jaccard index	2	0.0
+FOCUS	strain	Taxon counts	2	200.0
+FOCUS	strain	Purity (precision)	2	0.0
+FOCUS	strain	Completeness (recall)	2	0.0
+FOCUS	strain	True positives	2	0.0
+FOCUS	genus	F1 score	2	0.23236514522821575
+FOCUS	genus	False negatives	2	43.0
+FOCUS	genus	False positives	2	142.0
+FOCUS	genus	Jaccard index	2	0.13145539906103287
+FOCUS	genus	Taxon counts	2	170.0
+FOCUS	genus	Purity (precision)	2	0.16470588235294117
+FOCUS	genus	Completeness (recall)	2	0.39436619718309857
+FOCUS	genus	True positives	2	28.0
+FOCUS	class	L1 norm error	2	0.473208325447317
+FOCUS	family	L1 norm error	2	0.916077461369548
+FOCUS	genus	L1 norm error	2	1.249486250377024
+FOCUS	order	L1 norm error	2	0.6023791201994984
+FOCUS	phylum	L1 norm error	2	0.33223018309307795
+FOCUS	species	L1 norm error	2	1.7546699575467002
+FOCUS	strain	L1 norm error	2	2.0000000000000004
+FOCUS	superkingdom	L1 norm error	2	0.010057239092651073
+FOCUS	na	Weighted UniFrac error	2	7.868180985969809
+FOCUS	na	Unweighted UniFrac error	2	3029.172756759828
+MetaPhlAn2.0 db_v20	class	Bray-Curtis distance	1	0.23846633130867964
+MetaPhlAn2.0 db_v20	family	Bray-Curtis distance	1	0.6179169914641359
+MetaPhlAn2.0 db_v20	genus	Bray-Curtis distance	1	0.6475862283084347
+MetaPhlAn2.0 db_v20	order	Bray-Curtis distance	1	0.3336822
+MetaPhlAn2.0 db_v20	phylum	Bray-Curtis distance	1	0.15996174728898294
+MetaPhlAn2.0 db_v20	species	Bray-Curtis distance	1	0.6344455107938386
+MetaPhlAn2.0 db_v20	strain	Bray-Curtis distance	1	1.0
+MetaPhlAn2.0 db_v20	superkingdom	Bray-Curtis distance	1	0.08069149999999999
+MetaPhlAn2.0 db_v20	superkingdom	Shannon diversity	1	0.30616665330614706
+MetaPhlAn2.0 db_v20	superkingdom	Shannon equitability	1	0.2786848977243143
+MetaPhlAn2.0 db_v20	phylum	Shannon diversity	1	0.7993241595287235
+MetaPhlAn2.0 db_v20	phylum	Shannon equitability	1	0.49664802435269617
+MetaPhlAn2.0 db_v20	class	Shannon diversity	1	1.47225288359042
+MetaPhlAn2.0 db_v20	class	Shannon equitability	1	0.6139771408249554
+MetaPhlAn2.0 db_v20	order	Shannon diversity	1	2.1270189206398893
+MetaPhlAn2.0 db_v20	order	Shannon equitability	1	0.6783679937389341
+MetaPhlAn2.0 db_v20	family	Shannon diversity	1	2.2368080405396693
+MetaPhlAn2.0 db_v20	family	Shannon equitability	1	0.6397263558616539
+MetaPhlAn2.0 db_v20	genus	Shannon diversity	1	2.485679156839351
+MetaPhlAn2.0 db_v20	genus	Shannon equitability	1	0.673830410496948
+MetaPhlAn2.0 db_v20	species	Shannon diversity	1	2.440681026287813
+MetaPhlAn2.0 db_v20	species	Shannon equitability	1	0.6616320908957599
+MetaPhlAn2.0 db_v20	strain	Shannon diversity	1	2.0248520080939403
+MetaPhlAn2.0 db_v20	strain	Shannon equitability	1	0.6076613851013232
+MetaPhlAn2.0 db_v20	class	F1 score	1	0.846153846153846
+MetaPhlAn2.0 db_v20	class	False negatives	1	4.0
+MetaPhlAn2.0 db_v20	class	False positives	1	0.0
+MetaPhlAn2.0 db_v20	class	Jaccard index	1	0.7333333333333333
+MetaPhlAn2.0 db_v20	class	Taxon counts	1	11.0
+MetaPhlAn2.0 db_v20	class	Purity (precision)	1	1.0
+MetaPhlAn2.0 db_v20	class	Completeness (recall)	1	0.7333333333333333
+MetaPhlAn2.0 db_v20	class	True positives	1	11.0
+MetaPhlAn2.0 db_v20	species	F1 score	1	0.43636363636363634
+MetaPhlAn2.0 db_v20	species	False negatives	1	46.0
+MetaPhlAn2.0 db_v20	species	False positives	1	16.0
+MetaPhlAn2.0 db_v20	species	Jaccard index	1	0.27906976744186046
+MetaPhlAn2.0 db_v20	species	Taxon counts	1	40.0
+MetaPhlAn2.0 db_v20	species	Purity (precision)	1	0.6
+MetaPhlAn2.0 db_v20	species	Completeness (recall)	1	0.34285714285714286
+MetaPhlAn2.0 db_v20	species	True positives	1	24.0
+MetaPhlAn2.0 db_v20	superkingdom	F1 score	1	0.8
+MetaPhlAn2.0 db_v20	superkingdom	False negatives	1	0.0
+MetaPhlAn2.0 db_v20	superkingdom	False positives	1	1.0
+MetaPhlAn2.0 db_v20	superkingdom	Jaccard index	1	0.6666666666666666
+MetaPhlAn2.0 db_v20	superkingdom	Taxon counts	1	3.0
+MetaPhlAn2.0 db_v20	superkingdom	Purity (precision)	1	0.6666666666666666
+MetaPhlAn2.0 db_v20	superkingdom	Completeness (recall)	1	1.0
+MetaPhlAn2.0 db_v20	superkingdom	True positives	1	2.0
+MetaPhlAn2.0 db_v20	order	F1 score	1	0.7692307692307693
+MetaPhlAn2.0 db_v20	order	False negatives	1	9.0
+MetaPhlAn2.0 db_v20	order	False positives	1	3.0
+MetaPhlAn2.0 db_v20	order	Jaccard index	1	0.625
+MetaPhlAn2.0 db_v20	order	Taxon counts	1	23.0
+MetaPhlAn2.0 db_v20	order	Purity (precision)	1	0.8695652173913043
+MetaPhlAn2.0 db_v20	order	Completeness (recall)	1	0.6896551724137931
+MetaPhlAn2.0 db_v20	order	True positives	1	20.0
+MetaPhlAn2.0 db_v20	phylum	F1 score	1	0.9090909090909091
+MetaPhlAn2.0 db_v20	phylum	False negatives	1	1.0
+MetaPhlAn2.0 db_v20	phylum	False positives	1	0.0
+MetaPhlAn2.0 db_v20	phylum	Jaccard index	1	0.8333333333333334
+MetaPhlAn2.0 db_v20	phylum	Taxon counts	1	5.0
+MetaPhlAn2.0 db_v20	phylum	Purity (precision)	1	1.0
+MetaPhlAn2.0 db_v20	phylum	Completeness (recall)	1	0.8333333333333334
+MetaPhlAn2.0 db_v20	phylum	True positives	1	5.0
+MetaPhlAn2.0 db_v20	family	F1 score	1	0.7209302325581395
+MetaPhlAn2.0 db_v20	family	False negatives	1	22.0
+MetaPhlAn2.0 db_v20	family	False positives	1	2.0
+MetaPhlAn2.0 db_v20	family	Jaccard index	1	0.5636363636363636
+MetaPhlAn2.0 db_v20	family	Taxon counts	1	33.0
+MetaPhlAn2.0 db_v20	family	Purity (precision)	1	0.9393939393939394
+MetaPhlAn2.0 db_v20	family	Completeness (recall)	1	0.5849056603773585
+MetaPhlAn2.0 db_v20	family	True positives	1	31.0
+MetaPhlAn2.0 db_v20	strain	False negatives	1	132.0
+MetaPhlAn2.0 db_v20	strain	False positives	1	28.0
+MetaPhlAn2.0 db_v20	strain	Jaccard index	1	0.0
+MetaPhlAn2.0 db_v20	strain	Taxon counts	1	28.0
+MetaPhlAn2.0 db_v20	strain	Purity (precision)	1	0.0
+MetaPhlAn2.0 db_v20	strain	Completeness (recall)	1	0.0
+MetaPhlAn2.0 db_v20	strain	True positives	1	0.0
+MetaPhlAn2.0 db_v20	genus	F1 score	1	0.5405405405405407
+MetaPhlAn2.0 db_v20	genus	False negatives	1	41.0
+MetaPhlAn2.0 db_v20	genus	False positives	1	10.0
+MetaPhlAn2.0 db_v20	genus	Jaccard index	1	0.37037037037037035
+MetaPhlAn2.0 db_v20	genus	Taxon counts	1	40.0
+MetaPhlAn2.0 db_v20	genus	Purity (precision)	1	0.75
+MetaPhlAn2.0 db_v20	genus	Completeness (recall)	1	0.4225352112676056
+MetaPhlAn2.0 db_v20	genus	True positives	1	30.0
+MetaPhlAn2.0 db_v20	class	L1 norm error	1	0.47693266261735934
+MetaPhlAn2.0 db_v20	family	L1 norm error	1	1.2358339829282725
+MetaPhlAn2.0 db_v20	genus	L1 norm error	1	1.2951724566168692
+MetaPhlAn2.0 db_v20	order	L1 norm error	1	0.6673644
+MetaPhlAn2.0 db_v20	phylum	L1 norm error	1	0.3199234945779659
+MetaPhlAn2.0 db_v20	species	L1 norm error	1	1.2688910215876774
+MetaPhlAn2.0 db_v20	strain	L1 norm error	1	2.0000000000000004
+MetaPhlAn2.0 db_v20	superkingdom	L1 norm error	1	0.16138299999999994
+MetaPhlAn2.0 db_v20	na	Weighted UniFrac error	1	8.112941418328141
+MetaPhlAn2.0 db_v20	na	Unweighted UniFrac error	1	1356.7893279872042
+MetaPhlAn2.0 db_v20	class	Bray-Curtis distance	2	0.41723137988164305
+MetaPhlAn2.0 db_v20	family	Bray-Curtis distance	2	0.5600142634078957
+MetaPhlAn2.0 db_v20	genus	Bray-Curtis distance	2	0.5922268964230385
+MetaPhlAn2.0 db_v20	order	Bray-Curtis distance	2	0.5326148102961592
+MetaPhlAn2.0 db_v20	phylum	Bray-Curtis distance	2	0.40322152740917105
+MetaPhlAn2.0 db_v20	species	Bray-Curtis distance	2	0.575919537060543
+MetaPhlAn2.0 db_v20	strain	Bray-Curtis distance	2	1.0
+MetaPhlAn2.0 db_v20	superkingdom	Bray-Curtis distance	2	0.1120417677928465
+MetaPhlAn2.0 db_v20	superkingdom	Shannon diversity	2	0.5353810306892772
+MetaPhlAn2.0 db_v20	superkingdom	Shannon equitability	2	0.48732481532528676
+MetaPhlAn2.0 db_v20	phylum	Shannon diversity	2	1.0306062420041775
+MetaPhlAn2.0 db_v20	phylum	Shannon equitability	2	0.6403516619323931
+MetaPhlAn2.0 db_v20	class	Shannon diversity	2	1.5724759421381131
+MetaPhlAn2.0 db_v20	class	Shannon equitability	2	0.655773402606952
+MetaPhlAn2.0 db_v20	order	Shannon diversity	2	2.019555462783391
+MetaPhlAn2.0 db_v20	order	Shannon equitability	2	0.6354692433143219
+MetaPhlAn2.0 db_v20	family	Shannon diversity	2	2.074046674869964
+MetaPhlAn2.0 db_v20	family	Shannon equitability	2	0.5881550285037065
+MetaPhlAn2.0 db_v20	genus	Shannon diversity	2	2.1097861169030576
+MetaPhlAn2.0 db_v20	genus	Shannon equitability	2	0.5681284970390879
+MetaPhlAn2.0 db_v20	species	Shannon diversity	2	2.1191586359081613
+MetaPhlAn2.0 db_v20	species	Shannon equitability	2	0.5784421938544251
+MetaPhlAn2.0 db_v20	strain	Shannon diversity	2	1.418103050627963
+MetaPhlAn2.0 db_v20	strain	Shannon equitability	2	0.4352550742677266
+MetaPhlAn2.0 db_v20	class	F1 score	2	0.846153846153846
+MetaPhlAn2.0 db_v20	class	False negatives	2	4.0
+MetaPhlAn2.0 db_v20	class	False positives	2	0.0
+MetaPhlAn2.0 db_v20	class	Jaccard index	2	0.7333333333333333
+MetaPhlAn2.0 db_v20	class	Taxon counts	2	11.0
+MetaPhlAn2.0 db_v20	class	Purity (precision)	2	1.0
+MetaPhlAn2.0 db_v20	class	Completeness (recall)	2	0.7333333333333333
+MetaPhlAn2.0 db_v20	class	True positives	2	11.0
+MetaPhlAn2.0 db_v20	species	F1 score	2	0.4403669724770642
+MetaPhlAn2.0 db_v20	species	False negatives	2	46.0
+MetaPhlAn2.0 db_v20	species	False positives	2	15.0
+MetaPhlAn2.0 db_v20	species	Jaccard index	2	0.2823529411764706
+MetaPhlAn2.0 db_v20	species	Taxon counts	2	39.0
+MetaPhlAn2.0 db_v20	species	Purity (precision)	2	0.6153846153846154
+MetaPhlAn2.0 db_v20	species	Completeness (recall)	2	0.34285714285714286
+MetaPhlAn2.0 db_v20	species	True positives	2	24.0
+MetaPhlAn2.0 db_v20	superkingdom	F1 score	2	0.8
+MetaPhlAn2.0 db_v20	superkingdom	False negatives	2	0.0
+MetaPhlAn2.0 db_v20	superkingdom	False positives	2	1.0
+MetaPhlAn2.0 db_v20	superkingdom	Jaccard index	2	0.6666666666666666
+MetaPhlAn2.0 db_v20	superkingdom	Taxon counts	2	3.0
+MetaPhlAn2.0 db_v20	superkingdom	Purity (precision)	2	0.6666666666666666
+MetaPhlAn2.0 db_v20	superkingdom	Completeness (recall)	2	1.0
+MetaPhlAn2.0 db_v20	superkingdom	True positives	2	2.0
+MetaPhlAn2.0 db_v20	order	F1 score	2	0.7924528301886793
+MetaPhlAn2.0 db_v20	order	False negatives	2	8.0
+MetaPhlAn2.0 db_v20	order	False positives	2	3.0
+MetaPhlAn2.0 db_v20	order	Jaccard index	2	0.65625
+MetaPhlAn2.0 db_v20	order	Taxon counts	2	24.0
+MetaPhlAn2.0 db_v20	order	Purity (precision)	2	0.875
+MetaPhlAn2.0 db_v20	order	Completeness (recall)	2	0.7241379310344828
+MetaPhlAn2.0 db_v20	order	True positives	2	21.0
+MetaPhlAn2.0 db_v20	phylum	F1 score	2	0.9090909090909091
+MetaPhlAn2.0 db_v20	phylum	False negatives	2	1.0
+MetaPhlAn2.0 db_v20	phylum	False positives	2	0.0
+MetaPhlAn2.0 db_v20	phylum	Jaccard index	2	0.8333333333333334
+MetaPhlAn2.0 db_v20	phylum	Taxon counts	2	5.0
+MetaPhlAn2.0 db_v20	phylum	Purity (precision)	2	1.0
+MetaPhlAn2.0 db_v20	phylum	Completeness (recall)	2	0.8333333333333334
+MetaPhlAn2.0 db_v20	phylum	True positives	2	5.0
+MetaPhlAn2.0 db_v20	family	F1 score	2	0.7586206896551724
+MetaPhlAn2.0 db_v20	family	False negatives	2	20.0
+MetaPhlAn2.0 db_v20	family	False positives	2	1.0
+MetaPhlAn2.0 db_v20	family	Jaccard index	2	0.6111111111111112
+MetaPhlAn2.0 db_v20	family	Taxon counts	2	34.0
+MetaPhlAn2.0 db_v20	family	Purity (precision)	2	0.9705882352941176
+MetaPhlAn2.0 db_v20	family	Completeness (recall)	2	0.6226415094339622
+MetaPhlAn2.0 db_v20	family	True positives	2	33.0
+MetaPhlAn2.0 db_v20	strain	False negatives	2	132.0
+MetaPhlAn2.0 db_v20	strain	False positives	2	26.0
+MetaPhlAn2.0 db_v20	strain	Jaccard index	2	0.0
+MetaPhlAn2.0 db_v20	strain	Taxon counts	2	26.0
+MetaPhlAn2.0 db_v20	strain	Purity (precision)	2	0.0
+MetaPhlAn2.0 db_v20	strain	Completeness (recall)	2	0.0
+MetaPhlAn2.0 db_v20	strain	True positives	2	0.0
+MetaPhlAn2.0 db_v20	genus	F1 score	2	0.5535714285714285
+MetaPhlAn2.0 db_v20	genus	False negatives	2	40.0
+MetaPhlAn2.0 db_v20	genus	False positives	2	10.0
+MetaPhlAn2.0 db_v20	genus	Jaccard index	2	0.38271604938271603
+MetaPhlAn2.0 db_v20	genus	Taxon counts	2	41.0
+MetaPhlAn2.0 db_v20	genus	Purity (precision)	2	0.7560975609756098
+MetaPhlAn2.0 db_v20	genus	Completeness (recall)	2	0.43661971830985913
+MetaPhlAn2.0 db_v20	genus	True positives	2	31.0
+MetaPhlAn2.0 db_v20	class	L1 norm error	2	0.8344627597632859
+MetaPhlAn2.0 db_v20	family	L1 norm error	2	1.1200285268157917
+MetaPhlAn2.0 db_v20	genus	L1 norm error	2	1.1844537928460765
+MetaPhlAn2.0 db_v20	order	L1 norm error	2	1.065229620592318
+MetaPhlAn2.0 db_v20	phylum	L1 norm error	2	0.8064430548183421
+MetaPhlAn2.0 db_v20	species	L1 norm error	2	1.151839074121086
+MetaPhlAn2.0 db_v20	strain	L1 norm error	2	1.9999999999999998
+MetaPhlAn2.0 db_v20	superkingdom	L1 norm error	2	0.22408353558569297
+MetaPhlAn2.0 db_v20	na	Weighted UniFrac error	2	8.68953332691664
+MetaPhlAn2.0 db_v20	na	Unweighted UniFrac error	2	1211.805905657401
+MetaPhyler_V1.25	class	Bray-Curtis distance	1	0.06905600408180818
+MetaPhyler_V1.25	family	Bray-Curtis distance	1	0.2525357162801624
+MetaPhyler_V1.25	genus	Bray-Curtis distance	1	0.6901900874859876
+MetaPhyler_V1.25	order	Bray-Curtis distance	1	0.09344965883072834
+MetaPhyler_V1.25	phylum	Bray-Curtis distance	1	0.06479100000000008
+MetaPhyler_V1.25	species	Bray-Curtis distance	1	0.8764199388646704
+MetaPhyler_V1.25	superkingdom	Bray-Curtis distance	1	0.00012529999999999069
+MetaPhyler_V1.25	superkingdom	Shannon diversity	1	0.013970468203907028
+MetaPhyler_V1.25	superkingdom	Shannon equitability	1	0.020155125196673614
+MetaPhyler_V1.25	phylum	Shannon diversity	1	0.916627068487208
+MetaPhyler_V1.25	phylum	Shannon equitability	1	0.3010741708222149
+MetaPhyler_V1.25	class	Shannon diversity	1	1.4854186158670675
+MetaPhyler_V1.25	class	Shannon equitability	1	0.394932088210137
+MetaPhyler_V1.25	order	Shannon diversity	1	2.2081550626562003
+MetaPhyler_V1.25	order	Shannon equitability	1	0.48489564281569875
+MetaPhyler_V1.25	family	Shannon diversity	1	3.3409355873322313
+MetaPhyler_V1.25	family	Shannon equitability	1	0.6264976116031961
+MetaPhyler_V1.25	genus	Shannon diversity	1	4.10382129351903
+MetaPhyler_V1.25	genus	Shannon equitability	1	0.6530448250041416
+MetaPhyler_V1.25	species	Shannon diversity	1	4.6913513243639064
+MetaPhyler_V1.25	species	Shannon equitability	1	0.6623033250871165
+MetaPhyler_V1.25	class	F1 score	1	0.5172413793103449
+MetaPhyler_V1.25	class	False negatives	1	0.0
+MetaPhyler_V1.25	class	False positives	1	28.0
+MetaPhyler_V1.25	class	Jaccard index	1	0.3488372093023256
+MetaPhyler_V1.25	class	Taxon counts	1	43.0
+MetaPhyler_V1.25	class	Purity (precision)	1	0.3488372093023256
+MetaPhyler_V1.25	class	Completeness (recall)	1	1.0
+MetaPhyler_V1.25	class	True positives	1	15.0
+MetaPhyler_V1.25	species	F1 score	1	0.017432646592709985
+MetaPhyler_V1.25	species	False negatives	1	59.0
+MetaPhyler_V1.25	species	False positives	1	1181.0
+MetaPhyler_V1.25	species	Jaccard index	1	0.008792965627498001
+MetaPhyler_V1.25	species	Taxon counts	1	1192.0
+MetaPhyler_V1.25	species	Purity (precision)	1	0.009228187919463088
+MetaPhyler_V1.25	species	Completeness (recall)	1	0.15714285714285714
+MetaPhyler_V1.25	species	True positives	1	11.0
+MetaPhyler_V1.25	superkingdom	F1 score	1	1.0
+MetaPhyler_V1.25	superkingdom	False negatives	1	0.0
+MetaPhyler_V1.25	superkingdom	False positives	1	0.0
+MetaPhyler_V1.25	superkingdom	Jaccard index	1	1.0
+MetaPhyler_V1.25	superkingdom	Taxon counts	1	2.0
+MetaPhyler_V1.25	superkingdom	Purity (precision)	1	1.0
+MetaPhyler_V1.25	superkingdom	Completeness (recall)	1	1.0
+MetaPhyler_V1.25	superkingdom	True positives	1	2.0
+MetaPhyler_V1.25	order	F1 score	1	0.46774193548387094
+MetaPhyler_V1.25	order	False negatives	1	0.0
+MetaPhyler_V1.25	order	False positives	1	66.0
+MetaPhyler_V1.25	order	Jaccard index	1	0.30526315789473685
+MetaPhyler_V1.25	order	Taxon counts	1	95.0
+MetaPhyler_V1.25	order	Purity (precision)	1	0.30526315789473685
+MetaPhyler_V1.25	order	Completeness (recall)	1	1.0
+MetaPhyler_V1.25	order	True positives	1	29.0
+MetaPhyler_V1.25	phylum	F1 score	1	0.4444444444444445
+MetaPhyler_V1.25	phylum	False negatives	1	0.0
+MetaPhyler_V1.25	phylum	False positives	1	15.0
+MetaPhyler_V1.25	phylum	Jaccard index	1	0.2857142857142857
+MetaPhyler_V1.25	phylum	Taxon counts	1	21.0
+MetaPhyler_V1.25	phylum	Purity (precision)	1	0.2857142857142857
+MetaPhyler_V1.25	phylum	Completeness (recall)	1	1.0
+MetaPhyler_V1.25	phylum	True positives	1	6.0
+MetaPhyler_V1.25	family	F1 score	1	0.3846153846153846
+MetaPhyler_V1.25	family	False negatives	1	3.0
+MetaPhyler_V1.25	family	False positives	1	157.0
+MetaPhyler_V1.25	family	Jaccard index	1	0.23809523809523808
+MetaPhyler_V1.25	family	Taxon counts	1	207.0
+MetaPhyler_V1.25	family	Purity (precision)	1	0.24154589371980675
+MetaPhyler_V1.25	family	Completeness (recall)	1	0.9433962264150944
+MetaPhyler_V1.25	family	True positives	1	50.0
+MetaPhyler_V1.25	strain	False negatives	1	132.0
+MetaPhyler_V1.25	strain	False positives	1	0.0
+MetaPhyler_V1.25	strain	Jaccard index	1	0.0
+MetaPhyler_V1.25	strain	Taxon counts	1	0.0
+MetaPhyler_V1.25	strain	Purity (precision)	1	0.0
+MetaPhyler_V1.25	strain	Completeness (recall)	1	0.0
+MetaPhyler_V1.25	strain	True positives	1	0.0
+MetaPhyler_V1.25	genus	F1 score	1	0.11861614497528832
+MetaPhyler_V1.25	genus	False negatives	1	35.0
+MetaPhyler_V1.25	genus	False positives	1	500.0
+MetaPhyler_V1.25	genus	Jaccard index	1	0.06304728546409807
+MetaPhyler_V1.25	genus	Taxon counts	1	536.0
+MetaPhyler_V1.25	genus	Purity (precision)	1	0.06716417910447761
+MetaPhyler_V1.25	genus	Completeness (recall)	1	0.5070422535211268
+MetaPhyler_V1.25	genus	True positives	1	36.0
+MetaPhyler_V1.25	class	L1 norm error	1	0.13811200816361635
+MetaPhyler_V1.25	family	L1 norm error	1	0.5050714325603248
+MetaPhyler_V1.25	genus	L1 norm error	1	1.3803801749719775
+MetaPhyler_V1.25	order	L1 norm error	1	0.18689931766145662
+MetaPhyler_V1.25	phylum	L1 norm error	1	0.12958200000000017
+MetaPhyler_V1.25	species	L1 norm error	1	1.7528398777293466
+MetaPhyler_V1.25	superkingdom	L1 norm error	1	0.00025059999999998137
+MetaPhyler_V1.25	na	Weighted UniFrac error	1	6.807214411086692
+MetaPhyler_V1.25	na	Unweighted UniFrac error	1	11815.924915087722
+MetaPhyler_V1.25	class	Bray-Curtis distance	2	0.11517899382963023
+MetaPhyler_V1.25	family	Bray-Curtis distance	2	0.28510220964551775
+MetaPhyler_V1.25	genus	Bray-Curtis distance	2	0.4762017877300292
+MetaPhyler_V1.25	order	Bray-Curtis distance	2	0.15149285152239383
+MetaPhyler_V1.25	phylum	Bray-Curtis distance	2	0.06125612596996189
+MetaPhyler_V1.25	species	Bray-Curtis distance	2	0.7863668117823256
+MetaPhyler_V1.25	superkingdom	Bray-Curtis distance	2	0.00983716999999999
+MetaPhyler_V1.25	superkingdom	Shannon diversity	2	0.16525518811162174
+MetaPhyler_V1.25	superkingdom	Shannon equitability	2	0.23841284036980948
+MetaPhyler_V1.25	phylum	Shannon diversity	2	1.4393851141636964
+MetaPhyler_V1.25	phylum	Shannon equitability	2	0.47277861917812414
+MetaPhyler_V1.25	class	Shannon diversity	2	2.060390174944366
+MetaPhyler_V1.25	class	Shannon equitability	2	0.5512499459196876
+MetaPhyler_V1.25	order	Shannon diversity	2	2.632897911385049
+MetaPhyler_V1.25	order	Shannon equitability	2	0.5795128948400642
+MetaPhyler_V1.25	family	Shannon diversity	2	3.6739328352138227
+MetaPhyler_V1.25	family	Shannon equitability	2	0.6883197422395554
+MetaPhyler_V1.25	genus	Shannon diversity	2	4.309314836962427
+MetaPhyler_V1.25	genus	Shannon equitability	2	0.6849348296703212
+MetaPhyler_V1.25	species	Shannon diversity	2	4.985211136322446
+MetaPhyler_V1.25	species	Shannon equitability	2	0.7006048202265127
+MetaPhyler_V1.25	class	F1 score	2	0.5263157894736842
+MetaPhyler_V1.25	class	False negatives	2	0.0
+MetaPhyler_V1.25	class	False positives	2	27.0
+MetaPhyler_V1.25	class	Jaccard index	2	0.35714285714285715
+MetaPhyler_V1.25	class	Taxon counts	2	42.0
+MetaPhyler_V1.25	class	Purity (precision)	2	0.35714285714285715
+MetaPhyler_V1.25	class	Completeness (recall)	2	1.0
+MetaPhyler_V1.25	class	True positives	2	15.0
+MetaPhyler_V1.25	species	F1 score	2	0.016910069177555727
+MetaPhyler_V1.25	species	False negatives	2	59.0
+MetaPhyler_V1.25	species	False positives	2	1220.0
+MetaPhyler_V1.25	species	Jaccard index	2	0.008527131782945736
+MetaPhyler_V1.25	species	Taxon counts	2	1231.0
+MetaPhyler_V1.25	species	Purity (precision)	2	0.008935824532900082
+MetaPhyler_V1.25	species	Completeness (recall)	2	0.15714285714285714
+MetaPhyler_V1.25	species	True positives	2	11.0
+MetaPhyler_V1.25	superkingdom	F1 score	2	1.0
+MetaPhyler_V1.25	superkingdom	False negatives	2	0.0
+MetaPhyler_V1.25	superkingdom	False positives	2	0.0
+MetaPhyler_V1.25	superkingdom	Jaccard index	2	1.0
+MetaPhyler_V1.25	superkingdom	Taxon counts	2	2.0
+MetaPhyler_V1.25	superkingdom	Purity (precision)	2	1.0
+MetaPhyler_V1.25	superkingdom	Completeness (recall)	2	1.0
+MetaPhyler_V1.25	superkingdom	True positives	2	2.0
+MetaPhyler_V1.25	order	F1 score	2	0.47154471544715443
+MetaPhyler_V1.25	order	False negatives	2	0.0
+MetaPhyler_V1.25	order	False positives	2	65.0
+MetaPhyler_V1.25	order	Jaccard index	2	0.30851063829787234
+MetaPhyler_V1.25	order	Taxon counts	2	94.0
+MetaPhyler_V1.25	order	Purity (precision)	2	0.30851063829787234
+MetaPhyler_V1.25	order	Completeness (recall)	2	1.0
+MetaPhyler_V1.25	order	True positives	2	29.0
+MetaPhyler_V1.25	phylum	F1 score	2	0.4444444444444445
+MetaPhyler_V1.25	phylum	False negatives	2	0.0
+MetaPhyler_V1.25	phylum	False positives	2	15.0
+MetaPhyler_V1.25	phylum	Jaccard index	2	0.2857142857142857
+MetaPhyler_V1.25	phylum	Taxon counts	2	21.0
+MetaPhyler_V1.25	phylum	Purity (precision)	2	0.2857142857142857
+MetaPhyler_V1.25	phylum	Completeness (recall)	2	1.0
+MetaPhyler_V1.25	phylum	True positives	2	6.0
+MetaPhyler_V1.25	family	F1 score	2	0.38314176245210724
+MetaPhyler_V1.25	family	False negatives	2	3.0
+MetaPhyler_V1.25	family	False positives	2	158.0
+MetaPhyler_V1.25	family	Jaccard index	2	0.23696682464454977
+MetaPhyler_V1.25	family	Taxon counts	2	208.0
+MetaPhyler_V1.25	family	Purity (precision)	2	0.2403846153846154
+MetaPhyler_V1.25	family	Completeness (recall)	2	0.9433962264150944
+MetaPhyler_V1.25	family	True positives	2	50.0
+MetaPhyler_V1.25	strain	False negatives	2	132.0
+MetaPhyler_V1.25	strain	False positives	2	0.0
+MetaPhyler_V1.25	strain	Jaccard index	2	0.0
+MetaPhyler_V1.25	strain	Taxon counts	2	0.0
+MetaPhyler_V1.25	strain	Purity (precision)	2	0.0
+MetaPhyler_V1.25	strain	Completeness (recall)	2	0.0
+MetaPhyler_V1.25	strain	True positives	2	0.0
+MetaPhyler_V1.25	genus	F1 score	2	0.11783960720130932
+MetaPhyler_V1.25	genus	False negatives	2	35.0
+MetaPhyler_V1.25	genus	False positives	2	504.0
+MetaPhyler_V1.25	genus	Jaccard index	2	0.06260869565217392
+MetaPhyler_V1.25	genus	Taxon counts	2	540.0
+MetaPhyler_V1.25	genus	Purity (precision)	2	0.06666666666666667
+MetaPhyler_V1.25	genus	Completeness (recall)	2	0.5070422535211268
+MetaPhyler_V1.25	genus	True positives	2	36.0
+MetaPhyler_V1.25	class	L1 norm error	2	0.23035798765926047
+MetaPhyler_V1.25	family	L1 norm error	2	0.570204419291036
+MetaPhyler_V1.25	genus	L1 norm error	2	0.9524035754600587
+MetaPhyler_V1.25	order	L1 norm error	2	0.30298570304478756
+MetaPhyler_V1.25	phylum	L1 norm error	2	0.12251225193992375
+MetaPhyler_V1.25	species	L1 norm error	2	1.5727336235646485
+MetaPhyler_V1.25	superkingdom	L1 norm error	2	0.01967433999999998
+MetaPhyler_V1.25	na	Weighted UniFrac error	2	6.102355889863623
+MetaPhyler_V1.25	na	Unweighted UniFrac error	2	11999.983366325741
+mOTU_1.1.1	class	Bray-Curtis distance	1	0.15363887088069378
+mOTU_1.1.1	family	Bray-Curtis distance	1	0.6399511773450127
+mOTU_1.1.1	genus	Bray-Curtis distance	1	0.7194012511498181
+mOTU_1.1.1	order	Bray-Curtis distance	1	0.28047662767782805
+mOTU_1.1.1	phylum	Bray-Curtis distance	1	0.12434368708874138
+mOTU_1.1.1	species	Bray-Curtis distance	1	0.7076913643380933
+mOTU_1.1.1	superkingdom	Bray-Curtis distance	1	0.005786614948537526
+mOTU_1.1.1	superkingdom	Shannon diversity	1	0.04581485082792766
+mOTU_1.1.1	superkingdom	Shannon equitability	1	0.06609685808851885
+mOTU_1.1.1	phylum	Shannon diversity	1	0.9411263341727588
+mOTU_1.1.1	phylum	Shannon equitability	1	0.525252608029037
+mOTU_1.1.1	class	Shannon diversity	1	1.2757515699808935
+mOTU_1.1.1	class	Shannon equitability	1	0.4834118439431106
+mOTU_1.1.1	order	Shannon diversity	1	1.841204138091723
+mOTU_1.1.1	order	Shannon equitability	1	0.5221258930387258
+mOTU_1.1.1	family	Shannon diversity	1	2.0814325093033355
+mOTU_1.1.1	family	Shannon equitability	1	0.47917259342042556
+mOTU_1.1.1	genus	Shannon diversity	1	2.3629614564014134
+mOTU_1.1.1	genus	Shannon equitability	1	0.46973275355465294
+mOTU_1.1.1	species	Shannon diversity	1	2.556108229878605
+mOTU_1.1.1	species	Shannon equitability	1	0.44840514548909105
+mOTU_1.1.1	class	F1 score	1	0.8275862068965518
+mOTU_1.1.1	class	False negatives	1	3.0
+mOTU_1.1.1	class	False positives	1	2.0
+mOTU_1.1.1	class	Jaccard index	1	0.7058823529411765
+mOTU_1.1.1	class	Taxon counts	1	14.0
+mOTU_1.1.1	class	Purity (precision)	1	0.8571428571428571
+mOTU_1.1.1	class	Completeness (recall)	1	0.8
+mOTU_1.1.1	class	True positives	1	12.0
+mOTU_1.1.1	species	F1 score	1	0.08672086720867209
+mOTU_1.1.1	species	False negatives	1	54.0
+mOTU_1.1.1	species	False positives	1	283.0
+mOTU_1.1.1	species	Jaccard index	1	0.0453257790368272
+mOTU_1.1.1	species	Taxon counts	1	299.0
+mOTU_1.1.1	species	Purity (precision)	1	0.05351170568561873
+mOTU_1.1.1	species	Completeness (recall)	1	0.22857142857142856
+mOTU_1.1.1	species	True positives	1	16.0
+mOTU_1.1.1	superkingdom	F1 score	1	1.0
+mOTU_1.1.1	superkingdom	False negatives	1	0.0
+mOTU_1.1.1	superkingdom	False positives	1	0.0
+mOTU_1.1.1	superkingdom	Jaccard index	1	1.0
+mOTU_1.1.1	superkingdom	Taxon counts	1	2.0
+mOTU_1.1.1	superkingdom	Purity (precision)	1	1.0
+mOTU_1.1.1	superkingdom	Completeness (recall)	1	1.0
+mOTU_1.1.1	superkingdom	True positives	1	2.0
+mOTU_1.1.1	order	F1 score	1	0.7619047619047619
+mOTU_1.1.1	order	False negatives	1	5.0
+mOTU_1.1.1	order	False positives	1	10.0
+mOTU_1.1.1	order	Jaccard index	1	0.6153846153846154
+mOTU_1.1.1	order	Taxon counts	1	34.0
+mOTU_1.1.1	order	Purity (precision)	1	0.7058823529411765
+mOTU_1.1.1	order	Completeness (recall)	1	0.8275862068965517
+mOTU_1.1.1	order	True positives	1	24.0
+mOTU_1.1.1	phylum	F1 score	1	0.8333333333333334
+mOTU_1.1.1	phylum	False negatives	1	1.0
+mOTU_1.1.1	phylum	False positives	1	1.0
+mOTU_1.1.1	phylum	Jaccard index	1	0.7142857142857143
+mOTU_1.1.1	phylum	Taxon counts	1	6.0
+mOTU_1.1.1	phylum	Purity (precision)	1	0.8333333333333334
+mOTU_1.1.1	phylum	Completeness (recall)	1	0.8333333333333334
+mOTU_1.1.1	phylum	True positives	1	5.0
+mOTU_1.1.1	family	F1 score	1	0.6153846153846154
+mOTU_1.1.1	family	False negatives	1	13.0
+mOTU_1.1.1	family	False positives	1	37.0
+mOTU_1.1.1	family	Jaccard index	1	0.4444444444444444
+mOTU_1.1.1	family	Taxon counts	1	77.0
+mOTU_1.1.1	family	Purity (precision)	1	0.5194805194805194
+mOTU_1.1.1	family	Completeness (recall)	1	0.7547169811320755
+mOTU_1.1.1	family	True positives	1	40.0
+mOTU_1.1.1	strain	False negatives	1	132.0
+mOTU_1.1.1	strain	False positives	1	0.0
+mOTU_1.1.1	strain	Jaccard index	1	0.0
+mOTU_1.1.1	strain	Taxon counts	1	0.0
+mOTU_1.1.1	strain	Purity (precision)	1	0.0
+mOTU_1.1.1	strain	Completeness (recall)	1	0.0
+mOTU_1.1.1	strain	True positives	1	0.0
+mOTU_1.1.1	genus	F1 score	1	0.28571428571428575
+mOTU_1.1.1	genus	False negatives	1	39.0
+mOTU_1.1.1	genus	False positives	1	121.0
+mOTU_1.1.1	genus	Jaccard index	1	0.16666666666666666
+mOTU_1.1.1	genus	Taxon counts	1	153.0
+mOTU_1.1.1	genus	Purity (precision)	1	0.20915032679738563
+mOTU_1.1.1	genus	Completeness (recall)	1	0.4507042253521127
+mOTU_1.1.1	genus	True positives	1	32.0
+mOTU_1.1.1	class	L1 norm error	1	0.30727774176138756
+mOTU_1.1.1	family	L1 norm error	1	1.2799023546900263
+mOTU_1.1.1	genus	L1 norm error	1	1.4388025022996367
+mOTU_1.1.1	order	L1 norm error	1	0.5609532553556561
+mOTU_1.1.1	phylum	L1 norm error	1	0.24868737417748277
+mOTU_1.1.1	species	L1 norm error	1	1.4153827286761873
+mOTU_1.1.1	superkingdom	L1 norm error	1	0.011573229897075052
+mOTU_1.1.1	na	Weighted UniFrac error	1	7.976658186857462
+mOTU_1.1.1	na	Unweighted UniFrac error	1	4679.143694143934
+mOTU_1.1.1	class	Bray-Curtis distance	2	0.4407622653045978
+mOTU_1.1.1	family	Bray-Curtis distance	2	0.6005440352856283
+mOTU_1.1.1	genus	Bray-Curtis distance	2	0.6375635085492355
+mOTU_1.1.1	order	Bray-Curtis distance	2	0.549740441940772
+mOTU_1.1.1	phylum	Bray-Curtis distance	2	0.4374407633768179
+mOTU_1.1.1	species	Bray-Curtis distance	2	0.6178152750371313
+mOTU_1.1.1	superkingdom	Bray-Curtis distance	2	0.09506401
+mOTU_1.1.1	superkingdom	Shannon diversity	2	0.41226210855218304
+mOTU_1.1.1	superkingdom	Shannon equitability	2	0.594768499554662
+mOTU_1.1.1	phylum	Shannon diversity	2	1.0349929320216336
+mOTU_1.1.1	phylum	Shannon equitability	2	0.5776405537667064
+mOTU_1.1.1	class	Shannon diversity	2	1.4666450481881812
+mOTU_1.1.1	class	Shannon equitability	2	0.5718027312787498
+mOTU_1.1.1	order	Shannon diversity	2	1.809841641580589
+mOTU_1.1.1	order	Shannon equitability	2	0.5176141077245427
+mOTU_1.1.1	family	Shannon diversity	2	1.9188459353624272
+mOTU_1.1.1	family	Shannon equitability	2	0.4366522100550865
+mOTU_1.1.1	genus	Shannon diversity	2	2.1014959345150612
+mOTU_1.1.1	genus	Shannon equitability	2	0.4120688187144621
+mOTU_1.1.1	species	Shannon diversity	2	2.196809026782929
+mOTU_1.1.1	species	Shannon equitability	2	0.383163834260988
+mOTU_1.1.1	class	F1 score	2	0.9285714285714286
+mOTU_1.1.1	class	False negatives	2	2.0
+mOTU_1.1.1	class	False positives	2	0.0
+mOTU_1.1.1	class	Jaccard index	2	0.8666666666666667
+mOTU_1.1.1	class	Taxon counts	2	13.0
+mOTU_1.1.1	class	Purity (precision)	2	1.0
+mOTU_1.1.1	class	Completeness (recall)	2	0.8666666666666667
+mOTU_1.1.1	class	True positives	2	13.0
+mOTU_1.1.1	species	F1 score	2	0.08443271767810026
+mOTU_1.1.1	species	False negatives	2	54.0
+mOTU_1.1.1	species	False positives	2	293.0
+mOTU_1.1.1	species	Jaccard index	2	0.0440771349862259
+mOTU_1.1.1	species	Taxon counts	2	309.0
+mOTU_1.1.1	species	Purity (precision)	2	0.05177993527508091
+mOTU_1.1.1	species	Completeness (recall)	2	0.22857142857142856
+mOTU_1.1.1	species	True positives	2	16.0
+mOTU_1.1.1	superkingdom	F1 score	2	1.0
+mOTU_1.1.1	superkingdom	False negatives	2	0.0
+mOTU_1.1.1	superkingdom	False positives	2	0.0
+mOTU_1.1.1	superkingdom	Jaccard index	2	1.0
+mOTU_1.1.1	superkingdom	Taxon counts	2	2.0
+mOTU_1.1.1	superkingdom	Purity (precision)	2	1.0
+mOTU_1.1.1	superkingdom	Completeness (recall)	2	1.0
+mOTU_1.1.1	superkingdom	True positives	2	2.0
+mOTU_1.1.1	order	F1 score	2	0.7741935483870968
+mOTU_1.1.1	order	False negatives	2	5.0
+mOTU_1.1.1	order	False positives	2	9.0
+mOTU_1.1.1	order	Jaccard index	2	0.631578947368421
+mOTU_1.1.1	order	Taxon counts	2	33.0
+mOTU_1.1.1	order	Purity (precision)	2	0.7272727272727273
+mOTU_1.1.1	order	Completeness (recall)	2	0.8275862068965517
+mOTU_1.1.1	order	True positives	2	24.0
+mOTU_1.1.1	phylum	F1 score	2	1.0
+mOTU_1.1.1	phylum	False negatives	2	0.0
+mOTU_1.1.1	phylum	False positives	2	0.0
+mOTU_1.1.1	phylum	Jaccard index	2	1.0
+mOTU_1.1.1	phylum	Taxon counts	2	6.0
+mOTU_1.1.1	phylum	Purity (precision)	2	1.0
+mOTU_1.1.1	phylum	Completeness (recall)	2	1.0
+mOTU_1.1.1	phylum	True positives	2	6.0
+mOTU_1.1.1	family	F1 score	2	0.5970149253731344
+mOTU_1.1.1	family	False negatives	2	13.0
+mOTU_1.1.1	family	False positives	2	41.0
+mOTU_1.1.1	family	Jaccard index	2	0.425531914893617
+mOTU_1.1.1	family	Taxon counts	2	81.0
+mOTU_1.1.1	family	Purity (precision)	2	0.49382716049382713
+mOTU_1.1.1	family	Completeness (recall)	2	0.7547169811320755
+mOTU_1.1.1	family	True positives	2	40.0
+mOTU_1.1.1	strain	False negatives	2	132.0
+mOTU_1.1.1	strain	False positives	2	0.0
+mOTU_1.1.1	strain	Jaccard index	2	0.0
+mOTU_1.1.1	strain	Taxon counts	2	0.0
+mOTU_1.1.1	strain	Purity (precision)	2	0.0
+mOTU_1.1.1	strain	Completeness (recall)	2	0.0
+mOTU_1.1.1	strain	True positives	2	0.0
+mOTU_1.1.1	genus	F1 score	2	0.28936170212765955
+mOTU_1.1.1	genus	False negatives	2	37.0
+mOTU_1.1.1	genus	False positives	2	130.0
+mOTU_1.1.1	genus	Jaccard index	2	0.1691542288557214
+mOTU_1.1.1	genus	Taxon counts	2	164.0
+mOTU_1.1.1	genus	Purity (precision)	2	0.2073170731707317
+mOTU_1.1.1	genus	Completeness (recall)	2	0.4788732394366197
+mOTU_1.1.1	genus	True positives	2	34.0
+mOTU_1.1.1	class	L1 norm error	2	0.8815245306091956
+mOTU_1.1.1	family	L1 norm error	2	1.2010880705712565
+mOTU_1.1.1	genus	L1 norm error	2	1.2751270170984714
+mOTU_1.1.1	order	L1 norm error	2	1.099480883881544
+mOTU_1.1.1	phylum	L1 norm error	2	0.8748815267536358
+mOTU_1.1.1	species	L1 norm error	2	1.2356305500742628
+mOTU_1.1.1	superkingdom	L1 norm error	2	0.19012802
+mOTU_1.1.1	na	Weighted UniFrac error	2	9.089344587892306
+mOTU_1.1.1	na	Unweighted UniFrac error	2	4590.183255677817
+Quickr	class	Bray-Curtis distance	1	0.23275297030153802
+Quickr	family	Bray-Curtis distance	1	0.5458454613677948
+Quickr	genus	Bray-Curtis distance	1	0.8251775360433274
+Quickr	order	Bray-Curtis distance	1	0.317281002945661
+Quickr	phylum	Bray-Curtis distance	1	0.1513629480664914
+Quickr	species	Bray-Curtis distance	1	0.9615791155629203
+Quickr	superkingdom	Bray-Curtis distance	1	0.03899224574724855
+Quickr	superkingdom	Shannon diversity	1	0.1995504963088302
+Quickr	superkingdom	Shannon equitability	1	0.18163868943315117
+Quickr	phylum	Shannon diversity	1	1.674829222478429
+Quickr	phylum	Shannon equitability	1	0.4710732095739752
+Quickr	class	Shannon diversity	1	2.2944367167134723
+Quickr	class	Shannon equitability	1	0.5895536126956733
+Quickr	order	Shannon diversity	1	3.262230104170646
+Quickr	order	Shannon equitability	1	0.7068569698811297
+Quickr	family	Shannon diversity	1	4.410267822497985
+Quickr	family	Shannon equitability	1	0.8331785091797604
+Quickr	genus	Shannon diversity	1	5.437744747901951
+Quickr	genus	Shannon equitability	1	0.865570496602787
+Quickr	species	Shannon diversity	1	6.061580942788775
+Quickr	species	Shannon equitability	1	0.8948007985085927
+Quickr	class	F1 score	1	0.43749999999999994
+Quickr	class	False negatives	1	1.0
+Quickr	class	False positives	1	35.0
+Quickr	class	Jaccard index	1	0.28
+Quickr	class	Taxon counts	1	49.0
+Quickr	class	Purity (precision)	1	0.2857142857142857
+Quickr	class	Completeness (recall)	1	0.9333333333333333
+Quickr	class	True positives	1	14.0
+Quickr	species	F1 score	1	0.033862433862433865
+Quickr	species	False negatives	1	54.0
+Quickr	species	False positives	1	859.0
+Quickr	species	Jaccard index	1	0.017222820236813777
+Quickr	species	Taxon counts	1	875.0
+Quickr	species	Purity (precision)	1	0.018285714285714287
+Quickr	species	Completeness (recall)	1	0.22857142857142856
+Quickr	species	True positives	1	16.0
+Quickr	superkingdom	F1 score	1	0.8
+Quickr	superkingdom	False negatives	1	0.0
+Quickr	superkingdom	False positives	1	1.0
+Quickr	superkingdom	Jaccard index	1	0.6666666666666666
+Quickr	superkingdom	Taxon counts	1	3.0
+Quickr	superkingdom	Purity (precision)	1	0.6666666666666666
+Quickr	superkingdom	Completeness (recall)	1	1.0
+Quickr	superkingdom	True positives	1	2.0
+Quickr	order	F1 score	1	0.41538461538461535
+Quickr	order	False negatives	1	2.0
+Quickr	order	False positives	1	74.0
+Quickr	order	Jaccard index	1	0.2621359223300971
+Quickr	order	Taxon counts	1	101.0
+Quickr	order	Purity (precision)	1	0.26732673267326734
+Quickr	order	Completeness (recall)	1	0.9310344827586207
+Quickr	order	True positives	1	27.0
+Quickr	phylum	F1 score	1	0.2926829268292683
+Quickr	phylum	False negatives	1	0.0
+Quickr	phylum	False positives	1	29.0
+Quickr	phylum	Jaccard index	1	0.17142857142857143
+Quickr	phylum	Taxon counts	1	35.0
+Quickr	phylum	Purity (precision)	1	0.17142857142857143
+Quickr	phylum	Completeness (recall)	1	1.0
+Quickr	phylum	True positives	1	6.0
+Quickr	family	F1 score	1	0.38095238095238093
+Quickr	family	False negatives	1	5.0
+Quickr	family	False positives	1	151.0
+Quickr	family	Jaccard index	1	0.23529411764705882
+Quickr	family	Taxon counts	1	199.0
+Quickr	family	Purity (precision)	1	0.24120603015075376
+Quickr	family	Completeness (recall)	1	0.9056603773584906
+Quickr	family	True positives	1	48.0
+Quickr	strain	False negatives	1	132.0
+Quickr	strain	False positives	1	0.0
+Quickr	strain	Jaccard index	1	0.0
+Quickr	strain	Taxon counts	1	0.0
+Quickr	strain	Purity (precision)	1	0.0
+Quickr	strain	Completeness (recall)	1	0.0
+Quickr	strain	True positives	1	0.0
+Quickr	genus	F1 score	1	0.13861386138613863
+Quickr	genus	False negatives	1	29.0
+Quickr	genus	False positives	1	493.0
+Quickr	genus	Jaccard index	1	0.07446808510638298
+Quickr	genus	Taxon counts	1	535.0
+Quickr	genus	Purity (precision)	1	0.07850467289719626
+Quickr	genus	Completeness (recall)	1	0.5915492957746479
+Quickr	genus	True positives	1	42.0
+Quickr	class	L1 norm error	1	0.46550594060307604
+Quickr	family	L1 norm error	1	1.0916909227355889
+Quickr	genus	L1 norm error	1	1.650355072086656
+Quickr	order	L1 norm error	1	0.634562005891322
+Quickr	phylum	L1 norm error	1	0.30272589613298273
+Quickr	species	L1 norm error	1	1.9231582311258413
+Quickr	superkingdom	L1 norm error	1	0.0779844914944971
+Quickr	na	Weighted UniFrac error	1	8.293039554354387
+Quickr	na	Unweighted UniFrac error	1	9734.930562209836
+Quickr	class	Bray-Curtis distance	2	0.21637006087803198
+Quickr	family	Bray-Curtis distance	2	0.5791250652282232
+Quickr	genus	Bray-Curtis distance	2	0.7167055842449892
+Quickr	order	Bray-Curtis distance	2	0.3230902103758813
+Quickr	phylum	Bray-Curtis distance	2	0.18585917331264645
+Quickr	species	Bray-Curtis distance	2	0.8904143136791637
+Quickr	superkingdom	Bray-Curtis distance	2	0.015494127951825129
+Quickr	superkingdom	Shannon diversity	2	0.2500031863161871
+Quickr	superkingdom	Shannon equitability	2	0.22756270696669129
+Quickr	phylum	Shannon diversity	2	2.0683460300881
+Quickr	phylum	Shannon equitability	2	0.5728033924131716
+Quickr	class	Shannon diversity	2	2.5847301254041897
+Quickr	class	Shannon equitability	2	0.6641442634591854
+Quickr	order	Shannon diversity	2	3.233222564925982
+Quickr	order	Shannon equitability	2	0.7005716433899122
+Quickr	family	Shannon diversity	2	4.275942968632355
+Quickr	family	Shannon equitability	2	0.8040328111403668
+Quickr	genus	Shannon diversity	2	5.221668182796251
+Quickr	genus	Shannon equitability	2	0.8380842197717622
+Quickr	species	Shannon diversity	2	5.92167373128927
+Quickr	species	Shannon equitability	2	0.8705277975363143
+Quickr	class	F1 score	2	0.46874999999999994
+Quickr	class	False negatives	2	0.0
+Quickr	class	False positives	2	34.0
+Quickr	class	Jaccard index	2	0.30612244897959184
+Quickr	class	Taxon counts	2	49.0
+Quickr	class	Purity (precision)	2	0.30612244897959184
+Quickr	class	Completeness (recall)	2	1.0
+Quickr	class	True positives	2	15.0
+Quickr	species	F1 score	2	0.032989690721649485
+Quickr	species	False negatives	2	54.0
+Quickr	species	False positives	2	884.0
+Quickr	species	Jaccard index	2	0.016771488469601678
+Quickr	species	Taxon counts	2	900.0
+Quickr	species	Purity (precision)	2	0.017777777777777778
+Quickr	species	Completeness (recall)	2	0.22857142857142856
+Quickr	species	True positives	2	16.0
+Quickr	superkingdom	F1 score	2	0.8
+Quickr	superkingdom	False negatives	2	0.0
+Quickr	superkingdom	False positives	2	1.0
+Quickr	superkingdom	Jaccard index	2	0.6666666666666666
+Quickr	superkingdom	Taxon counts	2	3.0
+Quickr	superkingdom	Purity (precision)	2	0.6666666666666666
+Quickr	superkingdom	Completeness (recall)	2	1.0
+Quickr	superkingdom	True positives	2	2.0
+Quickr	order	F1 score	2	0.41538461538461535
+Quickr	order	False negatives	2	2.0
+Quickr	order	False positives	2	74.0
+Quickr	order	Jaccard index	2	0.2621359223300971
+Quickr	order	Taxon counts	2	101.0
+Quickr	order	Purity (precision)	2	0.26732673267326734
+Quickr	order	Completeness (recall)	2	0.9310344827586207
+Quickr	order	True positives	2	27.0
+Quickr	phylum	F1 score	2	0.27906976744186046
+Quickr	phylum	False negatives	2	0.0
+Quickr	phylum	False positives	2	31.0
+Quickr	phylum	Jaccard index	2	0.16216216216216217
+Quickr	phylum	Taxon counts	2	37.0
+Quickr	phylum	Purity (precision)	2	0.16216216216216217
+Quickr	phylum	Completeness (recall)	2	1.0
+Quickr	phylum	True positives	2	6.0
+Quickr	family	F1 score	2	0.3657587548638132
+Quickr	family	False negatives	2	6.0
+Quickr	family	False positives	2	157.0
+Quickr	family	Jaccard index	2	0.22380952380952382
+Quickr	family	Taxon counts	2	204.0
+Quickr	family	Purity (precision)	2	0.23039215686274508
+Quickr	family	Completeness (recall)	2	0.8867924528301887
+Quickr	family	True positives	2	47.0
+Quickr	strain	False negatives	2	132.0
+Quickr	strain	False positives	2	0.0
+Quickr	strain	Jaccard index	2	0.0
+Quickr	strain	Taxon counts	2	0.0
+Quickr	strain	Purity (precision)	2	0.0
+Quickr	strain	Completeness (recall)	2	0.0
+Quickr	strain	True positives	2	0.0
+Quickr	genus	F1 score	2	0.15198618307426598
+Quickr	genus	False negatives	2	27.0
+Quickr	genus	False positives	2	464.0
+Quickr	genus	Jaccard index	2	0.08224299065420561
+Quickr	genus	Taxon counts	2	508.0
+Quickr	genus	Purity (precision)	2	0.08661417322834646
+Quickr	genus	Completeness (recall)	2	0.6197183098591549
+Quickr	genus	True positives	2	44.0
+Quickr	class	L1 norm error	2	0.43274012175606386
+Quickr	family	L1 norm error	2	1.1582501304564454
+Quickr	genus	L1 norm error	2	1.4334111684899802
+Quickr	order	L1 norm error	2	0.6461804207517623
+Quickr	phylum	L1 norm error	2	0.3717183466252928
+Quickr	species	L1 norm error	2	1.7808286273583278
+Quickr	superkingdom	L1 norm error	2	0.030988255903650258
+Quickr	na	Weighted UniFrac error	2	7.525357683346705
+Quickr	na	Unweighted UniFrac error	2	9772.296956343496
+Taxy-Pro	class	Bray-Curtis distance	1	0.10222858644344082
+Taxy-Pro	family	Bray-Curtis distance	1	0.5215595052684739
+Taxy-Pro	genus	Bray-Curtis distance	1	0.7693634512947805
+Taxy-Pro	order	Bray-Curtis distance	1	0.21813339674830742
+Taxy-Pro	phylum	Bray-Curtis distance	1	0.09507813086458822
+Taxy-Pro	superkingdom	Bray-Curtis distance	1	0.0012265901135003197
+Taxy-Pro	superkingdom	Shannon diversity	1	0.006685174316558374
+Taxy-Pro	superkingdom	Shannon equitability	1	0.00964466783397703
+Taxy-Pro	phylum	Shannon diversity	1	1.0066478606539588
+Taxy-Pro	phylum	Shannon equitability	1	0.2904571752973901
+Taxy-Pro	class	Shannon diversity	1	1.6306919461183869
+Taxy-Pro	class	Shannon equitability	1	0.4212367018719986
+Taxy-Pro	order	Shannon diversity	1	2.4613911411223013
+Taxy-Pro	order	Shannon equitability	1	0.5299707097387838
+Taxy-Pro	family	Shannon diversity	1	3.5143513647115165
+Taxy-Pro	family	Shannon equitability	1	0.6578306783067727
+Taxy-Pro	genus	Shannon diversity	1	4.230278968389605
+Taxy-Pro	genus	Shannon equitability	1	0.6826946037348156
+Taxy-Pro	class	F1 score	1	0.47619047619047616
+Taxy-Pro	class	False negatives	1	0.0
+Taxy-Pro	class	False positives	1	33.0
+Taxy-Pro	class	Jaccard index	1	0.3125
+Taxy-Pro	class	Taxon counts	1	48.0
+Taxy-Pro	class	Purity (precision)	1	0.3125
+Taxy-Pro	class	Completeness (recall)	1	1.0
+Taxy-Pro	class	True positives	1	15.0
+Taxy-Pro	species	False negatives	1	70.0
+Taxy-Pro	species	False positives	1	0.0
+Taxy-Pro	species	Jaccard index	1	0.0
+Taxy-Pro	species	Taxon counts	1	0.0
+Taxy-Pro	species	Purity (precision)	1	0.0
+Taxy-Pro	species	Completeness (recall)	1	0.0
+Taxy-Pro	species	True positives	1	0.0
+Taxy-Pro	superkingdom	F1 score	1	1.0
+Taxy-Pro	superkingdom	False negatives	1	0.0
+Taxy-Pro	superkingdom	False positives	1	0.0
+Taxy-Pro	superkingdom	Jaccard index	1	1.0
+Taxy-Pro	superkingdom	Taxon counts	1	2.0
+Taxy-Pro	superkingdom	Purity (precision)	1	1.0
+Taxy-Pro	superkingdom	Completeness (recall)	1	1.0
+Taxy-Pro	superkingdom	True positives	1	2.0
+Taxy-Pro	order	F1 score	1	0.4360902255639098
+Taxy-Pro	order	False negatives	1	0.0
+Taxy-Pro	order	False positives	1	75.0
+Taxy-Pro	order	Jaccard index	1	0.27884615384615385
+Taxy-Pro	order	Taxon counts	1	104.0
+Taxy-Pro	order	Purity (precision)	1	0.27884615384615385
+Taxy-Pro	order	Completeness (recall)	1	1.0
+Taxy-Pro	order	True positives	1	29.0
+Taxy-Pro	phylum	F1 score	1	0.3157894736842105
+Taxy-Pro	phylum	False negatives	1	0.0
+Taxy-Pro	phylum	False positives	1	26.0
+Taxy-Pro	phylum	Jaccard index	1	0.1875
+Taxy-Pro	phylum	Taxon counts	1	32.0
+Taxy-Pro	phylum	Purity (precision)	1	0.1875
+Taxy-Pro	phylum	Completeness (recall)	1	1.0
+Taxy-Pro	phylum	True positives	1	6.0
+Taxy-Pro	family	F1 score	1	0.366412213740458
+Taxy-Pro	family	False negatives	1	5.0
+Taxy-Pro	family	False positives	1	161.0
+Taxy-Pro	family	Jaccard index	1	0.22429906542056074
+Taxy-Pro	family	Taxon counts	1	209.0
+Taxy-Pro	family	Purity (precision)	1	0.22966507177033493
+Taxy-Pro	family	Completeness (recall)	1	0.9056603773584906
+Taxy-Pro	family	True positives	1	48.0
+Taxy-Pro	strain	False negatives	1	132.0
+Taxy-Pro	strain	False positives	1	0.0
+Taxy-Pro	strain	Jaccard index	1	0.0
+Taxy-Pro	strain	Taxon counts	1	0.0
+Taxy-Pro	strain	Purity (precision)	1	0.0
+Taxy-Pro	strain	Completeness (recall)	1	0.0
+Taxy-Pro	strain	True positives	1	0.0
+Taxy-Pro	genus	F1 score	1	0.10320284697508897
+Taxy-Pro	genus	False negatives	1	42.0
+Taxy-Pro	genus	False positives	1	462.0
+Taxy-Pro	genus	Jaccard index	1	0.054409005628517824
+Taxy-Pro	genus	Taxon counts	1	491.0
+Taxy-Pro	genus	Purity (precision)	1	0.059063136456211814
+Taxy-Pro	genus	Completeness (recall)	1	0.4084507042253521
+Taxy-Pro	genus	True positives	1	29.0
+Taxy-Pro	class	L1 norm error	1	0.20445717288688153
+Taxy-Pro	family	L1 norm error	1	1.0431190105369483
+Taxy-Pro	genus	L1 norm error	1	1.5387269025895611
+Taxy-Pro	order	L1 norm error	1	0.43626679349661507
+Taxy-Pro	phylum	L1 norm error	1	0.19015626172917638
+Taxy-Pro	superkingdom	L1 norm error	1	0.0024531802270006393
+Taxy-Pro	na	Weighted UniFrac error	1	6.190349808613023
+Taxy-Pro	na	Unweighted UniFrac error	1	3504.402434923674
+Taxy-Pro	class	Bray-Curtis distance	2	0.18846693545597898
+Taxy-Pro	family	Bray-Curtis distance	2	0.45083936328231
+Taxy-Pro	genus	Bray-Curtis distance	2	0.6197733473530214
+Taxy-Pro	order	Bray-Curtis distance	2	0.2594547621196728
+Taxy-Pro	phylum	Bray-Curtis distance	2	0.12980666472294353
+Taxy-Pro	superkingdom	Bray-Curtis distance	2	0.02063158332475731
+Taxy-Pro	superkingdom	Shannon diversity	2	0.12902200893562182
+Taxy-Pro	superkingdom	Shannon equitability	2	0.1174408936314013
+Taxy-Pro	phylum	Shannon diversity	2	1.504442488914589
+Taxy-Pro	phylum	Shannon equitability	2	0.4302700516064683
+Taxy-Pro	class	Shannon diversity	2	2.1754719995718332
+Taxy-Pro	class	Shannon equitability	2	0.5532981883696783
+Taxy-Pro	order	Shannon diversity	2	2.8946025717317805
+Taxy-Pro	order	Shannon equitability	2	0.6146266077506383
+Taxy-Pro	family	Shannon diversity	2	3.9606192676201863
+Taxy-Pro	family	Shannon equitability	2	0.7343145653983283
+Taxy-Pro	genus	Shannon diversity	2	4.586576727211548
+Taxy-Pro	genus	Shannon equitability	2	0.7296497164417141
+Taxy-Pro	class	F1 score	2	0.45454545454545453
+Taxy-Pro	class	False negatives	2	0.0
+Taxy-Pro	class	False positives	2	36.0
+Taxy-Pro	class	Jaccard index	2	0.29411764705882354
+Taxy-Pro	class	Taxon counts	2	51.0
+Taxy-Pro	class	Purity (precision)	2	0.29411764705882354
+Taxy-Pro	class	Completeness (recall)	2	1.0
+Taxy-Pro	class	True positives	2	15.0
+Taxy-Pro	species	False negatives	2	70.0
+Taxy-Pro	species	False positives	2	0.0
+Taxy-Pro	species	Jaccard index	2	0.0
+Taxy-Pro	species	Taxon counts	2	0.0
+Taxy-Pro	species	Purity (precision)	2	0.0
+Taxy-Pro	species	Completeness (recall)	2	0.0
+Taxy-Pro	species	True positives	2	0.0
+Taxy-Pro	superkingdom	F1 score	2	0.8
+Taxy-Pro	superkingdom	False negatives	2	0.0
+Taxy-Pro	superkingdom	False positives	2	1.0
+Taxy-Pro	superkingdom	Jaccard index	2	0.6666666666666666
+Taxy-Pro	superkingdom	Taxon counts	2	3.0
+Taxy-Pro	superkingdom	Purity (precision)	2	0.6666666666666666
+Taxy-Pro	superkingdom	Completeness (recall)	2	1.0
+Taxy-Pro	superkingdom	True positives	2	2.0
+Taxy-Pro	order	F1 score	2	0.41428571428571426
+Taxy-Pro	order	False negatives	2	0.0
+Taxy-Pro	order	False positives	2	82.0
+Taxy-Pro	order	Jaccard index	2	0.26126126126126126
+Taxy-Pro	order	Taxon counts	2	111.0
+Taxy-Pro	order	Purity (precision)	2	0.26126126126126126
+Taxy-Pro	order	Completeness (recall)	2	1.0
+Taxy-Pro	order	True positives	2	29.0
+Taxy-Pro	phylum	F1 score	2	0.3076923076923077
+Taxy-Pro	phylum	False negatives	2	0.0
+Taxy-Pro	phylum	False positives	2	27.0
+Taxy-Pro	phylum	Jaccard index	2	0.18181818181818182
+Taxy-Pro	phylum	Taxon counts	2	33.0
+Taxy-Pro	phylum	Purity (precision)	2	0.18181818181818182
+Taxy-Pro	phylum	Completeness (recall)	2	1.0
+Taxy-Pro	phylum	True positives	2	6.0
+Taxy-Pro	family	F1 score	2	0.358974358974359
+Taxy-Pro	family	False negatives	2	4.0
+Taxy-Pro	family	False positives	2	171.0
+Taxy-Pro	family	Jaccard index	2	0.21875
+Taxy-Pro	family	Taxon counts	2	220.0
+Taxy-Pro	family	Purity (precision)	2	0.22272727272727272
+Taxy-Pro	family	Completeness (recall)	2	0.9245283018867925
+Taxy-Pro	family	True positives	2	49.0
+Taxy-Pro	strain	False negatives	2	132.0
+Taxy-Pro	strain	False positives	2	0.0
+Taxy-Pro	strain	Jaccard index	2	0.0
+Taxy-Pro	strain	Taxon counts	2	0.0
+Taxy-Pro	strain	Purity (precision)	2	0.0
+Taxy-Pro	strain	Completeness (recall)	2	0.0
+Taxy-Pro	strain	True positives	2	0.0
+Taxy-Pro	genus	F1 score	2	0.10197368421052631
+Taxy-Pro	genus	False negatives	2	40.0
+Taxy-Pro	genus	False positives	2	506.0
+Taxy-Pro	genus	Jaccard index	2	0.053726169844020795
+Taxy-Pro	genus	Taxon counts	2	537.0
+Taxy-Pro	genus	Purity (precision)	2	0.05772811918063315
+Taxy-Pro	genus	Completeness (recall)	2	0.43661971830985913
+Taxy-Pro	genus	True positives	2	31.0
+Taxy-Pro	class	L1 norm error	2	0.376933870911958
+Taxy-Pro	family	L1 norm error	2	0.9016787265646201
+Taxy-Pro	genus	L1 norm error	2	1.239546694706043
+Taxy-Pro	order	L1 norm error	2	0.5189095242393453
+Taxy-Pro	phylum	L1 norm error	2	0.259613329445887
+Taxy-Pro	superkingdom	L1 norm error	2	0.04126316664951463
+Taxy-Pro	na	Weighted UniFrac error	2	5.709197841221176
+Taxy-Pro	na	Unweighted UniFrac error	2	3814.881705132444
+Taxy-Pro sjanssen	class	Bray-Curtis distance	1	0.10153703736145223
+Taxy-Pro sjanssen	family	Bray-Curtis distance	1	0.5155062933142108
+Taxy-Pro sjanssen	genus	Bray-Curtis distance	1	0.7646817640604174
+Taxy-Pro sjanssen	order	Bray-Curtis distance	1	0.21405030048983814
+Taxy-Pro sjanssen	phylum	Bray-Curtis distance	1	0.0935791948146934
+Taxy-Pro sjanssen	species	Bray-Curtis distance	1	0.77953693225549
+Taxy-Pro sjanssen	strain	Bray-Curtis distance	1	1.0
+Taxy-Pro sjanssen	superkingdom	Bray-Curtis distance	1	0.0011810192926447654
+Taxy-Pro sjanssen	superkingdom	Shannon diversity	1	0.007007436186629172
+Taxy-Pro sjanssen	superkingdom	Shannon equitability	1	0.010109593435795775
+Taxy-Pro sjanssen	phylum	Shannon diversity	1	1.0038136243436218
+Taxy-Pro sjanssen	phylum	Shannon equitability	1	0.3080981832887001
+Taxy-Pro sjanssen	class	Shannon diversity	1	1.6230405732774864
+Taxy-Pro sjanssen	class	Shannon equitability	1	0.43423864039190124
+Taxy-Pro sjanssen	order	Shannon diversity	1	2.4336379179516396
+Taxy-Pro sjanssen	order	Shannon equitability	1	0.5382025002902399
+Taxy-Pro sjanssen	family	Shannon diversity	1	3.457342662731766
+Taxy-Pro sjanssen	family	Shannon equitability	1	0.6629693678751922
+Taxy-Pro sjanssen	genus	Shannon diversity	1	4.081273250794366
+Taxy-Pro sjanssen	genus	Shannon equitability	1	0.6917532638624918
+Taxy-Pro sjanssen	species	Shannon diversity	1	4.16247698338949
+Taxy-Pro sjanssen	species	Shannon equitability	1	0.6742178807844889
+Taxy-Pro sjanssen	strain	Shannon diversity	1	4.618688084796868
+Taxy-Pro sjanssen	strain	Shannon equitability	1	0.713944871294532
+Taxy-Pro sjanssen	class	F1 score	1	0.5263157894736842
+Taxy-Pro sjanssen	class	False negatives	1	0.0
+Taxy-Pro sjanssen	class	False positives	1	27.0
+Taxy-Pro sjanssen	class	Jaccard index	1	0.35714285714285715
+Taxy-Pro sjanssen	class	Taxon counts	1	42.0
+Taxy-Pro sjanssen	class	Purity (precision)	1	0.35714285714285715
+Taxy-Pro sjanssen	class	Completeness (recall)	1	1.0
+Taxy-Pro sjanssen	class	True positives	1	15.0
+Taxy-Pro sjanssen	species	F1 score	1	0.02909090909090909
+Taxy-Pro sjanssen	species	False negatives	1	62.0
+Taxy-Pro sjanssen	species	False positives	1	472.0
+Taxy-Pro sjanssen	species	Jaccard index	1	0.014760147601476014
+Taxy-Pro sjanssen	species	Taxon counts	1	480.0
+Taxy-Pro sjanssen	species	Purity (precision)	1	0.016666666666666666
+Taxy-Pro sjanssen	species	Completeness (recall)	1	0.11428571428571428
+Taxy-Pro sjanssen	species	True positives	1	8.0
+Taxy-Pro sjanssen	superkingdom	F1 score	1	1.0
+Taxy-Pro sjanssen	superkingdom	False negatives	1	0.0
+Taxy-Pro sjanssen	superkingdom	False positives	1	0.0
+Taxy-Pro sjanssen	superkingdom	Jaccard index	1	1.0
+Taxy-Pro sjanssen	superkingdom	Taxon counts	1	2.0
+Taxy-Pro sjanssen	superkingdom	Purity (precision)	1	1.0
+Taxy-Pro sjanssen	superkingdom	Completeness (recall)	1	1.0
+Taxy-Pro sjanssen	superkingdom	True positives	1	2.0
+Taxy-Pro sjanssen	order	F1 score	1	0.46280991735537186
+Taxy-Pro sjanssen	order	False negatives	1	1.0
+Taxy-Pro sjanssen	order	False positives	1	64.0
+Taxy-Pro sjanssen	order	Jaccard index	1	0.3010752688172043
+Taxy-Pro sjanssen	order	Taxon counts	1	92.0
+Taxy-Pro sjanssen	order	Purity (precision)	1	0.30434782608695654
+Taxy-Pro sjanssen	order	Completeness (recall)	1	0.9655172413793104
+Taxy-Pro sjanssen	order	True positives	1	28.0
+Taxy-Pro sjanssen	phylum	F1 score	1	0.375
+Taxy-Pro sjanssen	phylum	False negatives	1	0.0
+Taxy-Pro sjanssen	phylum	False positives	1	20.0
+Taxy-Pro sjanssen	phylum	Jaccard index	1	0.23076923076923078
+Taxy-Pro sjanssen	phylum	Taxon counts	1	26.0
+Taxy-Pro sjanssen	phylum	Purity (precision)	1	0.23076923076923078
+Taxy-Pro sjanssen	phylum	Completeness (recall)	1	1.0
+Taxy-Pro sjanssen	phylum	True positives	1	6.0
+Taxy-Pro sjanssen	family	F1 score	1	0.39662447257383965
+Taxy-Pro sjanssen	family	False negatives	1	6.0
+Taxy-Pro sjanssen	family	False positives	1	137.0
+Taxy-Pro sjanssen	family	Jaccard index	1	0.24736842105263157
+Taxy-Pro sjanssen	family	Taxon counts	1	184.0
+Taxy-Pro sjanssen	family	Purity (precision)	1	0.2554347826086957
+Taxy-Pro sjanssen	family	Completeness (recall)	1	0.8867924528301887
+Taxy-Pro sjanssen	family	True positives	1	47.0
+Taxy-Pro sjanssen	strain	False negatives	1	132.0
+Taxy-Pro sjanssen	strain	False positives	1	645.0
+Taxy-Pro sjanssen	strain	Jaccard index	1	0.0
+Taxy-Pro sjanssen	strain	Taxon counts	1	645.0
+Taxy-Pro sjanssen	strain	Purity (precision)	1	0.0
+Taxy-Pro sjanssen	strain	Completeness (recall)	1	0.0
+Taxy-Pro sjanssen	strain	True positives	1	0.0
+Taxy-Pro sjanssen	genus	F1 score	1	0.11926605504587155
+Taxy-Pro sjanssen	genus	False negatives	1	45.0
+Taxy-Pro sjanssen	genus	False positives	1	339.0
+Taxy-Pro sjanssen	genus	Jaccard index	1	0.06341463414634146
+Taxy-Pro sjanssen	genus	Taxon counts	1	365.0
+Taxy-Pro sjanssen	genus	Purity (precision)	1	0.07123287671232877
+Taxy-Pro sjanssen	genus	Completeness (recall)	1	0.36619718309859156
+Taxy-Pro sjanssen	genus	True positives	1	26.0
+Taxy-Pro sjanssen	class	L1 norm error	1	0.20307407472290442
+Taxy-Pro sjanssen	family	L1 norm error	1	1.0310125866284217
+Taxy-Pro sjanssen	genus	L1 norm error	1	1.5293635281208358
+Taxy-Pro sjanssen	order	L1 norm error	1	0.42810060097967656
+Taxy-Pro sjanssen	phylum	L1 norm error	1	0.1871583896293868
+Taxy-Pro sjanssen	species	L1 norm error	1	1.55907386451098
+Taxy-Pro sjanssen	strain	L1 norm error	1	2.0000000000000018
+Taxy-Pro sjanssen	superkingdom	L1 norm error	1	0.0023620385852895307
+Taxy-Pro sjanssen	na	Weighted UniFrac error	1	7.9069543409878085
+Taxy-Pro sjanssen	na	Unweighted UniFrac error	1	8994.118920541574
+Taxy-Pro sjanssen	class	Bray-Curtis distance	2	0.18503724504461186
+Taxy-Pro sjanssen	family	Bray-Curtis distance	2	0.43572816610063925
+Taxy-Pro sjanssen	genus	Bray-Curtis distance	2	0.6014809043966359
+Taxy-Pro sjanssen	order	Bray-Curtis distance	2	0.25283189241939824
+Taxy-Pro sjanssen	phylum	Bray-Curtis distance	2	0.1267115998323287
+Taxy-Pro sjanssen	species	Bray-Curtis distance	2	0.7635269195509746
+Taxy-Pro sjanssen	strain	Bray-Curtis distance	2	1.0
+Taxy-Pro sjanssen	superkingdom	Bray-Curtis distance	2	0.020506142550898273
+Taxy-Pro sjanssen	superkingdom	Shannon diversity	2	0.12944586687632667
+Taxy-Pro sjanssen	superkingdom	Shannon equitability	2	0.18675091020604942
+Taxy-Pro sjanssen	phylum	Shannon diversity	2	1.4848645938578906
+Taxy-Pro sjanssen	phylum	Shannon equitability	2	0.4735663635781502
+Taxy-Pro sjanssen	class	Shannon diversity	2	2.1582733611316005
+Taxy-Pro sjanssen	class	Shannon equitability	2	0.5811852637740805
+Taxy-Pro sjanssen	order	Shannon diversity	2	2.8477741384001583
+Taxy-Pro sjanssen	order	Shannon equitability	2	0.6297893167439158
+Taxy-Pro sjanssen	family	Shannon diversity	2	3.861925825314399
+Taxy-Pro sjanssen	family	Shannon equitability	2	0.7397821058024251
+Taxy-Pro sjanssen	genus	Shannon diversity	2	4.353392802791325
+Taxy-Pro sjanssen	genus	Shannon equitability	2	0.7213000075406112
+Taxy-Pro sjanssen	species	Shannon diversity	2	4.425463553861711
+Taxy-Pro sjanssen	species	Shannon equitability	2	0.6958742276210983
+Taxy-Pro sjanssen	strain	Shannon diversity	2	4.742589265903257
+Taxy-Pro sjanssen	strain	Shannon equitability	2	0.7069960970404462
+Taxy-Pro sjanssen	class	F1 score	2	0.5357142857142857
+Taxy-Pro sjanssen	class	False negatives	2	0.0
+Taxy-Pro sjanssen	class	False positives	2	26.0
+Taxy-Pro sjanssen	class	Jaccard index	2	0.36585365853658536
+Taxy-Pro sjanssen	class	Taxon counts	2	41.0
+Taxy-Pro sjanssen	class	Purity (precision)	2	0.36585365853658536
+Taxy-Pro sjanssen	class	Completeness (recall)	2	1.0
+Taxy-Pro sjanssen	class	True positives	2	15.0
+Taxy-Pro sjanssen	species	F1 score	2	0.033950617283950615
+Taxy-Pro sjanssen	species	False negatives	2	59.0
+Taxy-Pro sjanssen	species	False positives	2	567.0
+Taxy-Pro sjanssen	species	Jaccard index	2	0.01726844583987441
+Taxy-Pro sjanssen	species	Taxon counts	2	578.0
+Taxy-Pro sjanssen	species	Purity (precision)	2	0.01903114186851211
+Taxy-Pro sjanssen	species	Completeness (recall)	2	0.15714285714285714
+Taxy-Pro sjanssen	species	True positives	2	11.0
+Taxy-Pro sjanssen	superkingdom	F1 score	2	1.0
+Taxy-Pro sjanssen	superkingdom	False negatives	2	0.0
+Taxy-Pro sjanssen	superkingdom	False positives	2	0.0
+Taxy-Pro sjanssen	superkingdom	Jaccard index	2	1.0
+Taxy-Pro sjanssen	superkingdom	Taxon counts	2	2.0
+Taxy-Pro sjanssen	superkingdom	Purity (precision)	2	1.0
+Taxy-Pro sjanssen	superkingdom	Completeness (recall)	2	1.0
+Taxy-Pro sjanssen	superkingdom	True positives	2	2.0
+Taxy-Pro sjanssen	order	F1 score	2	0.46280991735537186
+Taxy-Pro sjanssen	order	False negatives	2	1.0
+Taxy-Pro sjanssen	order	False positives	2	64.0
+Taxy-Pro sjanssen	order	Jaccard index	2	0.3010752688172043
+Taxy-Pro sjanssen	order	Taxon counts	2	92.0
+Taxy-Pro sjanssen	order	Purity (precision)	2	0.30434782608695654
+Taxy-Pro sjanssen	order	Completeness (recall)	2	0.9655172413793104
+Taxy-Pro sjanssen	order	True positives	2	28.0
+Taxy-Pro sjanssen	phylum	F1 score	2	0.41379310344827586
+Taxy-Pro sjanssen	phylum	False negatives	2	0.0
+Taxy-Pro sjanssen	phylum	False positives	2	17.0
+Taxy-Pro sjanssen	phylum	Jaccard index	2	0.2608695652173913
+Taxy-Pro sjanssen	phylum	Taxon counts	2	23.0
+Taxy-Pro sjanssen	phylum	Purity (precision)	2	0.2608695652173913
+Taxy-Pro sjanssen	phylum	Completeness (recall)	2	1.0
+Taxy-Pro sjanssen	phylum	True positives	2	6.0
+Taxy-Pro sjanssen	family	F1 score	2	0.40336134453781514
+Taxy-Pro sjanssen	family	False negatives	2	5.0
+Taxy-Pro sjanssen	family	False positives	2	137.0
+Taxy-Pro sjanssen	family	Jaccard index	2	0.25263157894736843
+Taxy-Pro sjanssen	family	Taxon counts	2	185.0
+Taxy-Pro sjanssen	family	Purity (precision)	2	0.2594594594594595
+Taxy-Pro sjanssen	family	Completeness (recall)	2	0.9056603773584906
+Taxy-Pro sjanssen	family	True positives	2	48.0
+Taxy-Pro sjanssen	strain	False negatives	2	132.0
+Taxy-Pro sjanssen	strain	False positives	2	819.0
+Taxy-Pro sjanssen	strain	Jaccard index	2	0.0
+Taxy-Pro sjanssen	strain	Taxon counts	2	819.0
+Taxy-Pro sjanssen	strain	Purity (precision)	2	0.0
+Taxy-Pro sjanssen	strain	Completeness (recall)	2	0.0
+Taxy-Pro sjanssen	strain	True positives	2	0.0
+Taxy-Pro sjanssen	genus	F1 score	2	0.1226993865030675
+Taxy-Pro sjanssen	genus	False negatives	2	41.0
+Taxy-Pro sjanssen	genus	False positives	2	388.0
+Taxy-Pro sjanssen	genus	Jaccard index	2	0.06535947712418301
+Taxy-Pro sjanssen	genus	Taxon counts	2	418.0
+Taxy-Pro sjanssen	genus	Purity (precision)	2	0.07177033492822966
+Taxy-Pro sjanssen	genus	Completeness (recall)	2	0.4225352112676056
+Taxy-Pro sjanssen	genus	True positives	2	30.0
+Taxy-Pro sjanssen	class	L1 norm error	2	0.3700744900892238
+Taxy-Pro sjanssen	family	L1 norm error	2	0.8714563322012787
+Taxy-Pro sjanssen	genus	L1 norm error	2	1.2029618087932734
+Taxy-Pro sjanssen	order	L1 norm error	2	0.5056637848387966
+Taxy-Pro sjanssen	phylum	L1 norm error	2	0.25342319966465743
+Taxy-Pro sjanssen	species	L1 norm error	2	1.527053839101948
+Taxy-Pro sjanssen	strain	L1 norm error	2	2.0000000000000013
+Taxy-Pro sjanssen	superkingdom	L1 norm error	2	0.04101228510179654
+Taxy-Pro sjanssen	na	Weighted UniFrac error	2	7.322238303291339
+Taxy-Pro sjanssen	na	Unweighted UniFrac error	2	11060.510508835
+TIPP_1.1	class	Bray-Curtis distance	1	0.10118750314439597
+TIPP_1.1	family	Bray-Curtis distance	1	0.2724383323197773
+TIPP_1.1	genus	Bray-Curtis distance	1	0.6508018333384271
+TIPP_1.1	order	Bray-Curtis distance	1	0.15846879567663913
+TIPP_1.1	phylum	Bray-Curtis distance	1	0.10068566411183763
+TIPP_1.1	species	Bray-Curtis distance	1	0.8251868372975384
+TIPP_1.1	superkingdom	Bray-Curtis distance	1	0.0013730242871479582
+TIPP_1.1	superkingdom	Shannon diversity	1	0.022861805055988584
+TIPP_1.1	superkingdom	Shannon equitability	1	0.03298261278004496
+TIPP_1.1	phylum	Shannon diversity	1	0.8939382039810067
+TIPP_1.1	phylum	Shannon equitability	1	0.2712325398146185
+TIPP_1.1	class	Shannon diversity	1	1.4371155650610798
+TIPP_1.1	class	Shannon equitability	1	0.37123248341063053
+TIPP_1.1	order	Shannon diversity	1	2.1272426324419187
+TIPP_1.1	order	Shannon equitability	1	0.45802402912192225
+TIPP_1.1	family	Shannon diversity	1	3.156464689333541
+TIPP_1.1	family	Shannon equitability	1	0.5842408247296971
+TIPP_1.1	genus	Shannon diversity	1	3.9107900227078547
+TIPP_1.1	genus	Shannon equitability	1	0.6176717807913961
+TIPP_1.1	species	Shannon diversity	1	4.281445984349526
+TIPP_1.1	species	Shannon equitability	1	0.6081892835118686
+TIPP_1.1	class	F1 score	1	0.5714285714285713
+TIPP_1.1	class	False negatives	1	1.0
+TIPP_1.1	class	False positives	1	20.0
+TIPP_1.1	class	Jaccard index	1	0.4
+TIPP_1.1	class	Taxon counts	1	34.0
+TIPP_1.1	class	Purity (precision)	1	0.4117647058823529
+TIPP_1.1	class	Completeness (recall)	1	0.9333333333333333
+TIPP_1.1	class	True positives	1	14.0
+TIPP_1.1	species	F1 score	1	0.03503184713375796
+TIPP_1.1	species	False negatives	1	59.0
+TIPP_1.1	species	False positives	1	547.0
+TIPP_1.1	species	Jaccard index	1	0.017828200972447326
+TIPP_1.1	species	Taxon counts	1	558.0
+TIPP_1.1	species	Purity (precision)	1	0.01971326164874552
+TIPP_1.1	species	Completeness (recall)	1	0.15714285714285714
+TIPP_1.1	species	True positives	1	11.0
+TIPP_1.1	superkingdom	F1 score	1	1.0
+TIPP_1.1	superkingdom	False negatives	1	0.0
+TIPP_1.1	superkingdom	False positives	1	0.0
+TIPP_1.1	superkingdom	Jaccard index	1	1.0
+TIPP_1.1	superkingdom	Taxon counts	1	2.0
+TIPP_1.1	superkingdom	Purity (precision)	1	1.0
+TIPP_1.1	superkingdom	Completeness (recall)	1	1.0
+TIPP_1.1	superkingdom	True positives	1	2.0
+TIPP_1.1	order	F1 score	1	0.5185185185185186
+TIPP_1.1	order	False negatives	1	1.0
+TIPP_1.1	order	False positives	1	51.0
+TIPP_1.1	order	Jaccard index	1	0.35
+TIPP_1.1	order	Taxon counts	1	79.0
+TIPP_1.1	order	Purity (precision)	1	0.35443037974683544
+TIPP_1.1	order	Completeness (recall)	1	0.9655172413793104
+TIPP_1.1	order	True positives	1	28.0
+TIPP_1.1	phylum	F1 score	1	0.4615384615384615
+TIPP_1.1	phylum	False negatives	1	0.0
+TIPP_1.1	phylum	False positives	1	14.0
+TIPP_1.1	phylum	Jaccard index	1	0.3
+TIPP_1.1	phylum	Taxon counts	1	20.0
+TIPP_1.1	phylum	Purity (precision)	1	0.3
+TIPP_1.1	phylum	Completeness (recall)	1	1.0
+TIPP_1.1	phylum	True positives	1	6.0
+TIPP_1.1	family	F1 score	1	0.42342342342342343
+TIPP_1.1	family	False negatives	1	6.0
+TIPP_1.1	family	False positives	1	122.0
+TIPP_1.1	family	Jaccard index	1	0.26857142857142857
+TIPP_1.1	family	Taxon counts	1	169.0
+TIPP_1.1	family	Purity (precision)	1	0.2781065088757396
+TIPP_1.1	family	Completeness (recall)	1	0.8867924528301887
+TIPP_1.1	family	True positives	1	47.0
+TIPP_1.1	strain	False negatives	1	132.0
+TIPP_1.1	strain	False positives	1	0.0
+TIPP_1.1	strain	Jaccard index	1	0.0
+TIPP_1.1	strain	Taxon counts	1	0.0
+TIPP_1.1	strain	Purity (precision)	1	0.0
+TIPP_1.1	strain	Completeness (recall)	1	0.0
+TIPP_1.1	strain	True positives	1	0.0
+TIPP_1.1	genus	F1 score	1	0.15789473684210528
+TIPP_1.1	genus	False negatives	1	38.0
+TIPP_1.1	genus	False positives	1	314.0
+TIPP_1.1	genus	Jaccard index	1	0.08571428571428572
+TIPP_1.1	genus	Taxon counts	1	347.0
+TIPP_1.1	genus	Purity (precision)	1	0.09510086455331412
+TIPP_1.1	genus	Completeness (recall)	1	0.4647887323943662
+TIPP_1.1	genus	True positives	1	33.0
+TIPP_1.1	class	L1 norm error	1	0.20237500628879193
+TIPP_1.1	family	L1 norm error	1	0.5448766646395558
+TIPP_1.1	genus	L1 norm error	1	1.301603666676854
+TIPP_1.1	order	L1 norm error	1	0.3169375913532782
+TIPP_1.1	phylum	L1 norm error	1	0.2013713282236752
+TIPP_1.1	species	L1 norm error	1	1.6503736745950959
+TIPP_1.1	superkingdom	L1 norm error	1	0.002746048574295917
+TIPP_1.1	na	Weighted UniFrac error	1	6.9343629803515565
+TIPP_1.1	na	Unweighted UniFrac error	1	6083.896912463503
+TIPP_1.1	class	Bray-Curtis distance	2	0.12648334983835718
+TIPP_1.1	family	Bray-Curtis distance	2	0.3590931060031256
+TIPP_1.1	genus	Bray-Curtis distance	2	0.4908945320284427
+TIPP_1.1	order	Bray-Curtis distance	2	0.2205999044503366
+TIPP_1.1	phylum	Bray-Curtis distance	2	0.07525872741014834
+TIPP_1.1	species	Bray-Curtis distance	2	0.674945075807848
+TIPP_1.1	superkingdom	Bray-Curtis distance	2	0.004892550864874208
+TIPP_1.1	superkingdom	Shannon diversity	2	0.20980370988239336
+TIPP_1.1	superkingdom	Shannon equitability	2	0.3026827718074357
+TIPP_1.1	phylum	Shannon diversity	2	1.4458343457813987
+TIPP_1.1	phylum	Shannon equitability	2	0.43868504557819327
+TIPP_1.1	class	Shannon diversity	2	1.959414865074786
+TIPP_1.1	class	Shannon equitability	2	0.5061516721952021
+TIPP_1.1	order	Shannon diversity	2	2.517939784995772
+TIPP_1.1	order	Shannon equitability	2	0.54214639544257
+TIPP_1.1	family	Shannon diversity	2	3.4356304103927733
+TIPP_1.1	family	Shannon equitability	2	0.6338175864290169
+TIPP_1.1	genus	Shannon diversity	2	3.9702038161738953
+TIPP_1.1	genus	Shannon equitability	2	0.6231082356183935
+TIPP_1.1	species	Shannon diversity	2	4.351606925368914
+TIPP_1.1	species	Shannon equitability	2	0.6086234322863822
+TIPP_1.1	class	F1 score	2	0.5454545454545454
+TIPP_1.1	class	False negatives	2	0.0
+TIPP_1.1	class	False positives	2	25.0
+TIPP_1.1	class	Jaccard index	2	0.375
+TIPP_1.1	class	Taxon counts	2	40.0
+TIPP_1.1	class	Purity (precision)	2	0.375
+TIPP_1.1	class	Completeness (recall)	2	1.0
+TIPP_1.1	class	True positives	2	15.0
+TIPP_1.1	species	F1 score	2	0.02638522427440633
+TIPP_1.1	species	False negatives	2	60.0
+TIPP_1.1	species	False positives	2	678.0
+TIPP_1.1	species	Jaccard index	2	0.013368983957219251
+TIPP_1.1	species	Taxon counts	2	688.0
+TIPP_1.1	species	Purity (precision)	2	0.014534883720930232
+TIPP_1.1	species	Completeness (recall)	2	0.14285714285714285
+TIPP_1.1	species	True positives	2	10.0
+TIPP_1.1	superkingdom	F1 score	2	1.0
+TIPP_1.1	superkingdom	False negatives	2	0.0
+TIPP_1.1	superkingdom	False positives	2	0.0
+TIPP_1.1	superkingdom	Jaccard index	2	1.0
+TIPP_1.1	superkingdom	Taxon counts	2	2.0
+TIPP_1.1	superkingdom	Purity (precision)	2	1.0
+TIPP_1.1	superkingdom	Completeness (recall)	2	1.0
+TIPP_1.1	superkingdom	True positives	2	2.0
+TIPP_1.1	order	F1 score	2	0.4957264957264957
+TIPP_1.1	order	False negatives	2	0.0
+TIPP_1.1	order	False positives	2	59.0
+TIPP_1.1	order	Jaccard index	2	0.32954545454545453
+TIPP_1.1	order	Taxon counts	2	88.0
+TIPP_1.1	order	Purity (precision)	2	0.32954545454545453
+TIPP_1.1	order	Completeness (recall)	2	1.0
+TIPP_1.1	order	True positives	2	29.0
+TIPP_1.1	phylum	F1 score	2	0.3870967741935484
+TIPP_1.1	phylum	False negatives	2	0.0
+TIPP_1.1	phylum	False positives	2	19.0
+TIPP_1.1	phylum	Jaccard index	2	0.24
+TIPP_1.1	phylum	Taxon counts	2	25.0
+TIPP_1.1	phylum	Purity (precision)	2	0.24
+TIPP_1.1	phylum	Completeness (recall)	2	1.0
+TIPP_1.1	phylum	True positives	2	6.0
+TIPP_1.1	family	F1 score	2	0.41322314049586784
+TIPP_1.1	family	False negatives	2	3.0
+TIPP_1.1	family	False positives	2	139.0
+TIPP_1.1	family	Jaccard index	2	0.2604166666666667
+TIPP_1.1	family	Taxon counts	2	189.0
+TIPP_1.1	family	Purity (precision)	2	0.26455026455026454
+TIPP_1.1	family	Completeness (recall)	2	0.9433962264150944
+TIPP_1.1	family	True positives	2	50.0
+TIPP_1.1	strain	False negatives	2	132.0
+TIPP_1.1	strain	False positives	2	0.0
+TIPP_1.1	strain	Jaccard index	2	0.0
+TIPP_1.1	strain	Taxon counts	2	0.0
+TIPP_1.1	strain	Purity (precision)	2	0.0
+TIPP_1.1	strain	Completeness (recall)	2	0.0
+TIPP_1.1	strain	True positives	2	0.0
+TIPP_1.1	genus	F1 score	2	0.145748987854251
+TIPP_1.1	genus	False negatives	2	35.0
+TIPP_1.1	genus	False positives	2	387.0
+TIPP_1.1	genus	Jaccard index	2	0.07860262008733625
+TIPP_1.1	genus	Taxon counts	2	423.0
+TIPP_1.1	genus	Purity (precision)	2	0.0851063829787234
+TIPP_1.1	genus	Completeness (recall)	2	0.5070422535211268
+TIPP_1.1	genus	True positives	2	36.0
+TIPP_1.1	class	L1 norm error	2	0.2529666996767143
+TIPP_1.1	family	L1 norm error	2	0.7181862120062508
+TIPP_1.1	genus	L1 norm error	2	0.9817890640568815
+TIPP_1.1	order	L1 norm error	2	0.4411998089006735
+TIPP_1.1	phylum	L1 norm error	2	0.15051745482029666
+TIPP_1.1	species	L1 norm error	2	1.3498901516156872
+TIPP_1.1	superkingdom	L1 norm error	2	0.009785101729748415
+TIPP_1.1	na	Weighted UniFrac error	2	6.235818481710246
+TIPP_1.1	na	Unweighted UniFrac error	2	7461.0508056019735

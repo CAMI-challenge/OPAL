@@ -1,0 +1,972 @@
+tool	rank	metric	sample	value
+Gold standard	class	Bray-Curtis distance	medium_pool	0.0
+Gold standard	family	Bray-Curtis distance	medium_pool	0.0
+Gold standard	genus	Bray-Curtis distance	medium_pool	0.0
+Gold standard	order	Bray-Curtis distance	medium_pool	0.0
+Gold standard	phylum	Bray-Curtis distance	medium_pool	0.0
+Gold standard	species	Bray-Curtis distance	medium_pool	0.0
+Gold standard	strain	Bray-Curtis distance	medium_pool	0.0
+Gold standard	superkingdom	Bray-Curtis distance	medium_pool	0.0
+Gold standard	superkingdom	Shannon diversity	medium_pool	0.11268476876887479
+Gold standard	superkingdom	Shannon equitability	medium_pool	0.1625697570865752
+Gold standard	phylum	Shannon diversity	medium_pool	1.228525431108805
+Gold standard	phylum	Shannon equitability	medium_pool	0.6856530980902763
+Gold standard	class	Shannon diversity	medium_pool	1.948420960110197
+Gold standard	class	Shannon equitability	medium_pool	0.7194921864141091
+Gold standard	order	Shannon diversity	medium_pool	2.5678316446427227
+Gold standard	order	Shannon equitability	medium_pool	0.762579759632535
+Gold standard	family	Shannon diversity	medium_pool	3.2923931651346083
+Gold standard	family	Shannon equitability	medium_pool	0.8292572024481156
+Gold standard	genus	Shannon diversity	medium_pool	3.4742979561686176
+Gold standard	genus	Shannon equitability	medium_pool	0.8150501694675918
+Gold standard	species	Shannon diversity	medium_pool	3.3644272752847626
+Gold standard	species	Shannon equitability	medium_pool	0.7919103314475772
+Gold standard	strain	Shannon diversity	medium_pool	4.027494842258285
+Gold standard	strain	Shannon equitability	medium_pool	0.8248327304919554
+Gold standard	strain	F1 score	medium_pool	1.0
+Gold standard	strain	False negatives	medium_pool	0.0
+Gold standard	strain	False positives	medium_pool	0.0
+Gold standard	strain	Jaccard index	medium_pool	1.0
+Gold standard	strain	Taxon counts	medium_pool	132.0
+Gold standard	strain	Purity (precision)	medium_pool	1.0
+Gold standard	strain	Completeness (recall)	medium_pool	1.0
+Gold standard	strain	True positives	medium_pool	132.0
+Gold standard	class	F1 score	medium_pool	1.0
+Gold standard	class	False negatives	medium_pool	0.0
+Gold standard	class	False positives	medium_pool	0.0
+Gold standard	class	Jaccard index	medium_pool	1.0
+Gold standard	class	Taxon counts	medium_pool	15.0
+Gold standard	class	Purity (precision)	medium_pool	1.0
+Gold standard	class	Completeness (recall)	medium_pool	1.0
+Gold standard	class	True positives	medium_pool	15.0
+Gold standard	order	F1 score	medium_pool	1.0
+Gold standard	order	False negatives	medium_pool	0.0
+Gold standard	order	False positives	medium_pool	0.0
+Gold standard	order	Jaccard index	medium_pool	1.0
+Gold standard	order	Taxon counts	medium_pool	29.0
+Gold standard	order	Purity (precision)	medium_pool	1.0
+Gold standard	order	Completeness (recall)	medium_pool	1.0
+Gold standard	order	True positives	medium_pool	29.0
+Gold standard	family	F1 score	medium_pool	1.0
+Gold standard	family	False negatives	medium_pool	0.0
+Gold standard	family	False positives	medium_pool	0.0
+Gold standard	family	Jaccard index	medium_pool	1.0
+Gold standard	family	Taxon counts	medium_pool	53.0
+Gold standard	family	Purity (precision)	medium_pool	1.0
+Gold standard	family	Completeness (recall)	medium_pool	1.0
+Gold standard	family	True positives	medium_pool	53.0
+Gold standard	genus	F1 score	medium_pool	1.0
+Gold standard	genus	False negatives	medium_pool	0.0
+Gold standard	genus	False positives	medium_pool	0.0
+Gold standard	genus	Jaccard index	medium_pool	1.0
+Gold standard	genus	Taxon counts	medium_pool	71.0
+Gold standard	genus	Purity (precision)	medium_pool	1.0
+Gold standard	genus	Completeness (recall)	medium_pool	1.0
+Gold standard	genus	True positives	medium_pool	71.0
+Gold standard	superkingdom	F1 score	medium_pool	1.0
+Gold standard	superkingdom	False negatives	medium_pool	0.0
+Gold standard	superkingdom	False positives	medium_pool	0.0
+Gold standard	superkingdom	Jaccard index	medium_pool	1.0
+Gold standard	superkingdom	Taxon counts	medium_pool	2.0
+Gold standard	superkingdom	Purity (precision)	medium_pool	1.0
+Gold standard	superkingdom	Completeness (recall)	medium_pool	1.0
+Gold standard	superkingdom	True positives	medium_pool	2.0
+Gold standard	species	F1 score	medium_pool	1.0
+Gold standard	species	False negatives	medium_pool	0.0
+Gold standard	species	False positives	medium_pool	0.0
+Gold standard	species	Jaccard index	medium_pool	1.0
+Gold standard	species	Taxon counts	medium_pool	70.0
+Gold standard	species	Purity (precision)	medium_pool	1.0
+Gold standard	species	Completeness (recall)	medium_pool	1.0
+Gold standard	species	True positives	medium_pool	70.0
+Gold standard	phylum	F1 score	medium_pool	1.0
+Gold standard	phylum	False negatives	medium_pool	0.0
+Gold standard	phylum	False positives	medium_pool	0.0
+Gold standard	phylum	Jaccard index	medium_pool	1.0
+Gold standard	phylum	Taxon counts	medium_pool	6.0
+Gold standard	phylum	Purity (precision)	medium_pool	1.0
+Gold standard	phylum	Completeness (recall)	medium_pool	1.0
+Gold standard	phylum	True positives	medium_pool	6.0
+Gold standard	class	L1 norm error	medium_pool	0.0
+Gold standard	family	L1 norm error	medium_pool	0.0
+Gold standard	genus	L1 norm error	medium_pool	0.0
+Gold standard	order	L1 norm error	medium_pool	0.0
+Gold standard	phylum	L1 norm error	medium_pool	0.0
+Gold standard	species	L1 norm error	medium_pool	0.0
+Gold standard	strain	L1 norm error	medium_pool	0.0
+Gold standard	superkingdom	L1 norm error	medium_pool	0.0
+Gold standard	na	Weighted UniFrac error	medium_pool	0.0
+Gold standard	na	Unweighted UniFrac error	medium_pool	0.0
+CommonKmers	class	Bray-Curtis distance	medium_pool	0.14900397060504186
+CommonKmers	family	Bray-Curtis distance	medium_pool	0.5330712026912621
+CommonKmers	genus	Bray-Curtis distance	medium_pool	0.5865229636009818
+CommonKmers	order	Bray-Curtis distance	medium_pool	0.2949658337250632
+CommonKmers	phylum	Bray-Curtis distance	medium_pool	0.0905446980834203
+CommonKmers	species	Bray-Curtis distance	medium_pool	0.619164296238042
+CommonKmers	strain	Bray-Curtis distance	medium_pool	1.0
+CommonKmers	superkingdom	Bray-Curtis distance	medium_pool	0.01162321173141762
+CommonKmers	superkingdom	Shannon diversity	medium_pool	0.15329723148223753
+CommonKmers	superkingdom	Shannon equitability	medium_pool	0.22116115564143157
+CommonKmers	phylum	Shannon diversity	medium_pool	1.104083142995187
+CommonKmers	phylum	Shannon equitability	medium_pool	0.7964276375641283
+CommonKmers	class	Shannon diversity	medium_pool	1.7433788009364175
+CommonKmers	class	Shannon equitability	medium_pool	0.7934458857409938
+CommonKmers	order	Shannon diversity	medium_pool	2.13720986018568
+CommonKmers	order	Shannon equitability	medium_pool	0.7708355166572188
+CommonKmers	family	Shannon diversity	medium_pool	2.410375326092457
+CommonKmers	family	Shannon equitability	medium_pool	0.7158192947075099
+CommonKmers	genus	Shannon diversity	medium_pool	2.748189297025346
+CommonKmers	genus	Shannon equitability	medium_pool	0.7262292757194069
+CommonKmers	species	Shannon diversity	medium_pool	3.111724210275974
+CommonKmers	species	Shannon equitability	medium_pool	0.6967730028474979
+CommonKmers	strain	Shannon diversity	medium_pool	2.386392877648523
+CommonKmers	strain	Shannon equitability	medium_pool	0.6384707909910299
+CommonKmers	strain	False negatives	medium_pool	132.0
+CommonKmers	strain	False positives	medium_pool	42.0
+CommonKmers	strain	Jaccard index	medium_pool	0.0
+CommonKmers	strain	Taxon counts	medium_pool	42.0
+CommonKmers	strain	Purity (precision)	medium_pool	0.0
+CommonKmers	strain	Completeness (recall)	medium_pool	0.0
+CommonKmers	strain	True positives	medium_pool	0.0
+CommonKmers	class	F1 score	medium_pool	0.7499999999999999
+CommonKmers	class	False negatives	medium_pool	6.0
+CommonKmers	class	False positives	medium_pool	0.0
+CommonKmers	class	Jaccard index	medium_pool	0.6
+CommonKmers	class	Taxon counts	medium_pool	9.0
+CommonKmers	class	Purity (precision)	medium_pool	1.0
+CommonKmers	class	Completeness (recall)	medium_pool	0.6
+CommonKmers	class	True positives	medium_pool	9.0
+CommonKmers	order	F1 score	medium_pool	0.7111111111111111
+CommonKmers	order	False negatives	medium_pool	13.0
+CommonKmers	order	False positives	medium_pool	0.0
+CommonKmers	order	Jaccard index	medium_pool	0.5517241379310345
+CommonKmers	order	Taxon counts	medium_pool	16.0
+CommonKmers	order	Purity (precision)	medium_pool	1.0
+CommonKmers	order	Completeness (recall)	medium_pool	0.5517241379310345
+CommonKmers	order	True positives	medium_pool	16.0
+CommonKmers	family	F1 score	medium_pool	0.6829268292682926
+CommonKmers	family	False negatives	medium_pool	25.0
+CommonKmers	family	False positives	medium_pool	1.0
+CommonKmers	family	Jaccard index	medium_pool	0.5185185185185185
+CommonKmers	family	Taxon counts	medium_pool	29.0
+CommonKmers	family	Purity (precision)	medium_pool	0.9655172413793104
+CommonKmers	family	Completeness (recall)	medium_pool	0.5283018867924528
+CommonKmers	family	True positives	medium_pool	28.0
+CommonKmers	genus	F1 score	medium_pool	0.5565217391304348
+CommonKmers	genus	False negatives	medium_pool	39.0
+CommonKmers	genus	False positives	medium_pool	12.0
+CommonKmers	genus	Jaccard index	medium_pool	0.3855421686746988
+CommonKmers	genus	Taxon counts	medium_pool	44.0
+CommonKmers	genus	Purity (precision)	medium_pool	0.7272727272727273
+CommonKmers	genus	Completeness (recall)	medium_pool	0.4507042253521127
+CommonKmers	genus	True positives	medium_pool	32.0
+CommonKmers	superkingdom	F1 score	medium_pool	1.0
+CommonKmers	superkingdom	False negatives	medium_pool	0.0
+CommonKmers	superkingdom	False positives	medium_pool	0.0
+CommonKmers	superkingdom	Jaccard index	medium_pool	1.0
+CommonKmers	superkingdom	Taxon counts	medium_pool	2.0
+CommonKmers	superkingdom	Purity (precision)	medium_pool	1.0
+CommonKmers	superkingdom	Completeness (recall)	medium_pool	1.0
+CommonKmers	superkingdom	True positives	medium_pool	2.0
+CommonKmers	species	F1 score	medium_pool	0.2547770700636942
+CommonKmers	species	False negatives	medium_pool	50.0
+CommonKmers	species	False positives	medium_pool	67.0
+CommonKmers	species	Jaccard index	medium_pool	0.145985401459854
+CommonKmers	species	Taxon counts	medium_pool	87.0
+CommonKmers	species	Purity (precision)	medium_pool	0.22988505747126436
+CommonKmers	species	Completeness (recall)	medium_pool	0.2857142857142857
+CommonKmers	species	True positives	medium_pool	20.0
+CommonKmers	phylum	F1 score	medium_pool	0.8
+CommonKmers	phylum	False negatives	medium_pool	2.0
+CommonKmers	phylum	False positives	medium_pool	0.0
+CommonKmers	phylum	Jaccard index	medium_pool	0.6666666666666666
+CommonKmers	phylum	Taxon counts	medium_pool	4.0
+CommonKmers	phylum	Purity (precision)	medium_pool	1.0
+CommonKmers	phylum	Completeness (recall)	medium_pool	0.6666666666666666
+CommonKmers	phylum	True positives	medium_pool	4.0
+CommonKmers	class	L1 norm error	medium_pool	0.2980079412100838
+CommonKmers	family	L1 norm error	medium_pool	1.0661424053825237
+CommonKmers	genus	L1 norm error	medium_pool	1.1730459272019642
+CommonKmers	order	L1 norm error	medium_pool	0.5899316674501265
+CommonKmers	phylum	L1 norm error	medium_pool	0.1810893961668406
+CommonKmers	species	L1 norm error	medium_pool	1.238328592476084
+CommonKmers	strain	L1 norm error	medium_pool	2.0
+CommonKmers	superkingdom	L1 norm error	medium_pool	0.023246423462835245
+CommonKmers	na	Weighted UniFrac error	medium_pool	7.131602694385504
+CommonKmers	na	Unweighted UniFrac error	medium_pool	1069.3610739413402
+CommonKmers Sensitive Unnormalized	class	Bray-Curtis distance	medium_pool	0.1392408690553955
+CommonKmers Sensitive Unnormalized	family	Bray-Curtis distance	medium_pool	0.5218908694083972
+CommonKmers Sensitive Unnormalized	genus	Bray-Curtis distance	medium_pool	0.5827011897508082
+CommonKmers Sensitive Unnormalized	order	Bray-Curtis distance	medium_pool	0.2850015829250571
+CommonKmers Sensitive Unnormalized	phylum	Bray-Curtis distance	medium_pool	0.0780781256432647
+CommonKmers Sensitive Unnormalized	species	Bray-Curtis distance	medium_pool	0.6201118164166031
+CommonKmers Sensitive Unnormalized	strain	Bray-Curtis distance	medium_pool	1.0
+CommonKmers Sensitive Unnormalized	superkingdom	Bray-Curtis distance	medium_pool	0.010271300176188276
+CommonKmers Sensitive Unnormalized	superkingdom	Shannon diversity	medium_pool	0.14880521659221513
+CommonKmers Sensitive Unnormalized	superkingdom	Shannon equitability	medium_pool	0.21468054803599687
+CommonKmers Sensitive Unnormalized	phylum	Shannon diversity	medium_pool	1.1096308520644982
+CommonKmers Sensitive Unnormalized	phylum	Shannon equitability	medium_pool	0.8004294637454232
+CommonKmers Sensitive Unnormalized	class	Shannon diversity	medium_pool	1.7429352651403036
+CommonKmers Sensitive Unnormalized	class	Shannon equitability	medium_pool	0.7932440239009758
+CommonKmers Sensitive Unnormalized	order	Shannon diversity	medium_pool	2.1388655502264178
+CommonKmers Sensitive Unnormalized	order	Shannon equitability	medium_pool	0.7399966957133739
+CommonKmers Sensitive Unnormalized	family	Shannon diversity	medium_pool	2.480952662804351
+CommonKmers Sensitive Unnormalized	family	Shannon equitability	medium_pool	0.6870698040841322
+CommonKmers Sensitive Unnormalized	genus	Shannon diversity	medium_pool	2.8462328788787903
+CommonKmers Sensitive Unnormalized	genus	Shannon equitability	medium_pool	0.6951620303626987
+CommonKmers Sensitive Unnormalized	species	Shannon diversity	medium_pool	3.3032687909974268
+CommonKmers Sensitive Unnormalized	species	Shannon equitability	medium_pool	0.6744338169309936
+CommonKmers Sensitive Unnormalized	strain	Shannon diversity	medium_pool	2.48573645422943
+CommonKmers Sensitive Unnormalized	strain	Shannon equitability	medium_pool	0.6121835592257016
+CommonKmers Sensitive Unnormalized	strain	False negatives	medium_pool	132.0
+CommonKmers Sensitive Unnormalized	strain	False positives	medium_pool	58.0
+CommonKmers Sensitive Unnormalized	strain	Jaccard index	medium_pool	0.0
+CommonKmers Sensitive Unnormalized	strain	Taxon counts	medium_pool	58.0
+CommonKmers Sensitive Unnormalized	strain	Purity (precision)	medium_pool	0.0
+CommonKmers Sensitive Unnormalized	strain	Completeness (recall)	medium_pool	0.0
+CommonKmers Sensitive Unnormalized	strain	True positives	medium_pool	0.0
+CommonKmers Sensitive Unnormalized	class	F1 score	medium_pool	0.7499999999999999
+CommonKmers Sensitive Unnormalized	class	False negatives	medium_pool	6.0
+CommonKmers Sensitive Unnormalized	class	False positives	medium_pool	0.0
+CommonKmers Sensitive Unnormalized	class	Jaccard index	medium_pool	0.6
+CommonKmers Sensitive Unnormalized	class	Taxon counts	medium_pool	9.0
+CommonKmers Sensitive Unnormalized	class	Purity (precision)	medium_pool	1.0
+CommonKmers Sensitive Unnormalized	class	Completeness (recall)	medium_pool	0.6
+CommonKmers Sensitive Unnormalized	class	True positives	medium_pool	9.0
+CommonKmers Sensitive Unnormalized	order	F1 score	medium_pool	0.7234042553191489
+CommonKmers Sensitive Unnormalized	order	False negatives	medium_pool	12.0
+CommonKmers Sensitive Unnormalized	order	False positives	medium_pool	1.0
+CommonKmers Sensitive Unnormalized	order	Jaccard index	medium_pool	0.5666666666666667
+CommonKmers Sensitive Unnormalized	order	Taxon counts	medium_pool	18.0
+CommonKmers Sensitive Unnormalized	order	Purity (precision)	medium_pool	0.9444444444444444
+CommonKmers Sensitive Unnormalized	order	Completeness (recall)	medium_pool	0.5862068965517241
+CommonKmers Sensitive Unnormalized	order	True positives	medium_pool	17.0
+CommonKmers Sensitive Unnormalized	family	F1 score	medium_pool	0.6888888888888889
+CommonKmers Sensitive Unnormalized	family	False negatives	medium_pool	22.0
+CommonKmers Sensitive Unnormalized	family	False positives	medium_pool	6.0
+CommonKmers Sensitive Unnormalized	family	Jaccard index	medium_pool	0.5254237288135594
+CommonKmers Sensitive Unnormalized	family	Taxon counts	medium_pool	37.0
+CommonKmers Sensitive Unnormalized	family	Purity (precision)	medium_pool	0.8378378378378378
+CommonKmers Sensitive Unnormalized	family	Completeness (recall)	medium_pool	0.5849056603773585
+CommonKmers Sensitive Unnormalized	family	True positives	medium_pool	31.0
+CommonKmers Sensitive Unnormalized	genus	F1 score	medium_pool	0.534351145038168
+CommonKmers Sensitive Unnormalized	genus	False negatives	medium_pool	36.0
+CommonKmers Sensitive Unnormalized	genus	False positives	medium_pool	25.0
+CommonKmers Sensitive Unnormalized	genus	Jaccard index	medium_pool	0.3645833333333333
+CommonKmers Sensitive Unnormalized	genus	Taxon counts	medium_pool	60.0
+CommonKmers Sensitive Unnormalized	genus	Purity (precision)	medium_pool	0.5833333333333334
+CommonKmers Sensitive Unnormalized	genus	Completeness (recall)	medium_pool	0.49295774647887325
+CommonKmers Sensitive Unnormalized	genus	True positives	medium_pool	35.0
+CommonKmers Sensitive Unnormalized	superkingdom	F1 score	medium_pool	1.0
+CommonKmers Sensitive Unnormalized	superkingdom	False negatives	medium_pool	0.0
+CommonKmers Sensitive Unnormalized	superkingdom	False positives	medium_pool	0.0
+CommonKmers Sensitive Unnormalized	superkingdom	Jaccard index	medium_pool	1.0
+CommonKmers Sensitive Unnormalized	superkingdom	Taxon counts	medium_pool	2.0
+CommonKmers Sensitive Unnormalized	superkingdom	Purity (precision)	medium_pool	1.0
+CommonKmers Sensitive Unnormalized	superkingdom	Completeness (recall)	medium_pool	1.0
+CommonKmers Sensitive Unnormalized	superkingdom	True positives	medium_pool	2.0
+CommonKmers Sensitive Unnormalized	species	F1 score	medium_pool	0.2156862745098039
+CommonKmers Sensitive Unnormalized	species	False negatives	medium_pool	48.0
+CommonKmers Sensitive Unnormalized	species	False positives	medium_pool	112.0
+CommonKmers Sensitive Unnormalized	species	Jaccard index	medium_pool	0.12087912087912088
+CommonKmers Sensitive Unnormalized	species	Taxon counts	medium_pool	134.0
+CommonKmers Sensitive Unnormalized	species	Purity (precision)	medium_pool	0.16417910447761194
+CommonKmers Sensitive Unnormalized	species	Completeness (recall)	medium_pool	0.3142857142857143
+CommonKmers Sensitive Unnormalized	species	True positives	medium_pool	22.0
+CommonKmers Sensitive Unnormalized	phylum	F1 score	medium_pool	0.8
+CommonKmers Sensitive Unnormalized	phylum	False negatives	medium_pool	2.0
+CommonKmers Sensitive Unnormalized	phylum	False positives	medium_pool	0.0
+CommonKmers Sensitive Unnormalized	phylum	Jaccard index	medium_pool	0.6666666666666666
+CommonKmers Sensitive Unnormalized	phylum	Taxon counts	medium_pool	4.0
+CommonKmers Sensitive Unnormalized	phylum	Purity (precision)	medium_pool	1.0
+CommonKmers Sensitive Unnormalized	phylum	Completeness (recall)	medium_pool	0.6666666666666666
+CommonKmers Sensitive Unnormalized	phylum	True positives	medium_pool	4.0
+CommonKmers Sensitive Unnormalized	class	L1 norm error	medium_pool	0.278481738110791
+CommonKmers Sensitive Unnormalized	family	L1 norm error	medium_pool	1.0437817388167943
+CommonKmers Sensitive Unnormalized	genus	L1 norm error	medium_pool	1.165402379501617
+CommonKmers Sensitive Unnormalized	order	L1 norm error	medium_pool	0.570003165850114
+CommonKmers Sensitive Unnormalized	phylum	L1 norm error	medium_pool	0.1561562512865294
+CommonKmers Sensitive Unnormalized	species	L1 norm error	medium_pool	1.2402236328332061
+CommonKmers Sensitive Unnormalized	strain	L1 norm error	medium_pool	2.0
+CommonKmers Sensitive Unnormalized	superkingdom	L1 norm error	medium_pool	0.020542600352376556
+CommonKmers Sensitive Unnormalized	na	Weighted UniFrac error	medium_pool	7.035417285742244
+CommonKmers Sensitive Unnormalized	na	Unweighted UniFrac error	medium_pool	1317.7267341053812
+DUDes	class	Bray-Curtis distance	medium_pool	0.3374232907048013
+DUDes	family	Bray-Curtis distance	medium_pool	0.5564814839891356
+DUDes	genus	Bray-Curtis distance	medium_pool	0.6351060935920485
+DUDes	order	Bray-Curtis distance	medium_pool	0.38674742020106956
+DUDes	phylum	Bray-Curtis distance	medium_pool	0.25561009593411194
+DUDes	species	Bray-Curtis distance	medium_pool	0.6513949821377569
+DUDes	strain	Bray-Curtis distance	medium_pool	1.0
+DUDes	superkingdom	Bray-Curtis distance	medium_pool	0.06107480000000004
+DUDes	superkingdom	Shannon diversity	medium_pool	0.2906475564128781
+DUDes	superkingdom	Shannon equitability	medium_pool	0.4193157882833545
+DUDes	phylum	Shannon diversity	medium_pool	1.16284796799093
+DUDes	phylum	Shannon equitability	medium_pool	0.5592116655761077
+DUDes	class	Shannon diversity	medium_pool	1.8656407611147314
+DUDes	class	Shannon equitability	medium_pool	0.6584893315671584
+DUDes	order	Shannon diversity	medium_pool	2.410663843237492
+DUDes	order	Shannon equitability	medium_pool	0.658010994788153
+DUDes	family	Shannon diversity	medium_pool	2.7500862182358325
+DUDes	family	Shannon equitability	medium_pool	0.6011497187819117
+DUDes	genus	Shannon diversity	medium_pool	3.182953101719675
+DUDes	genus	Shannon equitability	medium_pool	0.5867248714666312
+DUDes	species	Shannon diversity	medium_pool	3.4388708183832875
+DUDes	species	Shannon equitability	medium_pool	0.5517688730417365
+DUDes	strain	Shannon diversity	medium_pool	3.2381575970303125
+DUDes	strain	Shannon equitability	medium_pool	0.5352562424431897
+DUDes	strain	False negatives	medium_pool	132.0
+DUDes	strain	False positives	medium_pool	424.0
+DUDes	strain	Jaccard index	medium_pool	0.0
+DUDes	strain	Taxon counts	medium_pool	424.0
+DUDes	strain	Purity (precision)	medium_pool	0.0
+DUDes	strain	Completeness (recall)	medium_pool	0.0
+DUDes	strain	True positives	medium_pool	0.0
+DUDes	class	F1 score	medium_pool	0.9375
+DUDes	class	False negatives	medium_pool	0.0
+DUDes	class	False positives	medium_pool	2.0
+DUDes	class	Jaccard index	medium_pool	0.8823529411764706
+DUDes	class	Taxon counts	medium_pool	17.0
+DUDes	class	Purity (precision)	medium_pool	0.8823529411764706
+DUDes	class	Completeness (recall)	medium_pool	1.0
+DUDes	class	True positives	medium_pool	15.0
+DUDes	order	F1 score	medium_pool	0.8529411764705882
+DUDes	order	False negatives	medium_pool	0.0
+DUDes	order	False positives	medium_pool	10.0
+DUDes	order	Jaccard index	medium_pool	0.7435897435897436
+DUDes	order	Taxon counts	medium_pool	39.0
+DUDes	order	Purity (precision)	medium_pool	0.7435897435897436
+DUDes	order	Completeness (recall)	medium_pool	1.0
+DUDes	order	True positives	medium_pool	29.0
+DUDes	family	F1 score	medium_pool	0.68
+DUDes	family	False negatives	medium_pool	2.0
+DUDes	family	False positives	medium_pool	46.0
+DUDes	family	Jaccard index	medium_pool	0.5151515151515151
+DUDes	family	Taxon counts	medium_pool	97.0
+DUDes	family	Purity (precision)	medium_pool	0.5257731958762887
+DUDes	family	Completeness (recall)	medium_pool	0.9622641509433962
+DUDes	family	True positives	medium_pool	51.0
+DUDes	genus	F1 score	medium_pool	0.2953020134228188
+DUDes	genus	False negatives	medium_pool	27.0
+DUDes	genus	False positives	medium_pool	183.0
+DUDes	genus	Jaccard index	medium_pool	0.1732283464566929
+DUDes	genus	Taxon counts	medium_pool	227.0
+DUDes	genus	Purity (precision)	medium_pool	0.19383259911894274
+DUDes	genus	Completeness (recall)	medium_pool	0.6197183098591549
+DUDes	genus	True positives	medium_pool	44.0
+DUDes	superkingdom	F1 score	medium_pool	1.0
+DUDes	superkingdom	False negatives	medium_pool	0.0
+DUDes	superkingdom	False positives	medium_pool	0.0
+DUDes	superkingdom	Jaccard index	medium_pool	1.0
+DUDes	superkingdom	Taxon counts	medium_pool	2.0
+DUDes	superkingdom	Purity (precision)	medium_pool	1.0
+DUDes	superkingdom	Completeness (recall)	medium_pool	1.0
+DUDes	superkingdom	True positives	medium_pool	2.0
+DUDes	species	F1 score	medium_pool	0.0621761658031088
+DUDes	species	False negatives	medium_pool	52.0
+DUDes	species	False positives	medium_pool	491.0
+DUDes	species	Jaccard index	medium_pool	0.03208556149732621
+DUDes	species	Taxon counts	medium_pool	509.0
+DUDes	species	Purity (precision)	medium_pool	0.03536345776031434
+DUDes	species	Completeness (recall)	medium_pool	0.2571428571428571
+DUDes	species	True positives	medium_pool	18.0
+DUDes	phylum	F1 score	medium_pool	0.8571428571428571
+DUDes	phylum	False negatives	medium_pool	0.0
+DUDes	phylum	False positives	medium_pool	2.0
+DUDes	phylum	Jaccard index	medium_pool	0.75
+DUDes	phylum	Taxon counts	medium_pool	8.0
+DUDes	phylum	Purity (precision)	medium_pool	0.75
+DUDes	phylum	Completeness (recall)	medium_pool	1.0
+DUDes	phylum	True positives	medium_pool	6.0
+DUDes	class	L1 norm error	medium_pool	0.6748465814096027
+DUDes	family	L1 norm error	medium_pool	1.1129629679782715
+DUDes	genus	L1 norm error	medium_pool	1.2702121871840968
+DUDes	order	L1 norm error	medium_pool	0.7734948404021391
+DUDes	phylum	L1 norm error	medium_pool	0.5112201918682239
+DUDes	species	L1 norm error	medium_pool	1.3027899642755119
+DUDes	strain	L1 norm error	medium_pool	1.9999999999999991
+DUDes	superkingdom	L1 norm error	medium_pool	0.12214960000000008
+DUDes	na	Weighted UniFrac error	medium_pool	8.358119623432296
+DUDes	na	Unweighted UniFrac error	medium_pool	5403.633730241422
+FOCUS_cfk7b	class	Bray-Curtis distance	medium_pool	0.178704083092417
+FOCUS_cfk7b	family	Bray-Curtis distance	medium_pool	0.5176760188893406
+FOCUS_cfk7b	genus	Bray-Curtis distance	medium_pool	0.7251759919020632
+FOCUS_cfk7b	order	Bray-Curtis distance	medium_pool	0.27508330835050454
+FOCUS_cfk7b	phylum	Bray-Curtis distance	medium_pool	0.15814318887470818
+FOCUS_cfk7b	species	Bray-Curtis distance	medium_pool	0.864658438560943
+FOCUS_cfk7b	strain	Bray-Curtis distance	medium_pool	1.0
+FOCUS_cfk7b	superkingdom	Bray-Curtis distance	medium_pool	0.01601955344134953
+FOCUS_cfk7b	superkingdom	Shannon diversity	medium_pool	0.16754526670558612
+FOCUS_cfk7b	superkingdom	Shannon equitability	medium_pool	0.24171672540056785
+FOCUS_cfk7b	phylum	Shannon diversity	medium_pool	1.5465211063155935
+FOCUS_cfk7b	phylum	Shannon equitability	medium_pool	0.5458540951601941
+FOCUS_cfk7b	class	Shannon diversity	medium_pool	2.035277163179135
+FOCUS_cfk7b	class	Shannon equitability	medium_pool	0.6246828905858882
+FOCUS_cfk7b	order	Shannon diversity	medium_pool	2.8969746291365492
+FOCUS_cfk7b	order	Shannon equitability	medium_pool	0.7368013995903634
+FOCUS_cfk7b	family	Shannon diversity	medium_pool	4.01526594415303
+FOCUS_cfk7b	family	Shannon equitability	medium_pool	0.8757457850752892
+FOCUS_cfk7b	genus	Shannon diversity	medium_pool	4.31688493988464
+FOCUS_cfk7b	genus	Shannon equitability	medium_pool	0.8735729076903187
+FOCUS_cfk7b	species	Shannon diversity	medium_pool	4.5396982016866545
+FOCUS_cfk7b	species	Shannon equitability	medium_pool	0.8770415146837918
+FOCUS_cfk7b	strain	Shannon diversity	medium_pool	4.453702225768829
+FOCUS_cfk7b	strain	Shannon equitability	medium_pool	0.874346414762043
+FOCUS_cfk7b	strain	False negatives	medium_pool	132.0
+FOCUS_cfk7b	strain	False positives	medium_pool	163.0
+FOCUS_cfk7b	strain	Jaccard index	medium_pool	0.0
+FOCUS_cfk7b	strain	Taxon counts	medium_pool	163.0
+FOCUS_cfk7b	strain	Purity (precision)	medium_pool	0.0
+FOCUS_cfk7b	strain	Completeness (recall)	medium_pool	0.0
+FOCUS_cfk7b	strain	True positives	medium_pool	0.0
+FOCUS_cfk7b	class	F1 score	medium_pool	0.6829268292682926
+FOCUS_cfk7b	class	False negatives	medium_pool	1.0
+FOCUS_cfk7b	class	False positives	medium_pool	12.0
+FOCUS_cfk7b	class	Jaccard index	medium_pool	0.5185185185185185
+FOCUS_cfk7b	class	Taxon counts	medium_pool	26.0
+FOCUS_cfk7b	class	Purity (precision)	medium_pool	0.5384615384615384
+FOCUS_cfk7b	class	Completeness (recall)	medium_pool	0.9333333333333333
+FOCUS_cfk7b	class	True positives	medium_pool	14.0
+FOCUS_cfk7b	order	F1 score	medium_pool	0.55
+FOCUS_cfk7b	order	False negatives	medium_pool	7.0
+FOCUS_cfk7b	order	False positives	medium_pool	29.0
+FOCUS_cfk7b	order	Jaccard index	medium_pool	0.3793103448275862
+FOCUS_cfk7b	order	Taxon counts	medium_pool	51.0
+FOCUS_cfk7b	order	Purity (precision)	medium_pool	0.43137254901960786
+FOCUS_cfk7b	order	Completeness (recall)	medium_pool	0.7586206896551724
+FOCUS_cfk7b	order	True positives	medium_pool	22.0
+FOCUS_cfk7b	family	F1 score	medium_pool	0.4900662251655629
+FOCUS_cfk7b	family	False negatives	medium_pool	16.0
+FOCUS_cfk7b	family	False positives	medium_pool	61.0
+FOCUS_cfk7b	family	Jaccard index	medium_pool	0.32456140350877194
+FOCUS_cfk7b	family	Taxon counts	medium_pool	98.0
+FOCUS_cfk7b	family	Purity (precision)	medium_pool	0.37755102040816324
+FOCUS_cfk7b	family	Completeness (recall)	medium_pool	0.6981132075471698
+FOCUS_cfk7b	family	True positives	medium_pool	37.0
+FOCUS_cfk7b	genus	F1 score	medium_pool	0.17061611374407581
+FOCUS_cfk7b	genus	False negatives	medium_pool	53.0
+FOCUS_cfk7b	genus	False positives	medium_pool	122.0
+FOCUS_cfk7b	genus	Jaccard index	medium_pool	0.09326424870466321
+FOCUS_cfk7b	genus	Taxon counts	medium_pool	140.0
+FOCUS_cfk7b	genus	Purity (precision)	medium_pool	0.12857142857142856
+FOCUS_cfk7b	genus	Completeness (recall)	medium_pool	0.2535211267605634
+FOCUS_cfk7b	genus	True positives	medium_pool	18.0
+FOCUS_cfk7b	superkingdom	F1 score	medium_pool	1.0
+FOCUS_cfk7b	superkingdom	False negatives	medium_pool	0.0
+FOCUS_cfk7b	superkingdom	False positives	medium_pool	0.0
+FOCUS_cfk7b	superkingdom	Jaccard index	medium_pool	1.0
+FOCUS_cfk7b	superkingdom	Taxon counts	medium_pool	2.0
+FOCUS_cfk7b	superkingdom	Purity (precision)	medium_pool	1.0
+FOCUS_cfk7b	superkingdom	Completeness (recall)	medium_pool	1.0
+FOCUS_cfk7b	superkingdom	True positives	medium_pool	2.0
+FOCUS_cfk7b	species	F1 score	medium_pool	0.04858299595141701
+FOCUS_cfk7b	species	False negatives	medium_pool	64.0
+FOCUS_cfk7b	species	False positives	medium_pool	171.0
+FOCUS_cfk7b	species	Jaccard index	medium_pool	0.024896265560165973
+FOCUS_cfk7b	species	Taxon counts	medium_pool	177.0
+FOCUS_cfk7b	species	Purity (precision)	medium_pool	0.03389830508474576
+FOCUS_cfk7b	species	Completeness (recall)	medium_pool	0.08571428571428572
+FOCUS_cfk7b	species	True positives	medium_pool	6.0
+FOCUS_cfk7b	phylum	F1 score	medium_pool	0.5217391304347826
+FOCUS_cfk7b	phylum	False negatives	medium_pool	0.0
+FOCUS_cfk7b	phylum	False positives	medium_pool	11.0
+FOCUS_cfk7b	phylum	Jaccard index	medium_pool	0.35294117647058826
+FOCUS_cfk7b	phylum	Taxon counts	medium_pool	17.0
+FOCUS_cfk7b	phylum	Purity (precision)	medium_pool	0.35294117647058826
+FOCUS_cfk7b	phylum	Completeness (recall)	medium_pool	1.0
+FOCUS_cfk7b	phylum	True positives	medium_pool	6.0
+FOCUS_cfk7b	class	L1 norm error	medium_pool	0.357408166184834
+FOCUS_cfk7b	family	L1 norm error	medium_pool	1.0353520377786807
+FOCUS_cfk7b	genus	L1 norm error	medium_pool	1.4503519838041257
+FOCUS_cfk7b	order	L1 norm error	medium_pool	0.5501666167010092
+FOCUS_cfk7b	phylum	L1 norm error	medium_pool	0.3162863777494165
+FOCUS_cfk7b	species	L1 norm error	medium_pool	1.7293168771218836
+FOCUS_cfk7b	strain	L1 norm error	medium_pool	1.9999999999999987
+FOCUS_cfk7b	superkingdom	L1 norm error	medium_pool	0.032039106882699064
+FOCUS_cfk7b	na	Weighted UniFrac error	medium_pool	8.071011815472993
+FOCUS_cfk7b	na	Unweighted UniFrac error	medium_pool	2440.327967710505
+FOCUS_cfk7bd	class	Bray-Curtis distance	medium_pool	0.16537686457097545
+FOCUS_cfk7bd	family	Bray-Curtis distance	medium_pool	0.45131643923384673
+FOCUS_cfk7bd	genus	Bray-Curtis distance	medium_pool	0.6861960005155637
+FOCUS_cfk7bd	order	Bray-Curtis distance	medium_pool	0.2548606552271119
+FOCUS_cfk7bd	phylum	Bray-Curtis distance	medium_pool	0.1515658793836133
+FOCUS_cfk7bd	species	Bray-Curtis distance	medium_pool	0.8732825663358715
+FOCUS_cfk7bd	strain	Bray-Curtis distance	medium_pool	1.0
+FOCUS_cfk7bd	superkingdom	Bray-Curtis distance	medium_pool	0.003838411152104533
+FOCUS_cfk7bd	superkingdom	Shannon diversity	medium_pool	0.1266304607129201
+FOCUS_cfk7bd	superkingdom	Shannon equitability	medium_pool	0.18268913769601455
+FOCUS_cfk7bd	phylum	Shannon diversity	medium_pool	1.4795425521836454
+FOCUS_cfk7bd	phylum	Shannon equitability	medium_pool	0.4938834371966051
+FOCUS_cfk7bd	class	Shannon diversity	medium_pool	2.0183558973834943
+FOCUS_cfk7bd	class	Shannon equitability	medium_pool	0.6270375147093901
+FOCUS_cfk7bd	order	Shannon diversity	medium_pool	2.794073061472419
+FOCUS_cfk7bd	order	Shannon equitability	medium_pool	0.7004472890481885
+FOCUS_cfk7bd	family	Shannon diversity	medium_pool	4.022390236279114
+FOCUS_cfk7bd	family	Shannon equitability	medium_pool	0.8590938701112996
+FOCUS_cfk7bd	genus	Shannon diversity	medium_pool	4.378419933131375
+FOCUS_cfk7bd	genus	Shannon equitability	medium_pool	0.860606786511372
+FOCUS_cfk7bd	species	Shannon diversity	medium_pool	4.778384182618639
+FOCUS_cfk7bd	species	Shannon equitability	medium_pool	0.868598418714378
+FOCUS_cfk7bd	strain	Shannon diversity	medium_pool	4.507719216959267
+FOCUS_cfk7bd	strain	Shannon equitability	medium_pool	0.8727794800633151
+FOCUS_cfk7bd	strain	False negatives	medium_pool	132.0
+FOCUS_cfk7bd	strain	False positives	medium_pool	175.0
+FOCUS_cfk7bd	strain	Jaccard index	medium_pool	0.0
+FOCUS_cfk7bd	strain	Taxon counts	medium_pool	175.0
+FOCUS_cfk7bd	strain	Purity (precision)	medium_pool	0.0
+FOCUS_cfk7bd	strain	Completeness (recall)	medium_pool	0.0
+FOCUS_cfk7bd	strain	True positives	medium_pool	0.0
+FOCUS_cfk7bd	class	F1 score	medium_pool	0.7000000000000001
+FOCUS_cfk7bd	class	False negatives	medium_pool	1.0
+FOCUS_cfk7bd	class	False positives	medium_pool	11.0
+FOCUS_cfk7bd	class	Jaccard index	medium_pool	0.5384615384615384
+FOCUS_cfk7bd	class	Taxon counts	medium_pool	25.0
+FOCUS_cfk7bd	class	Purity (precision)	medium_pool	0.56
+FOCUS_cfk7bd	class	Completeness (recall)	medium_pool	0.9333333333333333
+FOCUS_cfk7bd	class	True positives	medium_pool	14.0
+FOCUS_cfk7bd	order	F1 score	medium_pool	0.5542168674698795
+FOCUS_cfk7bd	order	False negatives	medium_pool	6.0
+FOCUS_cfk7bd	order	False positives	medium_pool	31.0
+FOCUS_cfk7bd	order	Jaccard index	medium_pool	0.38333333333333336
+FOCUS_cfk7bd	order	Taxon counts	medium_pool	54.0
+FOCUS_cfk7bd	order	Purity (precision)	medium_pool	0.42592592592592593
+FOCUS_cfk7bd	order	Completeness (recall)	medium_pool	0.7931034482758621
+FOCUS_cfk7bd	order	True positives	medium_pool	23.0
+FOCUS_cfk7bd	family	F1 score	medium_pool	0.5093167701863354
+FOCUS_cfk7bd	family	False negatives	medium_pool	12.0
+FOCUS_cfk7bd	family	False positives	medium_pool	67.0
+FOCUS_cfk7bd	family	Jaccard index	medium_pool	0.3416666666666667
+FOCUS_cfk7bd	family	Taxon counts	medium_pool	108.0
+FOCUS_cfk7bd	family	Purity (precision)	medium_pool	0.37962962962962965
+FOCUS_cfk7bd	family	Completeness (recall)	medium_pool	0.7735849056603774
+FOCUS_cfk7bd	family	True positives	medium_pool	41.0
+FOCUS_cfk7bd	genus	F1 score	medium_pool	0.22317596566523606
+FOCUS_cfk7bd	genus	False negatives	medium_pool	45.0
+FOCUS_cfk7bd	genus	False positives	medium_pool	136.0
+FOCUS_cfk7bd	genus	Jaccard index	medium_pool	0.12560386473429952
+FOCUS_cfk7bd	genus	Taxon counts	medium_pool	162.0
+FOCUS_cfk7bd	genus	Purity (precision)	medium_pool	0.16049382716049382
+FOCUS_cfk7bd	genus	Completeness (recall)	medium_pool	0.36619718309859156
+FOCUS_cfk7bd	genus	True positives	medium_pool	26.0
+FOCUS_cfk7bd	superkingdom	F1 score	medium_pool	1.0
+FOCUS_cfk7bd	superkingdom	False negatives	medium_pool	0.0
+FOCUS_cfk7bd	superkingdom	False positives	medium_pool	0.0
+FOCUS_cfk7bd	superkingdom	Jaccard index	medium_pool	1.0
+FOCUS_cfk7bd	superkingdom	Taxon counts	medium_pool	2.0
+FOCUS_cfk7bd	superkingdom	Purity (precision)	medium_pool	1.0
+FOCUS_cfk7bd	superkingdom	Completeness (recall)	medium_pool	1.0
+FOCUS_cfk7bd	superkingdom	True positives	medium_pool	2.0
+FOCUS_cfk7bd	species	F1 score	medium_pool	0.03809523809523809
+FOCUS_cfk7bd	species	False negatives	medium_pool	64.0
+FOCUS_cfk7bd	species	False positives	medium_pool	239.0
+FOCUS_cfk7bd	species	Jaccard index	medium_pool	0.019417475728155338
+FOCUS_cfk7bd	species	Taxon counts	medium_pool	245.0
+FOCUS_cfk7bd	species	Purity (precision)	medium_pool	0.024489795918367346
+FOCUS_cfk7bd	species	Completeness (recall)	medium_pool	0.08571428571428572
+FOCUS_cfk7bd	species	True positives	medium_pool	6.0
+FOCUS_cfk7bd	phylum	F1 score	medium_pool	0.4615384615384615
+FOCUS_cfk7bd	phylum	False negatives	medium_pool	0.0
+FOCUS_cfk7bd	phylum	False positives	medium_pool	14.0
+FOCUS_cfk7bd	phylum	Jaccard index	medium_pool	0.3
+FOCUS_cfk7bd	phylum	Taxon counts	medium_pool	20.0
+FOCUS_cfk7bd	phylum	Purity (precision)	medium_pool	0.3
+FOCUS_cfk7bd	phylum	Completeness (recall)	medium_pool	1.0
+FOCUS_cfk7bd	phylum	True positives	medium_pool	6.0
+FOCUS_cfk7bd	class	L1 norm error	medium_pool	0.33075372914195084
+FOCUS_cfk7bd	family	L1 norm error	medium_pool	0.9026328784676937
+FOCUS_cfk7bd	genus	L1 norm error	medium_pool	1.3723920010311266
+FOCUS_cfk7bd	order	L1 norm error	medium_pool	0.5097213104542238
+FOCUS_cfk7bd	phylum	L1 norm error	medium_pool	0.30313175876722664
+FOCUS_cfk7bd	species	L1 norm error	medium_pool	1.746565132671744
+FOCUS_cfk7bd	strain	L1 norm error	medium_pool	2.0
+FOCUS_cfk7bd	superkingdom	L1 norm error	medium_pool	0.007676822304209066
+FOCUS_cfk7bd	na	Weighted UniFrac error	medium_pool	7.896018897223586
+FOCUS_cfk7bd	na	Unweighted UniFrac error	medium_pool	2444.217544719928
+FOCUS_cfk7d	class	Bray-Curtis distance	medium_pool	0.18289051414799323
+FOCUS_cfk7d	family	Bray-Curtis distance	medium_pool	0.5290064386846894
+FOCUS_cfk7d	genus	Bray-Curtis distance	medium_pool	0.7703385482782621
+FOCUS_cfk7d	order	Bray-Curtis distance	medium_pool	0.2578347678154335
+FOCUS_cfk7d	phylum	Bray-Curtis distance	medium_pool	0.1531874177507205
+FOCUS_cfk7d	species	Bray-Curtis distance	medium_pool	0.9647464596474645
+FOCUS_cfk7d	strain	Bray-Curtis distance	medium_pool	1.0
+FOCUS_cfk7d	superkingdom	Bray-Curtis distance	medium_pool	0.0030485699999999926
+FOCUS_cfk7d	superkingdom	Shannon diversity	medium_pool	0.10116121801446283
+FOCUS_cfk7d	superkingdom	Shannon equitability	medium_pool	0.1459447875597528
+FOCUS_cfk7d	phylum	Shannon diversity	medium_pool	1.4264222970059195
+FOCUS_cfk7d	phylum	Shannon equitability	medium_pool	0.5405044752149716
+FOCUS_cfk7d	class	Shannon diversity	medium_pool	2.0765533762851875
+FOCUS_cfk7d	class	Shannon equitability	medium_pool	0.6622730687034091
+FOCUS_cfk7d	order	Shannon diversity	medium_pool	2.7276315109345846
+FOCUS_cfk7d	order	Shannon equitability	medium_pool	0.7345034543399293
+FOCUS_cfk7d	family	Shannon diversity	medium_pool	3.9134312205177286
+FOCUS_cfk7d	family	Shannon equitability	medium_pool	0.8905396519053443
+FOCUS_cfk7d	genus	Shannon diversity	medium_pool	4.269227829809212
+FOCUS_cfk7d	genus	Shannon equitability	medium_pool	0.8933077029632601
+FOCUS_cfk7d	species	Shannon diversity	medium_pool	4.686298256151683
+FOCUS_cfk7d	species	Shannon equitability	medium_pool	0.9073557510054302
+FOCUS_cfk7d	strain	Shannon diversity	medium_pool	4.4461490098971135
+FOCUS_cfk7d	strain	Shannon equitability	medium_pool	0.9134293871265711
+FOCUS_cfk7d	strain	False negatives	medium_pool	132.0
+FOCUS_cfk7d	strain	False positives	medium_pool	130.0
+FOCUS_cfk7d	strain	Jaccard index	medium_pool	0.0
+FOCUS_cfk7d	strain	Taxon counts	medium_pool	130.0
+FOCUS_cfk7d	strain	Purity (precision)	medium_pool	0.0
+FOCUS_cfk7d	strain	Completeness (recall)	medium_pool	0.0
+FOCUS_cfk7d	strain	True positives	medium_pool	0.0
+FOCUS_cfk7d	class	F1 score	medium_pool	0.7368421052631579
+FOCUS_cfk7d	class	False negatives	medium_pool	1.0
+FOCUS_cfk7d	class	False positives	medium_pool	9.0
+FOCUS_cfk7d	class	Jaccard index	medium_pool	0.5833333333333334
+FOCUS_cfk7d	class	Taxon counts	medium_pool	23.0
+FOCUS_cfk7d	class	Purity (precision)	medium_pool	0.6086956521739131
+FOCUS_cfk7d	class	Completeness (recall)	medium_pool	0.9333333333333333
+FOCUS_cfk7d	class	True positives	medium_pool	14.0
+FOCUS_cfk7d	order	F1 score	medium_pool	0.5714285714285714
+FOCUS_cfk7d	order	False negatives	medium_pool	9.0
+FOCUS_cfk7d	order	False positives	medium_pool	21.0
+FOCUS_cfk7d	order	Jaccard index	medium_pool	0.4
+FOCUS_cfk7d	order	Taxon counts	medium_pool	41.0
+FOCUS_cfk7d	order	Purity (precision)	medium_pool	0.4878048780487805
+FOCUS_cfk7d	order	Completeness (recall)	medium_pool	0.6896551724137931
+FOCUS_cfk7d	order	True positives	medium_pool	20.0
+FOCUS_cfk7d	family	F1 score	medium_pool	0.46268656716417905
+FOCUS_cfk7d	family	False negatives	medium_pool	22.0
+FOCUS_cfk7d	family	False positives	medium_pool	50.0
+FOCUS_cfk7d	family	Jaccard index	medium_pool	0.30097087378640774
+FOCUS_cfk7d	family	Taxon counts	medium_pool	81.0
+FOCUS_cfk7d	family	Purity (precision)	medium_pool	0.38271604938271603
+FOCUS_cfk7d	family	Completeness (recall)	medium_pool	0.5849056603773585
+FOCUS_cfk7d	family	True positives	medium_pool	31.0
+FOCUS_cfk7d	genus	F1 score	medium_pool	0.17894736842105263
+FOCUS_cfk7d	genus	False negatives	medium_pool	54.0
+FOCUS_cfk7d	genus	False positives	medium_pool	102.0
+FOCUS_cfk7d	genus	Jaccard index	medium_pool	0.09826589595375723
+FOCUS_cfk7d	genus	Taxon counts	medium_pool	119.0
+FOCUS_cfk7d	genus	Purity (precision)	medium_pool	0.14285714285714285
+FOCUS_cfk7d	genus	Completeness (recall)	medium_pool	0.23943661971830985
+FOCUS_cfk7d	genus	True positives	medium_pool	17.0
+FOCUS_cfk7d	superkingdom	F1 score	medium_pool	1.0
+FOCUS_cfk7d	superkingdom	False negatives	medium_pool	0.0
+FOCUS_cfk7d	superkingdom	False positives	medium_pool	0.0
+FOCUS_cfk7d	superkingdom	Jaccard index	medium_pool	1.0
+FOCUS_cfk7d	superkingdom	Taxon counts	medium_pool	2.0
+FOCUS_cfk7d	superkingdom	Purity (precision)	medium_pool	1.0
+FOCUS_cfk7d	superkingdom	Completeness (recall)	medium_pool	1.0
+FOCUS_cfk7d	superkingdom	True positives	medium_pool	2.0
+FOCUS_cfk7d	species	F1 score	medium_pool	0.008163265306122448
+FOCUS_cfk7d	species	False negatives	medium_pool	69.0
+FOCUS_cfk7d	species	False positives	medium_pool	174.0
+FOCUS_cfk7d	species	Jaccard index	medium_pool	0.004098360655737705
+FOCUS_cfk7d	species	Taxon counts	medium_pool	175.0
+FOCUS_cfk7d	species	Purity (precision)	medium_pool	0.005714285714285714
+FOCUS_cfk7d	species	Completeness (recall)	medium_pool	0.014285714285714285
+FOCUS_cfk7d	species	True positives	medium_pool	1.0
+FOCUS_cfk7d	phylum	F1 score	medium_pool	0.5
+FOCUS_cfk7d	phylum	False negatives	medium_pool	1.0
+FOCUS_cfk7d	phylum	False positives	medium_pool	9.0
+FOCUS_cfk7d	phylum	Jaccard index	medium_pool	0.3333333333333333
+FOCUS_cfk7d	phylum	Taxon counts	medium_pool	14.0
+FOCUS_cfk7d	phylum	Purity (precision)	medium_pool	0.35714285714285715
+FOCUS_cfk7d	phylum	Completeness (recall)	medium_pool	0.8333333333333334
+FOCUS_cfk7d	phylum	True positives	medium_pool	5.0
+FOCUS_cfk7d	class	L1 norm error	medium_pool	0.36578102829598647
+FOCUS_cfk7d	family	L1 norm error	medium_pool	1.058012877369379
+FOCUS_cfk7d	genus	L1 norm error	medium_pool	1.5406770965565237
+FOCUS_cfk7d	order	L1 norm error	medium_pool	0.5156695356308668
+FOCUS_cfk7d	phylum	L1 norm error	medium_pool	0.30637483550144107
+FOCUS_cfk7d	species	L1 norm error	medium_pool	1.92949291929493
+FOCUS_cfk7d	strain	L1 norm error	medium_pool	1.9999999999999987
+FOCUS_cfk7d	superkingdom	L1 norm error	medium_pool	0.006097139999999985
+FOCUS_cfk7d	na	Weighted UniFrac error	medium_pool	8.521217251677509
+FOCUS_cfk7d	na	Unweighted UniFrac error	medium_pool	1942.358079285204
+FOCUS_cfk8b	class	Bray-Curtis distance	medium_pool	0.17167729958834368
+FOCUS_cfk8b	family	Bray-Curtis distance	medium_pool	0.5105974838723235
+FOCUS_cfk8b	genus	Bray-Curtis distance	medium_pool	0.7143813904547449
+FOCUS_cfk8b	order	Bray-Curtis distance	medium_pool	0.2613602209395992
+FOCUS_cfk8b	phylum	Bray-Curtis distance	medium_pool	0.15184686941345277
+FOCUS_cfk8b	species	Bray-Curtis distance	medium_pool	0.8522486159100555
+FOCUS_cfk8b	strain	Bray-Curtis distance	medium_pool	1.0
+FOCUS_cfk8b	superkingdom	Bray-Curtis distance	medium_pool	0.014156605565293492
+FOCUS_cfk8b	superkingdom	Shannon diversity	medium_pool	0.16157260408209595
+FOCUS_cfk8b	superkingdom	Shannon equitability	medium_pool	0.23309999465275572
+FOCUS_cfk8b	phylum	Shannon diversity	medium_pool	1.5298862224747505
+FOCUS_cfk8b	phylum	Shannon equitability	medium_pool	0.5293043077573937
+FOCUS_cfk8b	class	Shannon diversity	medium_pool	2.0420618232791266
+FOCUS_cfk8b	class	Shannon equitability	medium_pool	0.6128260786645886
+FOCUS_cfk8b	order	Shannon diversity	medium_pool	2.9105106947269443
+FOCUS_cfk8b	order	Shannon equitability	medium_pool	0.7230450699316159
+FOCUS_cfk8b	family	Shannon diversity	medium_pool	4.027568491876362
+FOCUS_cfk8b	family	Shannon equitability	medium_pool	0.8619122665425326
+FOCUS_cfk8b	genus	Shannon diversity	medium_pool	4.345922642259811
+FOCUS_cfk8b	genus	Shannon equitability	medium_pool	0.8573692594853644
+FOCUS_cfk8b	species	Shannon diversity	medium_pool	4.622317225488707
+FOCUS_cfk8b	species	Shannon equitability	medium_pool	0.8636845578129108
+FOCUS_cfk8b	strain	Shannon diversity	medium_pool	4.567714332864177
+FOCUS_cfk8b	strain	Shannon equitability	medium_pool	0.8696642312018689
+FOCUS_cfk8b	strain	False negatives	medium_pool	132.0
+FOCUS_cfk8b	strain	False positives	medium_pool	191.0
+FOCUS_cfk8b	strain	Jaccard index	medium_pool	0.0
+FOCUS_cfk8b	strain	Taxon counts	medium_pool	191.0
+FOCUS_cfk8b	strain	Purity (precision)	medium_pool	0.0
+FOCUS_cfk8b	strain	Completeness (recall)	medium_pool	0.0
+FOCUS_cfk8b	strain	True positives	medium_pool	0.0
+FOCUS_cfk8b	class	F1 score	medium_pool	0.6976744186046512
+FOCUS_cfk8b	class	False negatives	medium_pool	0.0
+FOCUS_cfk8b	class	False positives	medium_pool	13.0
+FOCUS_cfk8b	class	Jaccard index	medium_pool	0.5357142857142857
+FOCUS_cfk8b	class	Taxon counts	medium_pool	28.0
+FOCUS_cfk8b	class	Purity (precision)	medium_pool	0.5357142857142857
+FOCUS_cfk8b	class	Completeness (recall)	medium_pool	1.0
+FOCUS_cfk8b	class	True positives	medium_pool	15.0
+FOCUS_cfk8b	order	F1 score	medium_pool	0.5411764705882354
+FOCUS_cfk8b	order	False negatives	medium_pool	6.0
+FOCUS_cfk8b	order	False positives	medium_pool	33.0
+FOCUS_cfk8b	order	Jaccard index	medium_pool	0.3709677419354839
+FOCUS_cfk8b	order	Taxon counts	medium_pool	56.0
+FOCUS_cfk8b	order	Purity (precision)	medium_pool	0.4107142857142857
+FOCUS_cfk8b	order	Completeness (recall)	medium_pool	0.7931034482758621
+FOCUS_cfk8b	order	True positives	medium_pool	23.0
+FOCUS_cfk8b	family	F1 score	medium_pool	0.475
+FOCUS_cfk8b	family	False negatives	medium_pool	15.0
+FOCUS_cfk8b	family	False positives	medium_pool	69.0
+FOCUS_cfk8b	family	Jaccard index	medium_pool	0.3114754098360656
+FOCUS_cfk8b	family	Taxon counts	medium_pool	107.0
+FOCUS_cfk8b	family	Purity (precision)	medium_pool	0.35514018691588783
+FOCUS_cfk8b	family	Completeness (recall)	medium_pool	0.7169811320754716
+FOCUS_cfk8b	family	True positives	medium_pool	38.0
+FOCUS_cfk8b	genus	F1 score	medium_pool	0.17391304347826086
+FOCUS_cfk8b	genus	False negatives	medium_pool	51.0
+FOCUS_cfk8b	genus	False positives	medium_pool	139.0
+FOCUS_cfk8b	genus	Jaccard index	medium_pool	0.09523809523809523
+FOCUS_cfk8b	genus	Taxon counts	medium_pool	159.0
+FOCUS_cfk8b	genus	Purity (precision)	medium_pool	0.12578616352201258
+FOCUS_cfk8b	genus	Completeness (recall)	medium_pool	0.28169014084507044
+FOCUS_cfk8b	genus	True positives	medium_pool	20.0
+FOCUS_cfk8b	superkingdom	F1 score	medium_pool	1.0
+FOCUS_cfk8b	superkingdom	False negatives	medium_pool	0.0
+FOCUS_cfk8b	superkingdom	False positives	medium_pool	0.0
+FOCUS_cfk8b	superkingdom	Jaccard index	medium_pool	1.0
+FOCUS_cfk8b	superkingdom	Taxon counts	medium_pool	2.0
+FOCUS_cfk8b	superkingdom	Purity (precision)	medium_pool	1.0
+FOCUS_cfk8b	superkingdom	Completeness (recall)	medium_pool	1.0
+FOCUS_cfk8b	superkingdom	True positives	medium_pool	2.0
+FOCUS_cfk8b	species	F1 score	medium_pool	0.042704626334519574
+FOCUS_cfk8b	species	False negatives	medium_pool	64.0
+FOCUS_cfk8b	species	False positives	medium_pool	205.0
+FOCUS_cfk8b	species	Jaccard index	medium_pool	0.02181818181818182
+FOCUS_cfk8b	species	Taxon counts	medium_pool	211.0
+FOCUS_cfk8b	species	Purity (precision)	medium_pool	0.02843601895734597
+FOCUS_cfk8b	species	Completeness (recall)	medium_pool	0.08571428571428572
+FOCUS_cfk8b	species	True positives	medium_pool	6.0
+FOCUS_cfk8b	phylum	F1 score	medium_pool	0.5
+FOCUS_cfk8b	phylum	False negatives	medium_pool	0.0
+FOCUS_cfk8b	phylum	False positives	medium_pool	12.0
+FOCUS_cfk8b	phylum	Jaccard index	medium_pool	0.3333333333333333
+FOCUS_cfk8b	phylum	Taxon counts	medium_pool	18.0
+FOCUS_cfk8b	phylum	Purity (precision)	medium_pool	0.3333333333333333
+FOCUS_cfk8b	phylum	Completeness (recall)	medium_pool	1.0
+FOCUS_cfk8b	phylum	True positives	medium_pool	6.0
+FOCUS_cfk8b	class	L1 norm error	medium_pool	0.3433545991766874
+FOCUS_cfk8b	family	L1 norm error	medium_pool	1.021194967744647
+FOCUS_cfk8b	genus	L1 norm error	medium_pool	1.4287627809094892
+FOCUS_cfk8b	order	L1 norm error	medium_pool	0.5227204418791986
+FOCUS_cfk8b	phylum	L1 norm error	medium_pool	0.30369373882690565
+FOCUS_cfk8b	species	L1 norm error	medium_pool	1.7044972318201101
+FOCUS_cfk8b	strain	L1 norm error	medium_pool	2.000000000000001
+FOCUS_cfk8b	superkingdom	L1 norm error	medium_pool	0.028313211130586984
+FOCUS_cfk8b	na	Weighted UniFrac error	medium_pool	7.948937198399948
+FOCUS_cfk8b	na	Unweighted UniFrac error	medium_pool	2827.34093037304
+FOCUS_cfk8bd	class	Bray-Curtis distance	medium_pool	0.1576448118223388
+FOCUS_cfk8bd	family	Bray-Curtis distance	medium_pool	0.44590934920222486
+FOCUS_cfk8bd	genus	Bray-Curtis distance	medium_pool	0.6691798490469211
+FOCUS_cfk8bd	order	Bray-Curtis distance	medium_pool	0.23885880921420347
+FOCUS_cfk8bd	phylum	Bray-Curtis distance	medium_pool	0.14423654187917134
+FOCUS_cfk8bd	species	Bray-Curtis distance	medium_pool	0.8662055213379447
+FOCUS_cfk8bd	strain	Bray-Curtis distance	medium_pool	1.0
+FOCUS_cfk8bd	superkingdom	Bray-Curtis distance	medium_pool	0.002265243992593946
+FOCUS_cfk8bd	superkingdom	Shannon diversity	medium_pool	0.12098555603430779
+FOCUS_cfk8bd	superkingdom	Shannon equitability	medium_pool	0.17454526170988965
+FOCUS_cfk8bd	phylum	Shannon diversity	medium_pool	1.4674113755490268
+FOCUS_cfk8bd	phylum	Shannon equitability	medium_pool	0.4819840896447131
+FOCUS_cfk8bd	class	Shannon diversity	medium_pool	2.012666126497584
+FOCUS_cfk8bd	class	Shannon equitability	medium_pool	0.6106692194803978
+FOCUS_cfk8bd	order	Shannon diversity	medium_pool	2.7849002910256666
+FOCUS_cfk8bd	order	Shannon equitability	medium_pool	0.6949510216141687
+FOCUS_cfk8bd	family	Shannon diversity	medium_pool	4.021465479367841
+FOCUS_cfk8bd	family	Shannon equitability	medium_pool	0.8522764525456085
+FOCUS_cfk8bd	genus	Shannon diversity	medium_pool	4.439192556099663
+FOCUS_cfk8bd	genus	Shannon equitability	medium_pool	0.8503620643585265
+FOCUS_cfk8bd	species	Shannon diversity	medium_pool	4.876132524032784
+FOCUS_cfk8bd	species	Shannon equitability	medium_pool	0.8610571345388811
+FOCUS_cfk8bd	strain	Shannon diversity	medium_pool	4.6633833826301245
+FOCUS_cfk8bd	strain	Shannon equitability	medium_pool	0.8603179175590951
+FOCUS_cfk8bd	strain	False negatives	medium_pool	132.0
+FOCUS_cfk8bd	strain	False positives	medium_pool	226.0
+FOCUS_cfk8bd	strain	Jaccard index	medium_pool	0.0
+FOCUS_cfk8bd	strain	Taxon counts	medium_pool	226.0
+FOCUS_cfk8bd	strain	Purity (precision)	medium_pool	0.0
+FOCUS_cfk8bd	strain	Completeness (recall)	medium_pool	0.0
+FOCUS_cfk8bd	strain	True positives	medium_pool	0.0
+FOCUS_cfk8bd	class	F1 score	medium_pool	0.6666666666666667
+FOCUS_cfk8bd	class	False negatives	medium_pool	1.0
+FOCUS_cfk8bd	class	False positives	medium_pool	13.0
+FOCUS_cfk8bd	class	Jaccard index	medium_pool	0.5
+FOCUS_cfk8bd	class	Taxon counts	medium_pool	27.0
+FOCUS_cfk8bd	class	Purity (precision)	medium_pool	0.5185185185185185
+FOCUS_cfk8bd	class	Completeness (recall)	medium_pool	0.9333333333333333
+FOCUS_cfk8bd	class	True positives	medium_pool	14.0
+FOCUS_cfk8bd	order	F1 score	medium_pool	0.5238095238095237
+FOCUS_cfk8bd	order	False negatives	medium_pool	7.0
+FOCUS_cfk8bd	order	False positives	medium_pool	33.0
+FOCUS_cfk8bd	order	Jaccard index	medium_pool	0.3548387096774194
+FOCUS_cfk8bd	order	Taxon counts	medium_pool	55.0
+FOCUS_cfk8bd	order	Purity (precision)	medium_pool	0.4
+FOCUS_cfk8bd	order	Completeness (recall)	medium_pool	0.7586206896551724
+FOCUS_cfk8bd	order	True positives	medium_pool	22.0
+FOCUS_cfk8bd	family	F1 score	medium_pool	0.48484848484848486
+FOCUS_cfk8bd	family	False negatives	medium_pool	13.0
+FOCUS_cfk8bd	family	False positives	medium_pool	72.0
+FOCUS_cfk8bd	family	Jaccard index	medium_pool	0.32
+FOCUS_cfk8bd	family	Taxon counts	medium_pool	112.0
+FOCUS_cfk8bd	family	Purity (precision)	medium_pool	0.35714285714285715
+FOCUS_cfk8bd	family	Completeness (recall)	medium_pool	0.7547169811320755
+FOCUS_cfk8bd	family	True positives	medium_pool	40.0
+FOCUS_cfk8bd	genus	F1 score	medium_pool	0.21875000000000003
+FOCUS_cfk8bd	genus	False negatives	medium_pool	43.0
+FOCUS_cfk8bd	genus	False positives	medium_pool	157.0
+FOCUS_cfk8bd	genus	Jaccard index	medium_pool	0.12280701754385964
+FOCUS_cfk8bd	genus	Taxon counts	medium_pool	185.0
+FOCUS_cfk8bd	genus	Purity (precision)	medium_pool	0.15135135135135136
+FOCUS_cfk8bd	genus	Completeness (recall)	medium_pool	0.39436619718309857
+FOCUS_cfk8bd	genus	True positives	medium_pool	28.0
+FOCUS_cfk8bd	superkingdom	F1 score	medium_pool	1.0
+FOCUS_cfk8bd	superkingdom	False negatives	medium_pool	0.0
+FOCUS_cfk8bd	superkingdom	False positives	medium_pool	0.0
+FOCUS_cfk8bd	superkingdom	Jaccard index	medium_pool	1.0
+FOCUS_cfk8bd	superkingdom	Taxon counts	medium_pool	2.0
+FOCUS_cfk8bd	superkingdom	Purity (precision)	medium_pool	1.0
+FOCUS_cfk8bd	superkingdom	Completeness (recall)	medium_pool	1.0
+FOCUS_cfk8bd	superkingdom	True positives	medium_pool	2.0
+FOCUS_cfk8bd	species	F1 score	medium_pool	0.0335195530726257
+FOCUS_cfk8bd	species	False negatives	medium_pool	64.0
+FOCUS_cfk8bd	species	False positives	medium_pool	282.0
+FOCUS_cfk8bd	species	Jaccard index	medium_pool	0.017045454545454544
+FOCUS_cfk8bd	species	Taxon counts	medium_pool	288.0
+FOCUS_cfk8bd	species	Purity (precision)	medium_pool	0.020833333333333332
+FOCUS_cfk8bd	species	Completeness (recall)	medium_pool	0.08571428571428572
+FOCUS_cfk8bd	species	True positives	medium_pool	6.0
+FOCUS_cfk8bd	phylum	F1 score	medium_pool	0.4444444444444445
+FOCUS_cfk8bd	phylum	False negatives	medium_pool	0.0
+FOCUS_cfk8bd	phylum	False positives	medium_pool	15.0
+FOCUS_cfk8bd	phylum	Jaccard index	medium_pool	0.2857142857142857
+FOCUS_cfk8bd	phylum	Taxon counts	medium_pool	21.0
+FOCUS_cfk8bd	phylum	Purity (precision)	medium_pool	0.2857142857142857
+FOCUS_cfk8bd	phylum	Completeness (recall)	medium_pool	1.0
+FOCUS_cfk8bd	phylum	True positives	medium_pool	6.0
+FOCUS_cfk8bd	class	L1 norm error	medium_pool	0.31528962364467755
+FOCUS_cfk8bd	family	L1 norm error	medium_pool	0.8918186984044495
+FOCUS_cfk8bd	genus	L1 norm error	medium_pool	1.3383596980938413
+FOCUS_cfk8bd	order	L1 norm error	medium_pool	0.47771761842840704
+FOCUS_cfk8bd	phylum	L1 norm error	medium_pool	0.28847308375834274
+FOCUS_cfk8bd	species	L1 norm error	medium_pool	1.73241104267589
+FOCUS_cfk8bd	strain	L1 norm error	medium_pool	2.0
+FOCUS_cfk8bd	superkingdom	L1 norm error	medium_pool	0.004530487985187892
+FOCUS_cfk8bd	na	Weighted UniFrac error	medium_pool	7.7699177249415055
+FOCUS_cfk8bd	na	Unweighted UniFrac error	medium_pool	2960.334937091494
+FOCUS_cfk8d	class	Bray-Curtis distance	medium_pool	0.1832529075265797
+FOCUS_cfk8d	family	Bray-Curtis distance	medium_pool	0.5165947624697376
+FOCUS_cfk8d	genus	Bray-Curtis distance	medium_pool	0.7505371005339848
+FOCUS_cfk8d	order	Bray-Curtis distance	medium_pool	0.24644646410627322
+FOCUS_cfk8d	phylum	Bray-Curtis distance	medium_pool	0.15122120648104462
+FOCUS_cfk8d	species	Bray-Curtis distance	medium_pool	0.9502614695026148
+FOCUS_cfk8d	strain	Bray-Curtis distance	medium_pool	1.0
+FOCUS_cfk8d	superkingdom	Bray-Curtis distance	medium_pool	0.004859159999999944
+FOCUS_cfk8d	superkingdom	Shannon diversity	medium_pool	0.09410494748481099
+FOCUS_cfk8d	superkingdom	Shannon equitability	medium_pool	0.13576474105945316
+FOCUS_cfk8d	phylum	Shannon diversity	medium_pool	1.4421663817816932
+FOCUS_cfk8d	phylum	Shannon equitability	medium_pool	0.49895532567458145
+FOCUS_cfk8d	class	Shannon diversity	medium_pool	2.1049817829158566
+FOCUS_cfk8d	class	Shannon equitability	medium_pool	0.6623493166839767
+FOCUS_cfk8d	order	Shannon diversity	medium_pool	2.7636218729450523
+FOCUS_cfk8d	order	Shannon equitability	medium_pool	0.7303074476432929
+FOCUS_cfk8d	family	Shannon diversity	medium_pool	3.9850210762342857
+FOCUS_cfk8d	family	Shannon equitability	medium_pool	0.8855976959447274
+FOCUS_cfk8d	genus	Shannon diversity	medium_pool	4.366962803159133
+FOCUS_cfk8d	genus	Shannon equitability	medium_pool	0.8875975067777506
+FOCUS_cfk8d	species	Shannon diversity	medium_pool	4.825275589990128
+FOCUS_cfk8d	species	Shannon equitability	medium_pool	0.902408556826363
+FOCUS_cfk8d	strain	Shannon diversity	medium_pool	4.585219174025818
+FOCUS_cfk8d	strain	Shannon equitability	medium_pool	0.9138854764251325
+FOCUS_cfk8d	strain	False negatives	medium_pool	132.0
+FOCUS_cfk8d	strain	False positives	medium_pool	151.0
+FOCUS_cfk8d	strain	Jaccard index	medium_pool	0.0
+FOCUS_cfk8d	strain	Taxon counts	medium_pool	151.0
+FOCUS_cfk8d	strain	Purity (precision)	medium_pool	0.0
+FOCUS_cfk8d	strain	Completeness (recall)	medium_pool	0.0
+FOCUS_cfk8d	strain	True positives	medium_pool	0.0
+FOCUS_cfk8d	class	F1 score	medium_pool	0.7179487179487181
+FOCUS_cfk8d	class	False negatives	medium_pool	1.0
+FOCUS_cfk8d	class	False positives	medium_pool	10.0
+FOCUS_cfk8d	class	Jaccard index	medium_pool	0.56
+FOCUS_cfk8d	class	Taxon counts	medium_pool	24.0
+FOCUS_cfk8d	class	Purity (precision)	medium_pool	0.5833333333333334
+FOCUS_cfk8d	class	Completeness (recall)	medium_pool	0.9333333333333333
+FOCUS_cfk8d	class	True positives	medium_pool	14.0
+FOCUS_cfk8d	order	F1 score	medium_pool	0.5753424657534246
+FOCUS_cfk8d	order	False negatives	medium_pool	8.0
+FOCUS_cfk8d	order	False positives	medium_pool	23.0
+FOCUS_cfk8d	order	Jaccard index	medium_pool	0.40384615384615385
+FOCUS_cfk8d	order	Taxon counts	medium_pool	44.0
+FOCUS_cfk8d	order	Purity (precision)	medium_pool	0.4772727272727273
+FOCUS_cfk8d	order	Completeness (recall)	medium_pool	0.7241379310344828
+FOCUS_cfk8d	order	True positives	medium_pool	21.0
+FOCUS_cfk8d	family	F1 score	medium_pool	0.4895104895104895
+FOCUS_cfk8d	family	False negatives	medium_pool	18.0
+FOCUS_cfk8d	family	False positives	medium_pool	55.0
+FOCUS_cfk8d	family	Jaccard index	medium_pool	0.32407407407407407
+FOCUS_cfk8d	family	Taxon counts	medium_pool	90.0
+FOCUS_cfk8d	family	Purity (precision)	medium_pool	0.3888888888888889
+FOCUS_cfk8d	family	Completeness (recall)	medium_pool	0.660377358490566
+FOCUS_cfk8d	family	True positives	medium_pool	35.0
+FOCUS_cfk8d	genus	F1 score	medium_pool	0.18269230769230768
+FOCUS_cfk8d	genus	False negatives	medium_pool	52.0
+FOCUS_cfk8d	genus	False positives	medium_pool	118.0
+FOCUS_cfk8d	genus	Jaccard index	medium_pool	0.10052910052910052
+FOCUS_cfk8d	genus	Taxon counts	medium_pool	137.0
+FOCUS_cfk8d	genus	Purity (precision)	medium_pool	0.1386861313868613
+FOCUS_cfk8d	genus	Completeness (recall)	medium_pool	0.2676056338028169
+FOCUS_cfk8d	genus	True positives	medium_pool	19.0
+FOCUS_cfk8d	superkingdom	F1 score	medium_pool	1.0
+FOCUS_cfk8d	superkingdom	False negatives	medium_pool	0.0
+FOCUS_cfk8d	superkingdom	False positives	medium_pool	0.0
+FOCUS_cfk8d	superkingdom	Jaccard index	medium_pool	1.0
+FOCUS_cfk8d	superkingdom	Taxon counts	medium_pool	2.0
+FOCUS_cfk8d	superkingdom	Purity (precision)	medium_pool	1.0
+FOCUS_cfk8d	superkingdom	Completeness (recall)	medium_pool	1.0
+FOCUS_cfk8d	superkingdom	True positives	medium_pool	2.0
+FOCUS_cfk8d	species	F1 score	medium_pool	0.007142857142857142
+FOCUS_cfk8d	species	False negatives	medium_pool	69.0
+FOCUS_cfk8d	species	False positives	medium_pool	209.0
+FOCUS_cfk8d	species	Jaccard index	medium_pool	0.0035842293906810036
+FOCUS_cfk8d	species	Taxon counts	medium_pool	210.0
+FOCUS_cfk8d	species	Purity (precision)	medium_pool	0.004761904761904762
+FOCUS_cfk8d	species	Completeness (recall)	medium_pool	0.014285714285714285
+FOCUS_cfk8d	species	True positives	medium_pool	1.0
+FOCUS_cfk8d	phylum	F1 score	medium_pool	0.4166666666666667
+FOCUS_cfk8d	phylum	False negatives	medium_pool	1.0
+FOCUS_cfk8d	phylum	False positives	medium_pool	13.0
+FOCUS_cfk8d	phylum	Jaccard index	medium_pool	0.2631578947368421
+FOCUS_cfk8d	phylum	Taxon counts	medium_pool	18.0
+FOCUS_cfk8d	phylum	Purity (precision)	medium_pool	0.2777777777777778
+FOCUS_cfk8d	phylum	Completeness (recall)	medium_pool	0.8333333333333334
+FOCUS_cfk8d	phylum	True positives	medium_pool	5.0
+FOCUS_cfk8d	class	L1 norm error	medium_pool	0.36650581505315943
+FOCUS_cfk8d	family	L1 norm error	medium_pool	1.0331895249394751
+FOCUS_cfk8d	genus	L1 norm error	medium_pool	1.5010742010679694
+FOCUS_cfk8d	order	L1 norm error	medium_pool	0.49289292821254654
+FOCUS_cfk8d	phylum	L1 norm error	medium_pool	0.30244241296208935
+FOCUS_cfk8d	species	L1 norm error	medium_pool	1.900522939005229
+FOCUS_cfk8d	strain	L1 norm error	medium_pool	2.0
+FOCUS_cfk8d	superkingdom	L1 norm error	medium_pool	0.00971831999999989
+FOCUS_cfk8d	na	Weighted UniFrac error	medium_pool	8.394181453056492
+FOCUS_cfk8d	na	Unweighted UniFrac error	medium_pool	2210.5726938730672

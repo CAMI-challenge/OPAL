@@ -1,0 +1,968 @@
+tool	rank	metric	sample	value
+Gold standard	class	Bray-Curtis distance	high_pool	0.0
+Gold standard	family	Bray-Curtis distance	high_pool	0.0
+Gold standard	genus	Bray-Curtis distance	high_pool	0.0
+Gold standard	order	Bray-Curtis distance	high_pool	0.0
+Gold standard	phylum	Bray-Curtis distance	high_pool	0.0
+Gold standard	species	Bray-Curtis distance	high_pool	0.0
+Gold standard	strain	Bray-Curtis distance	high_pool	0.0
+Gold standard	superkingdom	Bray-Curtis distance	high_pool	0.0
+Gold standard	superkingdom	Shannon diversity	high_pool	0.06383005479967933
+Gold standard	superkingdom	Shannon equitability	high_pool	0.09208730351916815
+Gold standard	phylum	Shannon diversity	high_pool	1.3471247250323468
+Gold standard	phylum	Shannon equitability	high_pool	0.5421228701477686
+Gold standard	class	Shannon diversity	high_pool	2.1648263612910155
+Gold standard	class	Shannon equitability	high_pool	0.7110561362490038
+Gold standard	order	Shannon diversity	high_pool	2.766323459912684
+Gold standard	order	Shannon equitability	high_pool	0.7499088800062594
+Gold standard	family	Shannon diversity	high_pool	3.757239452890833
+Gold standard	family	Shannon equitability	high_pool	0.8391683736504209
+Gold standard	genus	Shannon diversity	high_pool	4.584300121304099
+Gold standard	genus	Shannon equitability	high_pool	0.870239855151914
+Gold standard	species	Shannon diversity	high_pool	5.154894642593881
+Gold standard	species	Shannon equitability	high_pool	0.9398515031828505
+Gold standard	strain	Shannon diversity	high_pool	6.218102400156447
+Gold standard	strain	Shannon equitability	high_pool	0.973062318639095
+Gold standard	genus	F1 score	high_pool	1.0
+Gold standard	genus	False negatives	high_pool	0.0
+Gold standard	genus	False positives	high_pool	0.0
+Gold standard	genus	Jaccard index	high_pool	1.0
+Gold standard	genus	Taxon counts	high_pool	194.0
+Gold standard	genus	Purity (precision)	high_pool	1.0
+Gold standard	genus	Completeness (recall)	high_pool	1.0
+Gold standard	genus	True positives	high_pool	194.0
+Gold standard	family	F1 score	high_pool	1.0
+Gold standard	family	False negatives	high_pool	0.0
+Gold standard	family	False positives	high_pool	0.0
+Gold standard	family	Jaccard index	high_pool	1.0
+Gold standard	family	Taxon counts	high_pool	88.0
+Gold standard	family	Purity (precision)	high_pool	1.0
+Gold standard	family	Completeness (recall)	high_pool	1.0
+Gold standard	family	True positives	high_pool	88.0
+Gold standard	order	F1 score	high_pool	1.0
+Gold standard	order	False negatives	high_pool	0.0
+Gold standard	order	False positives	high_pool	0.0
+Gold standard	order	Jaccard index	high_pool	1.0
+Gold standard	order	Taxon counts	high_pool	40.0
+Gold standard	order	Purity (precision)	high_pool	1.0
+Gold standard	order	Completeness (recall)	high_pool	1.0
+Gold standard	order	True positives	high_pool	40.0
+Gold standard	class	F1 score	high_pool	1.0
+Gold standard	class	False negatives	high_pool	0.0
+Gold standard	class	False positives	high_pool	0.0
+Gold standard	class	Jaccard index	high_pool	1.0
+Gold standard	class	Taxon counts	high_pool	21.0
+Gold standard	class	Purity (precision)	high_pool	1.0
+Gold standard	class	Completeness (recall)	high_pool	1.0
+Gold standard	class	True positives	high_pool	21.0
+Gold standard	superkingdom	F1 score	high_pool	1.0
+Gold standard	superkingdom	False negatives	high_pool	0.0
+Gold standard	superkingdom	False positives	high_pool	0.0
+Gold standard	superkingdom	Jaccard index	high_pool	1.0
+Gold standard	superkingdom	Taxon counts	high_pool	2.0
+Gold standard	superkingdom	Purity (precision)	high_pool	1.0
+Gold standard	superkingdom	Completeness (recall)	high_pool	1.0
+Gold standard	superkingdom	True positives	high_pool	2.0
+Gold standard	phylum	F1 score	high_pool	1.0
+Gold standard	phylum	False negatives	high_pool	0.0
+Gold standard	phylum	False positives	high_pool	0.0
+Gold standard	phylum	Jaccard index	high_pool	1.0
+Gold standard	phylum	Taxon counts	high_pool	12.0
+Gold standard	phylum	Purity (precision)	high_pool	1.0
+Gold standard	phylum	Completeness (recall)	high_pool	1.0
+Gold standard	phylum	True positives	high_pool	12.0
+Gold standard	species	F1 score	high_pool	1.0
+Gold standard	species	False negatives	high_pool	0.0
+Gold standard	species	False positives	high_pool	0.0
+Gold standard	species	Jaccard index	high_pool	1.0
+Gold standard	species	Taxon counts	high_pool	241.0
+Gold standard	species	Purity (precision)	high_pool	1.0
+Gold standard	species	Completeness (recall)	high_pool	1.0
+Gold standard	species	True positives	high_pool	241.0
+Gold standard	strain	F1 score	high_pool	1.0
+Gold standard	strain	False negatives	high_pool	0.0
+Gold standard	strain	False positives	high_pool	0.0
+Gold standard	strain	Jaccard index	high_pool	1.0
+Gold standard	strain	Taxon counts	high_pool	596.0
+Gold standard	strain	Purity (precision)	high_pool	1.0
+Gold standard	strain	Completeness (recall)	high_pool	1.0
+Gold standard	strain	True positives	high_pool	596.0
+Gold standard	class	L1 norm error	high_pool	0.0
+Gold standard	family	L1 norm error	high_pool	0.0
+Gold standard	genus	L1 norm error	high_pool	0.0
+Gold standard	order	L1 norm error	high_pool	0.0
+Gold standard	phylum	L1 norm error	high_pool	0.0
+Gold standard	species	L1 norm error	high_pool	0.0
+Gold standard	strain	L1 norm error	high_pool	0.0
+Gold standard	superkingdom	L1 norm error	high_pool	0.0
+Gold standard	na	Weighted UniFrac error	high_pool	0.0
+Gold standard	na	Unweighted UniFrac error	high_pool	0.0
+CommonKmers	class	Bray-Curtis distance	high_pool	0.17274240695253995
+CommonKmers	family	Bray-Curtis distance	high_pool	0.4589999485261162
+CommonKmers	genus	Bray-Curtis distance	high_pool	0.594496445736796
+CommonKmers	order	Bray-Curtis distance	high_pool	0.2817910436996211
+CommonKmers	phylum	Bray-Curtis distance	high_pool	0.13856503688050445
+CommonKmers	species	Bray-Curtis distance	high_pool	0.8956784543959523
+CommonKmers	strain	Bray-Curtis distance	high_pool	1.0
+CommonKmers	superkingdom	Bray-Curtis distance	high_pool	0.011073198113953601
+CommonKmers	superkingdom	Shannon diversity	high_pool	0.1087755683534615
+CommonKmers	superkingdom	Shannon equitability	high_pool	0.15692997303341738
+CommonKmers	phylum	Shannon diversity	high_pool	1.035243856736072
+CommonKmers	phylum	Shannon equitability	high_pool	0.6432331739783475
+CommonKmers	class	Shannon diversity	high_pool	1.8342362477869432
+CommonKmers	class	Shannon equitability	high_pool	0.7649359288516253
+CommonKmers	order	Shannon diversity	high_pool	2.2571788669906274
+CommonKmers	order	Shannon equitability	high_pool	0.73023224399208
+CommonKmers	family	Shannon diversity	high_pool	3.1031563161344766
+CommonKmers	family	Shannon equitability	high_pool	0.8302382588752426
+CommonKmers	genus	Shannon diversity	high_pool	3.4632210997447417
+CommonKmers	genus	Shannon equitability	high_pool	0.8236561892237384
+CommonKmers	species	Shannon diversity	high_pool	4.765624671858454
+CommonKmers	species	Shannon equitability	high_pool	0.8843127185506444
+CommonKmers	strain	Shannon diversity	high_pool	3.562473431969187
+CommonKmers	strain	Shannon equitability	high_pool	0.8153143262615639
+CommonKmers	genus	F1 score	high_pool	0.41379310344827586
+CommonKmers	genus	False negatives	high_pool	140.0
+CommonKmers	genus	False positives	high_pool	13.0
+CommonKmers	genus	Jaccard index	high_pool	0.2608695652173913
+CommonKmers	genus	Taxon counts	high_pool	67.0
+CommonKmers	genus	Purity (precision)	high_pool	0.8059701492537313
+CommonKmers	genus	Completeness (recall)	high_pool	0.27835051546391754
+CommonKmers	genus	True positives	high_pool	54.0
+CommonKmers	family	F1 score	high_pool	0.6307692307692307
+CommonKmers	family	False negatives	high_pool	47.0
+CommonKmers	family	False positives	high_pool	1.0
+CommonKmers	family	Jaccard index	high_pool	0.4606741573033708
+CommonKmers	family	Taxon counts	high_pool	42.0
+CommonKmers	family	Purity (precision)	high_pool	0.9761904761904762
+CommonKmers	family	Completeness (recall)	high_pool	0.4659090909090909
+CommonKmers	family	True positives	high_pool	41.0
+CommonKmers	order	F1 score	high_pool	0.7096774193548387
+CommonKmers	order	False negatives	high_pool	18.0
+CommonKmers	order	False positives	high_pool	0.0
+CommonKmers	order	Jaccard index	high_pool	0.55
+CommonKmers	order	Taxon counts	high_pool	22.0
+CommonKmers	order	Purity (precision)	high_pool	1.0
+CommonKmers	order	Completeness (recall)	high_pool	0.55
+CommonKmers	order	True positives	high_pool	22.0
+CommonKmers	class	F1 score	high_pool	0.6875000000000001
+CommonKmers	class	False negatives	high_pool	10.0
+CommonKmers	class	False positives	high_pool	0.0
+CommonKmers	class	Jaccard index	high_pool	0.5238095238095238
+CommonKmers	class	Taxon counts	high_pool	11.0
+CommonKmers	class	Purity (precision)	high_pool	1.0
+CommonKmers	class	Completeness (recall)	high_pool	0.5238095238095238
+CommonKmers	class	True positives	high_pool	11.0
+CommonKmers	superkingdom	F1 score	high_pool	1.0
+CommonKmers	superkingdom	False negatives	high_pool	0.0
+CommonKmers	superkingdom	False positives	high_pool	0.0
+CommonKmers	superkingdom	Jaccard index	high_pool	1.0
+CommonKmers	superkingdom	Taxon counts	high_pool	2.0
+CommonKmers	superkingdom	Purity (precision)	high_pool	1.0
+CommonKmers	superkingdom	Completeness (recall)	high_pool	1.0
+CommonKmers	superkingdom	True positives	high_pool	2.0
+CommonKmers	phylum	F1 score	high_pool	0.5882352941176471
+CommonKmers	phylum	False negatives	high_pool	7.0
+CommonKmers	phylum	False positives	high_pool	0.0
+CommonKmers	phylum	Jaccard index	high_pool	0.4166666666666667
+CommonKmers	phylum	Taxon counts	high_pool	5.0
+CommonKmers	phylum	Purity (precision)	high_pool	1.0
+CommonKmers	phylum	Completeness (recall)	high_pool	0.4166666666666667
+CommonKmers	phylum	True positives	high_pool	5.0
+CommonKmers	species	F1 score	high_pool	0.07826086956521738
+CommonKmers	species	False negatives	high_pool	223.0
+CommonKmers	species	False positives	high_pool	201.0
+CommonKmers	species	Jaccard index	high_pool	0.04072398190045249
+CommonKmers	species	Taxon counts	high_pool	219.0
+CommonKmers	species	Purity (precision)	high_pool	0.0821917808219178
+CommonKmers	species	Completeness (recall)	high_pool	0.07468879668049792
+CommonKmers	species	True positives	high_pool	18.0
+CommonKmers	strain	False negatives	high_pool	596.0
+CommonKmers	strain	False positives	high_pool	79.0
+CommonKmers	strain	Jaccard index	high_pool	0.0
+CommonKmers	strain	Taxon counts	high_pool	79.0
+CommonKmers	strain	Purity (precision)	high_pool	0.0
+CommonKmers	strain	Completeness (recall)	high_pool	0.0
+CommonKmers	strain	True positives	high_pool	0.0
+CommonKmers	class	L1 norm error	high_pool	0.34548481390508
+CommonKmers	family	L1 norm error	high_pool	0.9179998970522321
+CommonKmers	genus	L1 norm error	high_pool	1.188992891473592
+CommonKmers	order	L1 norm error	high_pool	0.5635820873992422
+CommonKmers	phylum	L1 norm error	high_pool	0.2771300737610089
+CommonKmers	species	L1 norm error	high_pool	1.7913569087919041
+CommonKmers	strain	L1 norm error	high_pool	2.0000000000000018
+CommonKmers	superkingdom	L1 norm error	high_pool	0.022146396227907202
+CommonKmers	na	Weighted UniFrac error	high_pool	7.615599722045356
+CommonKmers	na	Unweighted UniFrac error	high_pool	5534.982551007068
+CommonKmers Sensitive Unnormalized	class	Bray-Curtis distance	high_pool	0.17291175810113463
+CommonKmers Sensitive Unnormalized	family	Bray-Curtis distance	high_pool	0.4585487660807319
+CommonKmers Sensitive Unnormalized	genus	Bray-Curtis distance	high_pool	0.5947351230040708
+CommonKmers Sensitive Unnormalized	order	Bray-Curtis distance	high_pool	0.28124170162936707
+CommonKmers Sensitive Unnormalized	phylum	Bray-Curtis distance	high_pool	0.13874436872251877
+CommonKmers Sensitive Unnormalized	species	Bray-Curtis distance	high_pool	0.8957098401506162
+CommonKmers Sensitive Unnormalized	strain	Bray-Curtis distance	high_pool	1.0
+CommonKmers Sensitive Unnormalized	superkingdom	Bray-Curtis distance	high_pool	0.011034441771157788
+CommonKmers Sensitive Unnormalized	superkingdom	Shannon diversity	high_pool	0.10862990524200239
+CommonKmers Sensitive Unnormalized	superkingdom	Shannon equitability	high_pool	0.15671982558487485
+CommonKmers Sensitive Unnormalized	phylum	Shannon diversity	high_pool	1.0350758291597697
+CommonKmers Sensitive Unnormalized	phylum	Shannon equitability	high_pool	0.6431287725752215
+CommonKmers Sensitive Unnormalized	class	Shannon diversity	high_pool	1.833225303411926
+CommonKmers Sensitive Unnormalized	class	Shannon equitability	high_pool	0.7645143323013149
+CommonKmers Sensitive Unnormalized	order	Shannon diversity	high_pool	2.2611699805589383
+CommonKmers Sensitive Unnormalized	order	Shannon equitability	high_pool	0.7211526556392895
+CommonKmers Sensitive Unnormalized	family	Shannon diversity	high_pool	3.10675207591203
+CommonKmers Sensitive Unnormalized	family	Shannon equitability	high_pool	0.8260002074734456
+CommonKmers Sensitive Unnormalized	genus	Shannon diversity	high_pool	3.4661883220306566
+CommonKmers Sensitive Unnormalized	genus	Shannon equitability	high_pool	0.8214674706669343
+CommonKmers Sensitive Unnormalized	species	Shannon diversity	high_pool	4.771401168122195
+CommonKmers Sensitive Unnormalized	species	Shannon equitability	high_pool	0.8838935452576603
+CommonKmers Sensitive Unnormalized	strain	Shannon diversity	high_pool	3.562473431969186
+CommonKmers Sensitive Unnormalized	strain	Shannon equitability	high_pool	0.8153143262615636
+CommonKmers Sensitive Unnormalized	genus	F1 score	high_pool	0.4122137404580153
+CommonKmers Sensitive Unnormalized	genus	False negatives	high_pool	140.0
+CommonKmers Sensitive Unnormalized	genus	False positives	high_pool	14.0
+CommonKmers Sensitive Unnormalized	genus	Jaccard index	high_pool	0.25961538461538464
+CommonKmers Sensitive Unnormalized	genus	Taxon counts	high_pool	68.0
+CommonKmers Sensitive Unnormalized	genus	Purity (precision)	high_pool	0.7941176470588235
+CommonKmers Sensitive Unnormalized	genus	Completeness (recall)	high_pool	0.27835051546391754
+CommonKmers Sensitive Unnormalized	genus	True positives	high_pool	54.0
+CommonKmers Sensitive Unnormalized	family	F1 score	high_pool	0.6412213740458016
+CommonKmers Sensitive Unnormalized	family	False negatives	high_pool	46.0
+CommonKmers Sensitive Unnormalized	family	False positives	high_pool	1.0
+CommonKmers Sensitive Unnormalized	family	Jaccard index	high_pool	0.47191011235955055
+CommonKmers Sensitive Unnormalized	family	Taxon counts	high_pool	43.0
+CommonKmers Sensitive Unnormalized	family	Purity (precision)	high_pool	0.9767441860465116
+CommonKmers Sensitive Unnormalized	family	Completeness (recall)	high_pool	0.4772727272727273
+CommonKmers Sensitive Unnormalized	family	True positives	high_pool	42.0
+CommonKmers Sensitive Unnormalized	order	F1 score	high_pool	0.7301587301587301
+CommonKmers Sensitive Unnormalized	order	False negatives	high_pool	17.0
+CommonKmers Sensitive Unnormalized	order	False positives	high_pool	0.0
+CommonKmers Sensitive Unnormalized	order	Jaccard index	high_pool	0.575
+CommonKmers Sensitive Unnormalized	order	Taxon counts	high_pool	23.0
+CommonKmers Sensitive Unnormalized	order	Purity (precision)	high_pool	1.0
+CommonKmers Sensitive Unnormalized	order	Completeness (recall)	high_pool	0.575
+CommonKmers Sensitive Unnormalized	order	True positives	high_pool	23.0
+CommonKmers Sensitive Unnormalized	class	F1 score	high_pool	0.6875000000000001
+CommonKmers Sensitive Unnormalized	class	False negatives	high_pool	10.0
+CommonKmers Sensitive Unnormalized	class	False positives	high_pool	0.0
+CommonKmers Sensitive Unnormalized	class	Jaccard index	high_pool	0.5238095238095238
+CommonKmers Sensitive Unnormalized	class	Taxon counts	high_pool	11.0
+CommonKmers Sensitive Unnormalized	class	Purity (precision)	high_pool	1.0
+CommonKmers Sensitive Unnormalized	class	Completeness (recall)	high_pool	0.5238095238095238
+CommonKmers Sensitive Unnormalized	class	True positives	high_pool	11.0
+CommonKmers Sensitive Unnormalized	superkingdom	F1 score	high_pool	1.0
+CommonKmers Sensitive Unnormalized	superkingdom	False negatives	high_pool	0.0
+CommonKmers Sensitive Unnormalized	superkingdom	False positives	high_pool	0.0
+CommonKmers Sensitive Unnormalized	superkingdom	Jaccard index	high_pool	1.0
+CommonKmers Sensitive Unnormalized	superkingdom	Taxon counts	high_pool	2.0
+CommonKmers Sensitive Unnormalized	superkingdom	Purity (precision)	high_pool	1.0
+CommonKmers Sensitive Unnormalized	superkingdom	Completeness (recall)	high_pool	1.0
+CommonKmers Sensitive Unnormalized	superkingdom	True positives	high_pool	2.0
+CommonKmers Sensitive Unnormalized	phylum	F1 score	high_pool	0.5882352941176471
+CommonKmers Sensitive Unnormalized	phylum	False negatives	high_pool	7.0
+CommonKmers Sensitive Unnormalized	phylum	False positives	high_pool	0.0
+CommonKmers Sensitive Unnormalized	phylum	Jaccard index	high_pool	0.4166666666666667
+CommonKmers Sensitive Unnormalized	phylum	Taxon counts	high_pool	5.0
+CommonKmers Sensitive Unnormalized	phylum	Purity (precision)	high_pool	1.0
+CommonKmers Sensitive Unnormalized	phylum	Completeness (recall)	high_pool	0.4166666666666667
+CommonKmers Sensitive Unnormalized	phylum	True positives	high_pool	5.0
+CommonKmers Sensitive Unnormalized	species	F1 score	high_pool	0.07792207792207792
+CommonKmers Sensitive Unnormalized	species	False negatives	high_pool	223.0
+CommonKmers Sensitive Unnormalized	species	False positives	high_pool	203.0
+CommonKmers Sensitive Unnormalized	species	Jaccard index	high_pool	0.04054054054054054
+CommonKmers Sensitive Unnormalized	species	Taxon counts	high_pool	221.0
+CommonKmers Sensitive Unnormalized	species	Purity (precision)	high_pool	0.08144796380090498
+CommonKmers Sensitive Unnormalized	species	Completeness (recall)	high_pool	0.07468879668049792
+CommonKmers Sensitive Unnormalized	species	True positives	high_pool	18.0
+CommonKmers Sensitive Unnormalized	strain	False negatives	high_pool	596.0
+CommonKmers Sensitive Unnormalized	strain	False positives	high_pool	79.0
+CommonKmers Sensitive Unnormalized	strain	Jaccard index	high_pool	0.0
+CommonKmers Sensitive Unnormalized	strain	Taxon counts	high_pool	79.0
+CommonKmers Sensitive Unnormalized	strain	Purity (precision)	high_pool	0.0
+CommonKmers Sensitive Unnormalized	strain	Completeness (recall)	high_pool	0.0
+CommonKmers Sensitive Unnormalized	strain	True positives	high_pool	0.0
+CommonKmers Sensitive Unnormalized	class	L1 norm error	high_pool	0.34582351620226925
+CommonKmers Sensitive Unnormalized	family	L1 norm error	high_pool	0.9170975321614637
+CommonKmers Sensitive Unnormalized	genus	L1 norm error	high_pool	1.1894702460081412
+CommonKmers Sensitive Unnormalized	order	L1 norm error	high_pool	0.5624834032587341
+CommonKmers Sensitive Unnormalized	phylum	L1 norm error	high_pool	0.2774887374450376
+CommonKmers Sensitive Unnormalized	species	L1 norm error	high_pool	1.7914196803012326
+CommonKmers Sensitive Unnormalized	strain	L1 norm error	high_pool	2.000000000000001
+CommonKmers Sensitive Unnormalized	superkingdom	L1 norm error	high_pool	0.022068883542315572
+CommonKmers Sensitive Unnormalized	na	Weighted UniFrac error	high_pool	7.614703356818889
+CommonKmers Sensitive Unnormalized	na	Unweighted UniFrac error	high_pool	5522.986465276016
+DUDes	class	Bray-Curtis distance	high_pool	0.2478237238720059
+DUDes	family	Bray-Curtis distance	high_pool	0.4401528684206904
+DUDes	genus	Bray-Curtis distance	high_pool	0.6265104303916543
+DUDes	order	Bray-Curtis distance	high_pool	0.32158367482055883
+DUDes	phylum	Bray-Curtis distance	high_pool	0.14209525624035624
+DUDes	species	Bray-Curtis distance	high_pool	0.976428875882968
+DUDes	strain	Bray-Curtis distance	high_pool	1.0
+DUDes	superkingdom	Bray-Curtis distance	high_pool	0.042042
+DUDes	superkingdom	Shannon diversity	high_pool	0.20948967612346298
+DUDes	superkingdom	Shannon equitability	high_pool	0.3022297168607551
+DUDes	phylum	Shannon diversity	high_pool	1.1658514916837683
+DUDes	phylum	Shannon equitability	high_pool	0.4417681566067892
+DUDes	class	Shannon diversity	high_pool	1.9586395395740162
+DUDes	class	Shannon equitability	high_pool	0.6246669279833473
+DUDes	order	Shannon diversity	high_pool	2.52441385260685
+DUDes	order	Shannon equitability	high_pool	0.6452962697571276
+DUDes	family	Shannon diversity	high_pool	3.302226318132546
+DUDes	family	Shannon equitability	high_pool	0.6773523406770003
+DUDes	genus	Shannon diversity	high_pool	3.7865231072096024
+DUDes	genus	Shannon equitability	high_pool	0.6467082142665251
+DUDes	species	Shannon diversity	high_pool	5.050893961070973
+DUDes	species	Shannon equitability	high_pool	0.7343201844744203
+DUDes	strain	Shannon diversity	high_pool	4.990945312213662
+DUDes	strain	Shannon equitability	high_pool	0.7377555885995554
+DUDes	genus	F1 score	high_pool	0.37937384898710874
+DUDes	genus	False negatives	high_pool	91.0
+DUDes	genus	False positives	high_pool	246.0
+DUDes	genus	Jaccard index	high_pool	0.2340909090909091
+DUDes	genus	Taxon counts	high_pool	349.0
+DUDes	genus	Purity (precision)	high_pool	0.29512893982808025
+DUDes	genus	Completeness (recall)	high_pool	0.5309278350515464
+DUDes	genus	True positives	high_pool	103.0
+DUDes	family	F1 score	high_pool	0.7579908675799086
+DUDes	family	False negatives	high_pool	5.0
+DUDes	family	False positives	high_pool	48.0
+DUDes	family	Jaccard index	high_pool	0.6102941176470589
+DUDes	family	Taxon counts	high_pool	131.0
+DUDes	family	Purity (precision)	high_pool	0.6335877862595419
+DUDes	family	Completeness (recall)	high_pool	0.9431818181818182
+DUDes	family	True positives	high_pool	83.0
+DUDes	order	F1 score	high_pool	0.8666666666666667
+DUDes	order	False negatives	high_pool	1.0
+DUDes	order	False positives	high_pool	11.0
+DUDes	order	Jaccard index	high_pool	0.7647058823529411
+DUDes	order	Taxon counts	high_pool	50.0
+DUDes	order	Purity (precision)	high_pool	0.78
+DUDes	order	Completeness (recall)	high_pool	0.975
+DUDes	order	True positives	high_pool	39.0
+DUDes	class	F1 score	high_pool	0.909090909090909
+DUDes	class	False negatives	high_pool	1.0
+DUDes	class	False positives	high_pool	3.0
+DUDes	class	Jaccard index	high_pool	0.8333333333333334
+DUDes	class	Taxon counts	high_pool	23.0
+DUDes	class	Purity (precision)	high_pool	0.8695652173913043
+DUDes	class	Completeness (recall)	high_pool	0.9523809523809523
+DUDes	class	True positives	high_pool	20.0
+DUDes	superkingdom	F1 score	high_pool	1.0
+DUDes	superkingdom	False negatives	high_pool	0.0
+DUDes	superkingdom	False positives	high_pool	0.0
+DUDes	superkingdom	Jaccard index	high_pool	1.0
+DUDes	superkingdom	Taxon counts	high_pool	2.0
+DUDes	superkingdom	Purity (precision)	high_pool	1.0
+DUDes	superkingdom	Completeness (recall)	high_pool	1.0
+DUDes	superkingdom	True positives	high_pool	2.0
+DUDes	phylum	F1 score	high_pool	0.8461538461538461
+DUDes	phylum	False negatives	high_pool	1.0
+DUDes	phylum	False positives	high_pool	3.0
+DUDes	phylum	Jaccard index	high_pool	0.7333333333333333
+DUDes	phylum	Taxon counts	high_pool	14.0
+DUDes	phylum	Purity (precision)	high_pool	0.7857142857142857
+DUDes	phylum	Completeness (recall)	high_pool	0.9166666666666666
+DUDes	phylum	True positives	high_pool	11.0
+DUDes	species	F1 score	high_pool	0.0049504950495049506
+DUDes	species	False negatives	high_pool	238.0
+DUDes	species	False positives	high_pool	968.0
+DUDes	species	Jaccard index	high_pool	0.0024813895781637717
+DUDes	species	Taxon counts	high_pool	971.0
+DUDes	species	Purity (precision)	high_pool	0.003089598352214212
+DUDes	species	Completeness (recall)	high_pool	0.012448132780082987
+DUDes	species	True positives	high_pool	3.0
+DUDes	strain	False negatives	high_pool	596.0
+DUDes	strain	False positives	high_pool	867.0
+DUDes	strain	Jaccard index	high_pool	0.0
+DUDes	strain	Taxon counts	high_pool	867.0
+DUDes	strain	Purity (precision)	high_pool	0.0
+DUDes	strain	Completeness (recall)	high_pool	0.0
+DUDes	strain	True positives	high_pool	0.0
+DUDes	class	L1 norm error	high_pool	0.49564744774401204
+DUDes	family	L1 norm error	high_pool	0.8803057368413808
+DUDes	genus	L1 norm error	high_pool	1.2530208607833087
+DUDes	order	L1 norm error	high_pool	0.6431673496411178
+DUDes	phylum	L1 norm error	high_pool	0.2841905124807125
+DUDes	species	L1 norm error	high_pool	1.9528577517659362
+DUDes	strain	L1 norm error	high_pool	2.0000000000000027
+DUDes	superkingdom	L1 norm error	high_pool	0.084084
+DUDes	na	Weighted UniFrac error	high_pool	8.155217195725998
+DUDes	na	Unweighted UniFrac error	high_pool	9236.303977050002
+FOCUS_cfk7b	class	Bray-Curtis distance	high_pool	0.13756730254606805
+FOCUS_cfk7b	family	Bray-Curtis distance	high_pool	0.37120073587975344
+FOCUS_cfk7b	genus	Bray-Curtis distance	high_pool	0.6580591840697991
+FOCUS_cfk7b	order	Bray-Curtis distance	high_pool	0.21830692904235685
+FOCUS_cfk7b	phylum	Bray-Curtis distance	high_pool	0.10187466863128979
+FOCUS_cfk7b	species	Bray-Curtis distance	high_pool	0.9992092699446488
+FOCUS_cfk7b	strain	Bray-Curtis distance	high_pool	1.0
+FOCUS_cfk7b	superkingdom	Bray-Curtis distance	high_pool	0.017339868157277463
+FOCUS_cfk7b	superkingdom	Shannon diversity	high_pool	0.1315114641502622
+FOCUS_cfk7b	superkingdom	Shannon equitability	high_pool	0.18973093714962996
+FOCUS_cfk7b	phylum	Shannon diversity	high_pool	1.5904885529987993
+FOCUS_cfk7b	phylum	Shannon equitability	high_pool	0.514547624951183
+FOCUS_cfk7b	class	Shannon diversity	high_pool	2.243771247226305
+FOCUS_cfk7b	class	Shannon equitability	high_pool	0.6534011671026919
+FOCUS_cfk7b	order	Shannon diversity	high_pool	3.002952817395544
+FOCUS_cfk7b	order	Shannon equitability	high_pool	0.7395628530177137
+FOCUS_cfk7b	family	Shannon diversity	high_pool	4.076545540526253
+FOCUS_cfk7b	family	Shannon equitability	high_pool	0.872393508288151
+FOCUS_cfk7b	genus	Shannon diversity	high_pool	4.591781960824447
+FOCUS_cfk7b	genus	Shannon equitability	high_pool	0.8900431754479449
+FOCUS_cfk7b	species	Shannon diversity	high_pool	4.884174342718132
+FOCUS_cfk7b	species	Shannon equitability	high_pool	0.9040285024432716
+FOCUS_cfk7b	strain	Shannon diversity	high_pool	4.784057274100068
+FOCUS_cfk7b	strain	Shannon equitability	high_pool	0.9081598497235763
+FOCUS_cfk7b	genus	F1 score	high_pool	0.24999999999999994
+FOCUS_cfk7b	genus	False negatives	high_pool	148.0
+FOCUS_cfk7b	genus	False positives	high_pool	128.0
+FOCUS_cfk7b	genus	Jaccard index	high_pool	0.14285714285714285
+FOCUS_cfk7b	genus	Taxon counts	high_pool	174.0
+FOCUS_cfk7b	genus	Purity (precision)	high_pool	0.26436781609195403
+FOCUS_cfk7b	genus	Completeness (recall)	high_pool	0.23711340206185566
+FOCUS_cfk7b	genus	True positives	high_pool	46.0
+FOCUS_cfk7b	family	F1 score	high_pool	0.6051282051282051
+FOCUS_cfk7b	family	False negatives	high_pool	29.0
+FOCUS_cfk7b	family	False positives	high_pool	48.0
+FOCUS_cfk7b	family	Jaccard index	high_pool	0.4338235294117647
+FOCUS_cfk7b	family	Taxon counts	high_pool	107.0
+FOCUS_cfk7b	family	Purity (precision)	high_pool	0.5514018691588785
+FOCUS_cfk7b	family	Completeness (recall)	high_pool	0.6704545454545454
+FOCUS_cfk7b	family	True positives	high_pool	59.0
+FOCUS_cfk7b	order	F1 score	high_pool	0.6530612244897959
+FOCUS_cfk7b	order	False negatives	high_pool	8.0
+FOCUS_cfk7b	order	False positives	high_pool	26.0
+FOCUS_cfk7b	order	Jaccard index	high_pool	0.48484848484848486
+FOCUS_cfk7b	order	Taxon counts	high_pool	58.0
+FOCUS_cfk7b	order	Purity (precision)	high_pool	0.5517241379310345
+FOCUS_cfk7b	order	Completeness (recall)	high_pool	0.8
+FOCUS_cfk7b	order	True positives	high_pool	32.0
+FOCUS_cfk7b	class	F1 score	high_pool	0.6923076923076923
+FOCUS_cfk7b	class	False negatives	high_pool	3.0
+FOCUS_cfk7b	class	False positives	high_pool	13.0
+FOCUS_cfk7b	class	Jaccard index	high_pool	0.5294117647058824
+FOCUS_cfk7b	class	Taxon counts	high_pool	31.0
+FOCUS_cfk7b	class	Purity (precision)	high_pool	0.5806451612903226
+FOCUS_cfk7b	class	Completeness (recall)	high_pool	0.8571428571428571
+FOCUS_cfk7b	class	True positives	high_pool	18.0
+FOCUS_cfk7b	superkingdom	F1 score	high_pool	1.0
+FOCUS_cfk7b	superkingdom	False negatives	high_pool	0.0
+FOCUS_cfk7b	superkingdom	False positives	high_pool	0.0
+FOCUS_cfk7b	superkingdom	Jaccard index	high_pool	1.0
+FOCUS_cfk7b	superkingdom	Taxon counts	high_pool	2.0
+FOCUS_cfk7b	superkingdom	Purity (precision)	high_pool	1.0
+FOCUS_cfk7b	superkingdom	Completeness (recall)	high_pool	1.0
+FOCUS_cfk7b	superkingdom	True positives	high_pool	2.0
+FOCUS_cfk7b	phylum	F1 score	high_pool	0.5882352941176471
+FOCUS_cfk7b	phylum	False negatives	high_pool	2.0
+FOCUS_cfk7b	phylum	False positives	high_pool	12.0
+FOCUS_cfk7b	phylum	Jaccard index	high_pool	0.4166666666666667
+FOCUS_cfk7b	phylum	Taxon counts	high_pool	22.0
+FOCUS_cfk7b	phylum	Purity (precision)	high_pool	0.45454545454545453
+FOCUS_cfk7b	phylum	Completeness (recall)	high_pool	0.8333333333333334
+FOCUS_cfk7b	phylum	True positives	high_pool	10.0
+FOCUS_cfk7b	species	F1 score	high_pool	0.004319654427645789
+FOCUS_cfk7b	species	False negatives	high_pool	240.0
+FOCUS_cfk7b	species	False positives	high_pool	221.0
+FOCUS_cfk7b	species	Jaccard index	high_pool	0.0021645021645021645
+FOCUS_cfk7b	species	Taxon counts	high_pool	222.0
+FOCUS_cfk7b	species	Purity (precision)	high_pool	0.0045045045045045045
+FOCUS_cfk7b	species	Completeness (recall)	high_pool	0.004149377593360996
+FOCUS_cfk7b	species	True positives	high_pool	1.0
+FOCUS_cfk7b	strain	False negatives	high_pool	596.0
+FOCUS_cfk7b	strain	False positives	high_pool	194.0
+FOCUS_cfk7b	strain	Jaccard index	high_pool	0.0
+FOCUS_cfk7b	strain	Taxon counts	high_pool	194.0
+FOCUS_cfk7b	strain	Purity (precision)	high_pool	0.0
+FOCUS_cfk7b	strain	Completeness (recall)	high_pool	0.0
+FOCUS_cfk7b	strain	True positives	high_pool	0.0
+FOCUS_cfk7b	class	L1 norm error	high_pool	0.2751346050921361
+FOCUS_cfk7b	family	L1 norm error	high_pool	0.7424014717595071
+FOCUS_cfk7b	genus	L1 norm error	high_pool	1.316118368139597
+FOCUS_cfk7b	order	L1 norm error	high_pool	0.43661385808471365
+FOCUS_cfk7b	phylum	L1 norm error	high_pool	0.20374933726257957
+FOCUS_cfk7b	species	L1 norm error	high_pool	1.9984185398892982
+FOCUS_cfk7b	strain	L1 norm error	high_pool	2.0000000000000018
+FOCUS_cfk7b	superkingdom	L1 norm error	high_pool	0.034679736314554926
+FOCUS_cfk7b	na	Weighted UniFrac error	high_pool	7.591605607846096
+FOCUS_cfk7b	na	Unweighted UniFrac error	high_pool	5918.922407840735
+FOCUS_cfk7bd	class	Bray-Curtis distance	high_pool	0.08700932623751645
+FOCUS_cfk7bd	family	Bray-Curtis distance	high_pool	0.2832078390449459
+FOCUS_cfk7bd	genus	Bray-Curtis distance	high_pool	0.5860580055520872
+FOCUS_cfk7bd	order	Bray-Curtis distance	high_pool	0.16215526877771966
+FOCUS_cfk7bd	phylum	Bray-Curtis distance	high_pool	0.06298730477315408
+FOCUS_cfk7bd	species	Bray-Curtis distance	high_pool	1.0
+FOCUS_cfk7bd	strain	Bray-Curtis distance	high_pool	1.0
+FOCUS_cfk7bd	superkingdom	Bray-Curtis distance	high_pool	0.01462020842476098
+FOCUS_cfk7bd	superkingdom	Shannon diversity	high_pool	0.121834710968177
+FOCUS_cfk7bd	superkingdom	Shannon equitability	high_pool	0.17577033332192915
+FOCUS_cfk7bd	phylum	Shannon diversity	high_pool	1.5030168692542107
+FOCUS_cfk7bd	phylum	Shannon equitability	high_pool	0.5017193567404823
+FOCUS_cfk7bd	class	Shannon diversity	high_pool	2.1932258272156058
+FOCUS_cfk7bd	class	Shannon equitability	high_pool	0.6386820033432342
+FOCUS_cfk7bd	order	Shannon diversity	high_pool	2.8558127710517045
+FOCUS_cfk7bd	order	Shannon equitability	high_pool	0.7033254163730756
+FOCUS_cfk7bd	family	Shannon diversity	high_pool	3.996117094674421
+FOCUS_cfk7bd	family	Shannon equitability	high_pool	0.8518057485806454
+FOCUS_cfk7bd	genus	Shannon diversity	high_pool	4.653549250968412
+FOCUS_cfk7bd	genus	Shannon equitability	high_pool	0.8766606200449675
+FOCUS_cfk7bd	species	Shannon diversity	high_pool	5.317823721943529
+FOCUS_cfk7bd	species	Shannon equitability	high_pool	0.9199203713874943
+FOCUS_cfk7bd	strain	Shannon diversity	high_pool	5.017658656223835
+FOCUS_cfk7bd	strain	Shannon equitability	high_pool	0.9162224140894979
+FOCUS_cfk7bd	genus	F1 score	high_pool	0.28787878787878785
+FOCUS_cfk7bd	genus	False negatives	high_pool	137.0
+FOCUS_cfk7bd	genus	False positives	high_pool	145.0
+FOCUS_cfk7bd	genus	Jaccard index	high_pool	0.168141592920354
+FOCUS_cfk7bd	genus	Taxon counts	high_pool	202.0
+FOCUS_cfk7bd	genus	Purity (precision)	high_pool	0.28217821782178215
+FOCUS_cfk7bd	genus	Completeness (recall)	high_pool	0.29381443298969073
+FOCUS_cfk7bd	genus	True positives	high_pool	57.0
+FOCUS_cfk7bd	family	F1 score	high_pool	0.6497461928934011
+FOCUS_cfk7bd	family	False negatives	high_pool	24.0
+FOCUS_cfk7bd	family	False positives	high_pool	45.0
+FOCUS_cfk7bd	family	Jaccard index	high_pool	0.48120300751879697
+FOCUS_cfk7bd	family	Taxon counts	high_pool	109.0
+FOCUS_cfk7bd	family	Purity (precision)	high_pool	0.5871559633027523
+FOCUS_cfk7bd	family	Completeness (recall)	high_pool	0.7272727272727273
+FOCUS_cfk7bd	family	True positives	high_pool	64.0
+FOCUS_cfk7bd	order	F1 score	high_pool	0.6530612244897959
+FOCUS_cfk7bd	order	False negatives	high_pool	8.0
+FOCUS_cfk7bd	order	False positives	high_pool	26.0
+FOCUS_cfk7bd	order	Jaccard index	high_pool	0.48484848484848486
+FOCUS_cfk7bd	order	Taxon counts	high_pool	58.0
+FOCUS_cfk7bd	order	Purity (precision)	high_pool	0.5517241379310345
+FOCUS_cfk7bd	order	Completeness (recall)	high_pool	0.8
+FOCUS_cfk7bd	order	True positives	high_pool	32.0
+FOCUS_cfk7bd	class	F1 score	high_pool	0.6923076923076923
+FOCUS_cfk7bd	class	False negatives	high_pool	3.0
+FOCUS_cfk7bd	class	False positives	high_pool	13.0
+FOCUS_cfk7bd	class	Jaccard index	high_pool	0.5294117647058824
+FOCUS_cfk7bd	class	Taxon counts	high_pool	31.0
+FOCUS_cfk7bd	class	Purity (precision)	high_pool	0.5806451612903226
+FOCUS_cfk7bd	class	Completeness (recall)	high_pool	0.8571428571428571
+FOCUS_cfk7bd	class	True positives	high_pool	18.0
+FOCUS_cfk7bd	superkingdom	F1 score	high_pool	1.0
+FOCUS_cfk7bd	superkingdom	False negatives	high_pool	0.0
+FOCUS_cfk7bd	superkingdom	False positives	high_pool	0.0
+FOCUS_cfk7bd	superkingdom	Jaccard index	high_pool	1.0
+FOCUS_cfk7bd	superkingdom	Taxon counts	high_pool	2.0
+FOCUS_cfk7bd	superkingdom	Purity (precision)	high_pool	1.0
+FOCUS_cfk7bd	superkingdom	Completeness (recall)	high_pool	1.0
+FOCUS_cfk7bd	superkingdom	True positives	high_pool	2.0
+FOCUS_cfk7bd	phylum	F1 score	high_pool	0.5625000000000001
+FOCUS_cfk7bd	phylum	False negatives	high_pool	3.0
+FOCUS_cfk7bd	phylum	False positives	high_pool	11.0
+FOCUS_cfk7bd	phylum	Jaccard index	high_pool	0.391304347826087
+FOCUS_cfk7bd	phylum	Taxon counts	high_pool	20.0
+FOCUS_cfk7bd	phylum	Purity (precision)	high_pool	0.45
+FOCUS_cfk7bd	phylum	Completeness (recall)	high_pool	0.75
+FOCUS_cfk7bd	phylum	True positives	high_pool	9.0
+FOCUS_cfk7bd	species	False negatives	high_pool	241.0
+FOCUS_cfk7bd	species	False positives	high_pool	324.0
+FOCUS_cfk7bd	species	Jaccard index	high_pool	0.0
+FOCUS_cfk7bd	species	Taxon counts	high_pool	324.0
+FOCUS_cfk7bd	species	Purity (precision)	high_pool	0.0
+FOCUS_cfk7bd	species	Completeness (recall)	high_pool	0.0
+FOCUS_cfk7bd	species	True positives	high_pool	0.0
+FOCUS_cfk7bd	strain	False negatives	high_pool	596.0
+FOCUS_cfk7bd	strain	False positives	high_pool	239.0
+FOCUS_cfk7bd	strain	Jaccard index	high_pool	0.0
+FOCUS_cfk7bd	strain	Taxon counts	high_pool	239.0
+FOCUS_cfk7bd	strain	Purity (precision)	high_pool	0.0
+FOCUS_cfk7bd	strain	Completeness (recall)	high_pool	0.0
+FOCUS_cfk7bd	strain	True positives	high_pool	0.0
+FOCUS_cfk7bd	class	L1 norm error	high_pool	0.17401865247503281
+FOCUS_cfk7bd	family	L1 norm error	high_pool	0.5664156780898917
+FOCUS_cfk7bd	genus	L1 norm error	high_pool	1.172116011104174
+FOCUS_cfk7bd	order	L1 norm error	high_pool	0.32431053755543926
+FOCUS_cfk7bd	phylum	L1 norm error	high_pool	0.12597460954630813
+FOCUS_cfk7bd	species	L1 norm error	high_pool	1.9999999999999998
+FOCUS_cfk7bd	strain	L1 norm error	high_pool	2.0000000000000036
+FOCUS_cfk7bd	superkingdom	L1 norm error	high_pool	0.02924041684952196
+FOCUS_cfk7bd	na	Weighted UniFrac error	high_pool	7.101152781807836
+FOCUS_cfk7bd	na	Unweighted UniFrac error	high_pool	5527.572569564402
+FOCUS_cfk7d	class	Bray-Curtis distance	high_pool	0.10472471331239812
+FOCUS_cfk7d	family	Bray-Curtis distance	high_pool	0.3258850867349501
+FOCUS_cfk7d	genus	Bray-Curtis distance	high_pool	0.6185319688391293
+FOCUS_cfk7d	order	Bray-Curtis distance	high_pool	0.19508986582836474
+FOCUS_cfk7d	phylum	Bray-Curtis distance	high_pool	0.0653394735728882
+FOCUS_cfk7d	species	Bray-Curtis distance	high_pool	1.0
+FOCUS_cfk7d	strain	Bray-Curtis distance	high_pool	1.0
+FOCUS_cfk7d	superkingdom	Bray-Curtis distance	high_pool	0.005537669999999968
+FOCUS_cfk7d	superkingdom	Shannon diversity	high_pool	0.08722600417916043
+FOCUS_cfk7d	superkingdom	Shannon equitability	high_pool	0.12584052366583476
+FOCUS_cfk7d	phylum	Shannon diversity	high_pool	1.4657639753053997
+FOCUS_cfk7d	phylum	Shannon equitability	high_pool	0.5173503712243974
+FOCUS_cfk7d	class	Shannon diversity	high_pool	2.1098796978445717
+FOCUS_cfk7d	class	Shannon equitability	high_pool	0.6554709819944553
+FOCUS_cfk7d	order	Shannon diversity	high_pool	2.7421767312814747
+FOCUS_cfk7d	order	Shannon equitability	high_pool	0.7246404109093614
+FOCUS_cfk7d	family	Shannon diversity	high_pool	3.883549564260352
+FOCUS_cfk7d	family	Shannon equitability	high_pool	0.863047517290952
+FOCUS_cfk7d	genus	Shannon diversity	high_pool	4.432309914388844
+FOCUS_cfk7d	genus	Shannon equitability	high_pool	0.8755015729035568
+FOCUS_cfk7d	species	Shannon diversity	high_pool	5.10760433393692
+FOCUS_cfk7d	species	Shannon equitability	high_pool	0.9178876093644136
+FOCUS_cfk7d	strain	Shannon diversity	high_pool	4.723855330321398
+FOCUS_cfk7d	strain	Shannon equitability	high_pool	0.9106427605601567
+FOCUS_cfk7d	genus	F1 score	high_pool	0.29545454545454547
+FOCUS_cfk7d	genus	False negatives	high_pool	142.0
+FOCUS_cfk7d	genus	False positives	high_pool	106.0
+FOCUS_cfk7d	genus	Jaccard index	high_pool	0.17333333333333334
+FOCUS_cfk7d	genus	Taxon counts	high_pool	158.0
+FOCUS_cfk7d	genus	Purity (precision)	high_pool	0.3291139240506329
+FOCUS_cfk7d	genus	Completeness (recall)	high_pool	0.26804123711340205
+FOCUS_cfk7d	genus	True positives	high_pool	52.0
+FOCUS_cfk7d	family	F1 score	high_pool	0.6067415730337078
+FOCUS_cfk7d	family	False negatives	high_pool	34.0
+FOCUS_cfk7d	family	False positives	high_pool	36.0
+FOCUS_cfk7d	family	Jaccard index	high_pool	0.43548387096774194
+FOCUS_cfk7d	family	Taxon counts	high_pool	90.0
+FOCUS_cfk7d	family	Purity (precision)	high_pool	0.6
+FOCUS_cfk7d	family	Completeness (recall)	high_pool	0.6136363636363636
+FOCUS_cfk7d	family	True positives	high_pool	54.0
+FOCUS_cfk7d	order	F1 score	high_pool	0.6428571428571429
+FOCUS_cfk7d	order	False negatives	high_pool	13.0
+FOCUS_cfk7d	order	False positives	high_pool	17.0
+FOCUS_cfk7d	order	Jaccard index	high_pool	0.47368421052631576
+FOCUS_cfk7d	order	Taxon counts	high_pool	44.0
+FOCUS_cfk7d	order	Purity (precision)	high_pool	0.6136363636363636
+FOCUS_cfk7d	order	Completeness (recall)	high_pool	0.675
+FOCUS_cfk7d	order	True positives	high_pool	27.0
+FOCUS_cfk7d	class	F1 score	high_pool	0.6956521739130435
+FOCUS_cfk7d	class	False negatives	high_pool	5.0
+FOCUS_cfk7d	class	False positives	high_pool	9.0
+FOCUS_cfk7d	class	Jaccard index	high_pool	0.5333333333333333
+FOCUS_cfk7d	class	Taxon counts	high_pool	25.0
+FOCUS_cfk7d	class	Purity (precision)	high_pool	0.64
+FOCUS_cfk7d	class	Completeness (recall)	high_pool	0.7619047619047619
+FOCUS_cfk7d	class	True positives	high_pool	16.0
+FOCUS_cfk7d	superkingdom	F1 score	high_pool	1.0
+FOCUS_cfk7d	superkingdom	False negatives	high_pool	0.0
+FOCUS_cfk7d	superkingdom	False positives	high_pool	0.0
+FOCUS_cfk7d	superkingdom	Jaccard index	high_pool	1.0
+FOCUS_cfk7d	superkingdom	Taxon counts	high_pool	2.0
+FOCUS_cfk7d	superkingdom	Purity (precision)	high_pool	1.0
+FOCUS_cfk7d	superkingdom	Completeness (recall)	high_pool	1.0
+FOCUS_cfk7d	superkingdom	True positives	high_pool	2.0
+FOCUS_cfk7d	phylum	F1 score	high_pool	0.5517241379310345
+FOCUS_cfk7d	phylum	False negatives	high_pool	4.0
+FOCUS_cfk7d	phylum	False positives	high_pool	9.0
+FOCUS_cfk7d	phylum	Jaccard index	high_pool	0.38095238095238093
+FOCUS_cfk7d	phylum	Taxon counts	high_pool	17.0
+FOCUS_cfk7d	phylum	Purity (precision)	high_pool	0.47058823529411764
+FOCUS_cfk7d	phylum	Completeness (recall)	high_pool	0.6666666666666666
+FOCUS_cfk7d	phylum	True positives	high_pool	8.0
+FOCUS_cfk7d	species	False negatives	high_pool	241.0
+FOCUS_cfk7d	species	False positives	high_pool	261.0
+FOCUS_cfk7d	species	Jaccard index	high_pool	0.0
+FOCUS_cfk7d	species	Taxon counts	high_pool	261.0
+FOCUS_cfk7d	species	Purity (precision)	high_pool	0.0
+FOCUS_cfk7d	species	Completeness (recall)	high_pool	0.0
+FOCUS_cfk7d	species	True positives	high_pool	0.0
+FOCUS_cfk7d	strain	False negatives	high_pool	596.0
+FOCUS_cfk7d	strain	False positives	high_pool	179.0
+FOCUS_cfk7d	strain	Jaccard index	high_pool	0.0
+FOCUS_cfk7d	strain	Taxon counts	high_pool	179.0
+FOCUS_cfk7d	strain	Purity (precision)	high_pool	0.0
+FOCUS_cfk7d	strain	Completeness (recall)	high_pool	0.0
+FOCUS_cfk7d	strain	True positives	high_pool	0.0
+FOCUS_cfk7d	class	L1 norm error	high_pool	0.2094494266247963
+FOCUS_cfk7d	family	L1 norm error	high_pool	0.6517701734698997
+FOCUS_cfk7d	genus	L1 norm error	high_pool	1.2370639376782584
+FOCUS_cfk7d	order	L1 norm error	high_pool	0.39017973165672926
+FOCUS_cfk7d	phylum	L1 norm error	high_pool	0.13067894714577644
+FOCUS_cfk7d	species	L1 norm error	high_pool	2.000000000000002
+FOCUS_cfk7d	strain	L1 norm error	high_pool	2.000000000000002
+FOCUS_cfk7d	superkingdom	L1 norm error	high_pool	0.011075339999999935
+FOCUS_cfk7d	na	Weighted UniFrac error	high_pool	7.431237854066586
+FOCUS_cfk7d	na	Unweighted UniFrac error	high_pool	5866.873550895236
+FOCUS_cfk8b	class	Bray-Curtis distance	high_pool	0.13259658146795278
+FOCUS_cfk8b	family	Bray-Curtis distance	high_pool	0.3576281957962208
+FOCUS_cfk8b	genus	Bray-Curtis distance	high_pool	0.6504742087218522
+FOCUS_cfk8b	order	Bray-Curtis distance	high_pool	0.20649850749810902
+FOCUS_cfk8b	phylum	Bray-Curtis distance	high_pool	0.09937140171333084
+FOCUS_cfk8b	species	Bray-Curtis distance	high_pool	0.9965983001700849
+FOCUS_cfk8b	strain	Bray-Curtis distance	high_pool	1.0
+FOCUS_cfk8b	superkingdom	Bray-Curtis distance	high_pool	0.01754581786813022
+FOCUS_cfk8b	superkingdom	Shannon diversity	high_pool	0.13223326346474312
+FOCUS_cfk8b	superkingdom	Shannon equitability	high_pool	0.19077227344114867
+FOCUS_cfk8b	phylum	Shannon diversity	high_pool	1.5841648996260829
+FOCUS_cfk8b	phylum	Shannon equitability	high_pool	0.5125018253647535
+FOCUS_cfk8b	class	Shannon diversity	high_pool	2.2430377860112136
+FOCUS_cfk8b	class	Shannon equitability	high_pool	0.6472038980809875
+FOCUS_cfk8b	order	Shannon diversity	high_pool	3.0212085290837765
+FOCUS_cfk8b	order	Shannon equitability	high_pool	0.7320354142165322
+FOCUS_cfk8b	family	Shannon diversity	high_pool	4.117568432311293
+FOCUS_cfk8b	family	Shannon equitability	high_pool	0.8693825812360313
+FOCUS_cfk8b	genus	Shannon diversity	high_pool	4.671374000354339
+FOCUS_cfk8b	genus	Shannon equitability	high_pool	0.8825061384212795
+FOCUS_cfk8b	species	Shannon diversity	high_pool	5.037061112480668
+FOCUS_cfk8b	species	Shannon equitability	high_pool	0.8997287359493458
+FOCUS_cfk8b	strain	Shannon diversity	high_pool	4.937233058240559
+FOCUS_cfk8b	strain	Shannon equitability	high_pool	0.8994878981251574
+FOCUS_cfk8b	genus	F1 score	high_pool	0.2595419847328244
+FOCUS_cfk8b	genus	False negatives	high_pool	143.0
+FOCUS_cfk8b	genus	False positives	high_pool	148.0
+FOCUS_cfk8b	genus	Jaccard index	high_pool	0.14912280701754385
+FOCUS_cfk8b	genus	Taxon counts	high_pool	199.0
+FOCUS_cfk8b	genus	Purity (precision)	high_pool	0.2562814070351759
+FOCUS_cfk8b	genus	Completeness (recall)	high_pool	0.26288659793814434
+FOCUS_cfk8b	genus	True positives	high_pool	51.0
+FOCUS_cfk8b	family	F1 score	high_pool	0.613861386138614
+FOCUS_cfk8b	family	False negatives	high_pool	26.0
+FOCUS_cfk8b	family	False positives	high_pool	52.0
+FOCUS_cfk8b	family	Jaccard index	high_pool	0.44285714285714284
+FOCUS_cfk8b	family	Taxon counts	high_pool	114.0
+FOCUS_cfk8b	family	Purity (precision)	high_pool	0.543859649122807
+FOCUS_cfk8b	family	Completeness (recall)	high_pool	0.7045454545454546
+FOCUS_cfk8b	family	True positives	high_pool	62.0
+FOCUS_cfk8b	order	F1 score	high_pool	0.6666666666666665
+FOCUS_cfk8b	order	False negatives	high_pool	6.0
+FOCUS_cfk8b	order	False positives	high_pool	28.0
+FOCUS_cfk8b	order	Jaccard index	high_pool	0.5
+FOCUS_cfk8b	order	Taxon counts	high_pool	62.0
+FOCUS_cfk8b	order	Purity (precision)	high_pool	0.5483870967741935
+FOCUS_cfk8b	order	Completeness (recall)	high_pool	0.85
+FOCUS_cfk8b	order	True positives	high_pool	34.0
+FOCUS_cfk8b	class	F1 score	high_pool	0.7169811320754718
+FOCUS_cfk8b	class	False negatives	high_pool	2.0
+FOCUS_cfk8b	class	False positives	high_pool	13.0
+FOCUS_cfk8b	class	Jaccard index	high_pool	0.5588235294117647
+FOCUS_cfk8b	class	Taxon counts	high_pool	32.0
+FOCUS_cfk8b	class	Purity (precision)	high_pool	0.59375
+FOCUS_cfk8b	class	Completeness (recall)	high_pool	0.9047619047619048
+FOCUS_cfk8b	class	True positives	high_pool	19.0
+FOCUS_cfk8b	superkingdom	F1 score	high_pool	1.0
+FOCUS_cfk8b	superkingdom	False negatives	high_pool	0.0
+FOCUS_cfk8b	superkingdom	False positives	high_pool	0.0
+FOCUS_cfk8b	superkingdom	Jaccard index	high_pool	1.0
+FOCUS_cfk8b	superkingdom	Taxon counts	high_pool	2.0
+FOCUS_cfk8b	superkingdom	Purity (precision)	high_pool	1.0
+FOCUS_cfk8b	superkingdom	Completeness (recall)	high_pool	1.0
+FOCUS_cfk8b	superkingdom	True positives	high_pool	2.0
+FOCUS_cfk8b	phylum	F1 score	high_pool	0.5882352941176471
+FOCUS_cfk8b	phylum	False negatives	high_pool	2.0
+FOCUS_cfk8b	phylum	False positives	high_pool	12.0
+FOCUS_cfk8b	phylum	Jaccard index	high_pool	0.4166666666666667
+FOCUS_cfk8b	phylum	Taxon counts	high_pool	22.0
+FOCUS_cfk8b	phylum	Purity (precision)	high_pool	0.45454545454545453
+FOCUS_cfk8b	phylum	Completeness (recall)	high_pool	0.8333333333333334
+FOCUS_cfk8b	phylum	True positives	high_pool	10.0
+FOCUS_cfk8b	species	F1 score	high_pool	0.003913894324853229
+FOCUS_cfk8b	species	False negatives	high_pool	240.0
+FOCUS_cfk8b	species	False positives	high_pool	269.0
+FOCUS_cfk8b	species	Jaccard index	high_pool	0.00196078431372549
+FOCUS_cfk8b	species	Taxon counts	high_pool	270.0
+FOCUS_cfk8b	species	Purity (precision)	high_pool	0.003703703703703704
+FOCUS_cfk8b	species	Completeness (recall)	high_pool	0.004149377593360996
+FOCUS_cfk8b	species	True positives	high_pool	1.0
+FOCUS_cfk8b	strain	False negatives	high_pool	596.0
+FOCUS_cfk8b	strain	False positives	high_pool	242.0
+FOCUS_cfk8b	strain	Jaccard index	high_pool	0.0
+FOCUS_cfk8b	strain	Taxon counts	high_pool	242.0
+FOCUS_cfk8b	strain	Purity (precision)	high_pool	0.0
+FOCUS_cfk8b	strain	Completeness (recall)	high_pool	0.0
+FOCUS_cfk8b	strain	True positives	high_pool	0.0
+FOCUS_cfk8b	class	L1 norm error	high_pool	0.26519316293590556
+FOCUS_cfk8b	family	L1 norm error	high_pool	0.7152563915924417
+FOCUS_cfk8b	genus	L1 norm error	high_pool	1.300948417443704
+FOCUS_cfk8b	order	L1 norm error	high_pool	0.412997014996218
+FOCUS_cfk8b	phylum	L1 norm error	high_pool	0.19874280342666167
+FOCUS_cfk8b	species	L1 norm error	high_pool	1.9931966003401704
+FOCUS_cfk8b	strain	L1 norm error	high_pool	2.0000000000000013
+FOCUS_cfk8b	superkingdom	L1 norm error	high_pool	0.03509163573626044
+FOCUS_cfk8b	na	Weighted UniFrac error	high_pool	7.493616602872305
+FOCUS_cfk8b	na	Unweighted UniFrac error	high_pool	5807.984459876567
+FOCUS_cfk8bd	class	Bray-Curtis distance	high_pool	0.08823355418619139
+FOCUS_cfk8bd	family	Bray-Curtis distance	high_pool	0.28917876730859665
+FOCUS_cfk8bd	genus	Bray-Curtis distance	high_pool	0.5781618119751126
+FOCUS_cfk8bd	order	Bray-Curtis distance	high_pool	0.16720665300651483
+FOCUS_cfk8bd	phylum	Bray-Curtis distance	high_pool	0.06721891242643416
+FOCUS_cfk8bd	species	Bray-Curtis distance	high_pool	1.0
+FOCUS_cfk8bd	strain	Bray-Curtis distance	high_pool	1.0
+FOCUS_cfk8bd	superkingdom	Bray-Curtis distance	high_pool	0.013911489894840263
+FOCUS_cfk8bd	superkingdom	Shannon diversity	high_pool	0.11926680249278139
+FOCUS_cfk8bd	superkingdom	Shannon equitability	high_pool	0.1720656244990192
+FOCUS_cfk8bd	phylum	Shannon diversity	high_pool	1.5062952864533017
+FOCUS_cfk8bd	phylum	Shannon equitability	high_pool	0.48730980217264935
+FOCUS_cfk8bd	class	Shannon diversity	high_pool	2.191995864756694
+FOCUS_cfk8bd	class	Shannon equitability	high_pool	0.6383238300636993
+FOCUS_cfk8bd	order	Shannon diversity	high_pool	2.8691755804331898
+FOCUS_cfk8bd	order	Shannon equitability	high_pool	0.6898908968884461
+FOCUS_cfk8bd	family	Shannon diversity	high_pool	4.045910546865887
+FOCUS_cfk8bd	family	Shannon equitability	high_pool	0.8436378754240305
+FOCUS_cfk8bd	genus	Shannon diversity	high_pool	4.733043408484594
+FOCUS_cfk8bd	genus	Shannon equitability	high_pool	0.8703520378451033
+FOCUS_cfk8bd	species	Shannon diversity	high_pool	5.468651510065438
+FOCUS_cfk8bd	species	Shannon equitability	high_pool	0.9170082587929975
+FOCUS_cfk8bd	strain	Shannon diversity	high_pool	5.163899976545268
+FOCUS_cfk8bd	strain	Shannon equitability	high_pool	0.9080222179595996
+FOCUS_cfk8bd	genus	F1 score	high_pool	0.28773584905660377
+FOCUS_cfk8bd	genus	False negatives	high_pool	133.0
+FOCUS_cfk8bd	genus	False positives	high_pool	169.0
+FOCUS_cfk8bd	genus	Jaccard index	high_pool	0.16804407713498623
+FOCUS_cfk8bd	genus	Taxon counts	high_pool	230.0
+FOCUS_cfk8bd	genus	Purity (precision)	high_pool	0.26521739130434785
+FOCUS_cfk8bd	genus	Completeness (recall)	high_pool	0.31443298969072164
+FOCUS_cfk8bd	genus	True positives	high_pool	61.0
+FOCUS_cfk8bd	family	F1 score	high_pool	0.6507177033492823
+FOCUS_cfk8bd	family	False negatives	high_pool	20.0
+FOCUS_cfk8bd	family	False positives	high_pool	53.0
+FOCUS_cfk8bd	family	Jaccard index	high_pool	0.48226950354609927
+FOCUS_cfk8bd	family	Taxon counts	high_pool	121.0
+FOCUS_cfk8bd	family	Purity (precision)	high_pool	0.5619834710743802
+FOCUS_cfk8bd	family	Completeness (recall)	high_pool	0.7727272727272727
+FOCUS_cfk8bd	family	True positives	high_pool	68.0
+FOCUS_cfk8bd	order	F1 score	high_pool	0.6538461538461537
+FOCUS_cfk8bd	order	False negatives	high_pool	6.0
+FOCUS_cfk8bd	order	False positives	high_pool	30.0
+FOCUS_cfk8bd	order	Jaccard index	high_pool	0.4857142857142857
+FOCUS_cfk8bd	order	Taxon counts	high_pool	64.0
+FOCUS_cfk8bd	order	Purity (precision)	high_pool	0.53125
+FOCUS_cfk8bd	order	Completeness (recall)	high_pool	0.85
+FOCUS_cfk8bd	order	True positives	high_pool	34.0
+FOCUS_cfk8bd	class	F1 score	high_pool	0.7307692307692307
+FOCUS_cfk8bd	class	False negatives	high_pool	2.0
+FOCUS_cfk8bd	class	False positives	high_pool	12.0
+FOCUS_cfk8bd	class	Jaccard index	high_pool	0.5757575757575758
+FOCUS_cfk8bd	class	Taxon counts	high_pool	31.0
+FOCUS_cfk8bd	class	Purity (precision)	high_pool	0.6129032258064516
+FOCUS_cfk8bd	class	Completeness (recall)	high_pool	0.9047619047619048
+FOCUS_cfk8bd	class	True positives	high_pool	19.0
+FOCUS_cfk8bd	superkingdom	F1 score	high_pool	1.0
+FOCUS_cfk8bd	superkingdom	False negatives	high_pool	0.0
+FOCUS_cfk8bd	superkingdom	False positives	high_pool	0.0
+FOCUS_cfk8bd	superkingdom	Jaccard index	high_pool	1.0
+FOCUS_cfk8bd	superkingdom	Taxon counts	high_pool	2.0
+FOCUS_cfk8bd	superkingdom	Purity (precision)	high_pool	1.0
+FOCUS_cfk8bd	superkingdom	Completeness (recall)	high_pool	1.0
+FOCUS_cfk8bd	superkingdom	True positives	high_pool	2.0
+FOCUS_cfk8bd	phylum	F1 score	high_pool	0.5882352941176471
+FOCUS_cfk8bd	phylum	False negatives	high_pool	2.0
+FOCUS_cfk8bd	phylum	False positives	high_pool	12.0
+FOCUS_cfk8bd	phylum	Jaccard index	high_pool	0.4166666666666667
+FOCUS_cfk8bd	phylum	Taxon counts	high_pool	22.0
+FOCUS_cfk8bd	phylum	Purity (precision)	high_pool	0.45454545454545453
+FOCUS_cfk8bd	phylum	Completeness (recall)	high_pool	0.8333333333333334
+FOCUS_cfk8bd	phylum	True positives	high_pool	10.0
+FOCUS_cfk8bd	species	False negatives	high_pool	241.0
+FOCUS_cfk8bd	species	False positives	high_pool	389.0
+FOCUS_cfk8bd	species	Jaccard index	high_pool	0.0
+FOCUS_cfk8bd	species	Taxon counts	high_pool	389.0
+FOCUS_cfk8bd	species	Purity (precision)	high_pool	0.0
+FOCUS_cfk8bd	species	Completeness (recall)	high_pool	0.0
+FOCUS_cfk8bd	species	True positives	high_pool	0.0
+FOCUS_cfk8bd	strain	False negatives	high_pool	596.0
+FOCUS_cfk8bd	strain	False positives	high_pool	295.0
+FOCUS_cfk8bd	strain	Jaccard index	high_pool	0.0
+FOCUS_cfk8bd	strain	Taxon counts	high_pool	295.0
+FOCUS_cfk8bd	strain	Purity (precision)	high_pool	0.0
+FOCUS_cfk8bd	strain	Completeness (recall)	high_pool	0.0
+FOCUS_cfk8bd	strain	True positives	high_pool	0.0
+FOCUS_cfk8bd	class	L1 norm error	high_pool	0.17646710837238275
+FOCUS_cfk8bd	family	L1 norm error	high_pool	0.5783575346171929
+FOCUS_cfk8bd	genus	L1 norm error	high_pool	1.1563236239502255
+FOCUS_cfk8bd	order	L1 norm error	high_pool	0.3344133060130295
+FOCUS_cfk8bd	phylum	L1 norm error	high_pool	0.13443782485286834
+FOCUS_cfk8bd	species	L1 norm error	high_pool	1.9999999999999998
+FOCUS_cfk8bd	strain	L1 norm error	high_pool	2.0000000000000018
+FOCUS_cfk8bd	superkingdom	L1 norm error	high_pool	0.027822979789680524
+FOCUS_cfk8bd	na	Weighted UniFrac error	high_pool	7.102278895394143
+FOCUS_cfk8bd	na	Unweighted UniFrac error	high_pool	5386.6140317602485
+FOCUS_cfk8d	class	Bray-Curtis distance	high_pool	0.10539436435433844
+FOCUS_cfk8d	family	Bray-Curtis distance	high_pool	0.31608595620969177
+FOCUS_cfk8d	genus	Bray-Curtis distance	high_pool	0.6123906888085925
+FOCUS_cfk8d	order	Bray-Curtis distance	high_pool	0.19276566122158648
+FOCUS_cfk8d	phylum	Bray-Curtis distance	high_pool	0.06633598365151111
+FOCUS_cfk8d	species	Bray-Curtis distance	high_pool	1.0
+FOCUS_cfk8d	strain	Bray-Curtis distance	high_pool	1.0
+FOCUS_cfk8d	superkingdom	Bray-Curtis distance	high_pool	0.005070889999999968
+FOCUS_cfk8d	superkingdom	Shannon diversity	high_pool	0.0853331743315702
+FOCUS_cfk8d	superkingdom	Shannon equitability	high_pool	0.12310974743146971
+FOCUS_cfk8d	phylum	Shannon diversity	high_pool	1.465297380938614
+FOCUS_cfk8d	phylum	Shannon equitability	high_pool	0.49764909081370545
+FOCUS_cfk8d	class	Shannon diversity	high_pool	2.10912971581504
+FOCUS_cfk8d	class	Shannon equitability	high_pool	0.6399375337930544
+FOCUS_cfk8d	order	Shannon diversity	high_pool	2.7439358475750706
+FOCUS_cfk8d	order	Shannon equitability	high_pool	0.7126832868320011
+FOCUS_cfk8d	family	Shannon diversity	high_pool	3.932631985925518
+FOCUS_cfk8d	family	Shannon equitability	high_pool	0.8558279466443801
+FOCUS_cfk8d	genus	Shannon diversity	high_pool	4.555625490906039
+FOCUS_cfk8d	genus	Shannon equitability	high_pool	0.8744865342278056
+FOCUS_cfk8d	species	Shannon diversity	high_pool	5.310758645620826
+FOCUS_cfk8d	species	Shannon equitability	high_pool	0.9201789522441929
+FOCUS_cfk8d	strain	Shannon diversity	high_pool	4.91884302809261
+FOCUS_cfk8d	strain	Shannon equitability	high_pool	0.9112068865041106
+FOCUS_cfk8d	genus	F1 score	high_pool	0.2864721485411141
+FOCUS_cfk8d	genus	False negatives	high_pool	140.0
+FOCUS_cfk8d	genus	False positives	high_pool	129.0
+FOCUS_cfk8d	genus	Jaccard index	high_pool	0.16718266253869968
+FOCUS_cfk8d	genus	Taxon counts	high_pool	183.0
+FOCUS_cfk8d	genus	Purity (precision)	high_pool	0.29508196721311475
+FOCUS_cfk8d	genus	Completeness (recall)	high_pool	0.27835051546391754
+FOCUS_cfk8d	genus	True positives	high_pool	54.0
+FOCUS_cfk8d	family	F1 score	high_pool	0.6203208556149733
+FOCUS_cfk8d	family	False negatives	high_pool	30.0
+FOCUS_cfk8d	family	False positives	high_pool	41.0
+FOCUS_cfk8d	family	Jaccard index	high_pool	0.4496124031007752
+FOCUS_cfk8d	family	Taxon counts	high_pool	99.0
+FOCUS_cfk8d	family	Purity (precision)	high_pool	0.5858585858585859
+FOCUS_cfk8d	family	Completeness (recall)	high_pool	0.6590909090909091
+FOCUS_cfk8d	family	True positives	high_pool	58.0
+FOCUS_cfk8d	order	F1 score	high_pool	0.6436781609195402
+FOCUS_cfk8d	order	False negatives	high_pool	12.0
+FOCUS_cfk8d	order	False positives	high_pool	19.0
+FOCUS_cfk8d	order	Jaccard index	high_pool	0.4745762711864407
+FOCUS_cfk8d	order	Taxon counts	high_pool	47.0
+FOCUS_cfk8d	order	Purity (precision)	high_pool	0.5957446808510638
+FOCUS_cfk8d	order	Completeness (recall)	high_pool	0.7
+FOCUS_cfk8d	order	True positives	high_pool	28.0
+FOCUS_cfk8d	class	F1 score	high_pool	0.6666666666666666
+FOCUS_cfk8d	class	False negatives	high_pool	5.0
+FOCUS_cfk8d	class	False positives	high_pool	11.0
+FOCUS_cfk8d	class	Jaccard index	high_pool	0.5
+FOCUS_cfk8d	class	Taxon counts	high_pool	27.0
+FOCUS_cfk8d	class	Purity (precision)	high_pool	0.5925925925925926
+FOCUS_cfk8d	class	Completeness (recall)	high_pool	0.7619047619047619
+FOCUS_cfk8d	class	True positives	high_pool	16.0
+FOCUS_cfk8d	superkingdom	F1 score	high_pool	1.0
+FOCUS_cfk8d	superkingdom	False negatives	high_pool	0.0
+FOCUS_cfk8d	superkingdom	False positives	high_pool	0.0
+FOCUS_cfk8d	superkingdom	Jaccard index	high_pool	1.0
+FOCUS_cfk8d	superkingdom	Taxon counts	high_pool	2.0
+FOCUS_cfk8d	superkingdom	Purity (precision)	high_pool	1.0
+FOCUS_cfk8d	superkingdom	Completeness (recall)	high_pool	1.0
+FOCUS_cfk8d	superkingdom	True positives	high_pool	2.0
+FOCUS_cfk8d	phylum	F1 score	high_pool	0.5161290322580646
+FOCUS_cfk8d	phylum	False negatives	high_pool	4.0
+FOCUS_cfk8d	phylum	False positives	high_pool	11.0
+FOCUS_cfk8d	phylum	Jaccard index	high_pool	0.34782608695652173
+FOCUS_cfk8d	phylum	Taxon counts	high_pool	19.0
+FOCUS_cfk8d	phylum	Purity (precision)	high_pool	0.42105263157894735
+FOCUS_cfk8d	phylum	Completeness (recall)	high_pool	0.6666666666666666
+FOCUS_cfk8d	phylum	True positives	high_pool	8.0
+FOCUS_cfk8d	species	False negatives	high_pool	241.0
+FOCUS_cfk8d	species	False positives	high_pool	321.0
+FOCUS_cfk8d	species	Jaccard index	high_pool	0.0
+FOCUS_cfk8d	species	Taxon counts	high_pool	321.0
+FOCUS_cfk8d	species	Purity (precision)	high_pool	0.0
+FOCUS_cfk8d	species	Completeness (recall)	high_pool	0.0
+FOCUS_cfk8d	species	True positives	high_pool	0.0
+FOCUS_cfk8d	strain	False negatives	high_pool	596.0
+FOCUS_cfk8d	strain	False positives	high_pool	221.0
+FOCUS_cfk8d	strain	Jaccard index	high_pool	0.0
+FOCUS_cfk8d	strain	Taxon counts	high_pool	221.0
+FOCUS_cfk8d	strain	Purity (precision)	high_pool	0.0
+FOCUS_cfk8d	strain	Completeness (recall)	high_pool	0.0
+FOCUS_cfk8d	strain	True positives	high_pool	0.0
+FOCUS_cfk8d	class	L1 norm error	high_pool	0.21078872870867682
+FOCUS_cfk8d	family	L1 norm error	high_pool	0.6321719124193834
+FOCUS_cfk8d	genus	L1 norm error	high_pool	1.2247813776171843
+FOCUS_cfk8d	order	L1 norm error	high_pool	0.38553132244317295
+FOCUS_cfk8d	phylum	L1 norm error	high_pool	0.13267196730302222
+FOCUS_cfk8d	species	L1 norm error	high_pool	2.0000000000000004
+FOCUS_cfk8d	strain	L1 norm error	high_pool	2.0000000000000018
+FOCUS_cfk8d	superkingdom	L1 norm error	high_pool	0.010141779999999935
+FOCUS_cfk8d	na	Weighted UniFrac error	high_pool	7.383389452722503
+FOCUS_cfk8d	na	Unweighted UniFrac error	high_pool	5754.785152460888
