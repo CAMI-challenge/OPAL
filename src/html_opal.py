@@ -305,8 +305,8 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
     alpha_diversity_metics = 'Alpha diversity'
     all_metrics_labels = [presence_metrics_label, estimates_metrics_label, alpha_diversity_metics]
 
-    styles = [{'selector': 'td', 'props': [('width', '77pt')]},
-              {'selector': 'th', 'props': [('width', '77pt'), ('text-align', 'left')]},
+    styles = [{'selector': 'td', 'props': [('width', '100pt')]},
+              {'selector': 'th', 'props': [('width', '100pt'), ('text-align', 'left')]},
               {'selector': 'th:nth-child(1)', 'props': [('width', '120pt'), ('font-weight', 'normal')]},
               {'selector': '', 'props': [('width', 'max-content'), ('width', '-moz-max-content'), ('border-top', '1px solid lightgray'), ('border-spacing', '0px')]},
               {'selector': 'expand-toggle:checked ~ * .data', 'props': [('background-color', 'white !important')]}]

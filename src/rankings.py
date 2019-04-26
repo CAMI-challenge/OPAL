@@ -40,11 +40,8 @@ def highscore_table(metrics, useranks=['phylum', 'class', 'order', 'family', 'ge
     for (metric, sample, rank), g in pd_metrics.groupby(['metric', 'sample', 'rank']):
         if metric in sort_ascendingly:
             if ((rank in useranks) and (metric != c.UNIFRAC)) or ((rank == 'rank independent') and (metric == c.UNIFRAC)):
-                res = g.groupby('tool').sum().sort_values('value', ascending=sort_ascendingly[metric])
-                worstpos = res.shape[0]+1
-                res['position'] = range(0, worstpos-1)
-                for m in set(pd_metrics['tool'].unique()) - set(res.index):
-                    res.loc[m, 'position'] = worstpos
+                res = g.groupby('tool').sum()
+                res['position'] = res['value'].rank(method='min', ascending=sort_ascendingly[metric]) - 1
                 res['metric'] = metric
                 res['sample'] = sample
                 res['rank'] = rank
