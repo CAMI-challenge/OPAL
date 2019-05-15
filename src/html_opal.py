@@ -137,7 +137,7 @@ def get_formatted_pd_rankings(pd_rankings):
     return pd_show, pd_show_unsorted_pos
 
 
-def create_rankings_html(pd_rankings):
+def create_rankings_html(pd_rankings, ranks_scored):
     pd_show, pd_show_unsorted_pos = get_formatted_pd_rankings(pd_rankings)
 
     table_source = ColumnDataSource(pd_show)
@@ -199,7 +199,8 @@ def create_rankings_html(pd_rankings):
     p = figure(x_range=pd_show_unsorted_pos[SUM_OF_SCORES].tolist(), plot_width=800, plot_height=400, title=SUM_OF_SCORES + " - lower is better")
     p.vbar(x='x', top='top', source=source, width=0.5, bottom=0, color="firebrick")
 
-    col_rankings = column([Div(text="<font color='navy'><u>Hint 1:</u> click on the columns of scores for sorting.</font>", style={"width": "500px", "margin-bottom": "10px"}),
+    col_rankings = column([Div(text="<font color='navy'><u>Hint 1:</u> click on the columns of scores for sorting.</font>", style={"width": "600px", "margin-bottom": "0px"}),
+                           Div(text="Taxonomic ranks scored: " + ", ".join(ranks_scored), style={"width": "600px", "margin-bottom": "0px"}),
                            data_table,
                            Div(text="<font color='navy'><u>Hint 2:</u> slide the bars to change the weight of the metrics.</font>", style={"width": "500px", "margin-top": "18px"}),
                            row(weight_recall, weight_precision),
@@ -482,8 +483,8 @@ def create_computing_efficiency_tab(pd_metrics, plots_list, tabs_list):
     tabs_list.append(Panel(child=column_time_memory, title="Computing efficiency"))
 
 
-def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, output_dir, desc_text):
-    col_rankings = create_rankings_html(pd_rankings)
+def create_html(pd_rankings, ranks_scored, pd_metrics, labels, sample_ids_list, plots_list, output_dir, desc_text):
+    col_rankings = create_rankings_html(pd_rankings, ranks_scored)
 
     create_heatmap_bar(output_dir)
 
@@ -491,7 +492,7 @@ def create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, ou
 
     tabs_plots = create_plots_html(plots_list)
 
-    metrics_row = row(column(select_sample, select_rank, heatmap_legend_div, mytable1, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-height-auto', 'bk-inline-block']), column(tabs_plots, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-inline-block']), css_classes=['bk-width-auto', 'bk-inline-block'], sizing_mode='scale_width')
+    metrics_row = row(column(row(select_sample, select_rank, css_classes=['bk-width-auto', 'bk-combo-box']), heatmap_legend_div, mytable1, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-height-auto', 'bk-inline-block']), column(tabs_plots, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-inline-block']), css_classes=['bk-width-auto', 'bk-inline-block'], sizing_mode='scale_width')
 
     beta_div_column = create_beta_diversity_tab(labels, plots_list)
 

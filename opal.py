@@ -304,6 +304,7 @@ def main():
     group2.add_argument('-t', '--time', help='Comma-separated runtimes in hours', required=False)
     group2.add_argument('-m', '--memory', help='Comma-separated memory usages in gigabytes', required=False)
     group2.add_argument('-d', '--desc', help='Description for HTML page', required=False)
+    group2.add_argument('-r', '--ranks', help='Highest and lowest taxonomic ranks to consider in performance rankings, comma-separated. Valid ranks: superkingdom, phylum, class, order, family, genus, species, strain (default:superkingdom,species)', required=False)
     group2.add_argument('--silent', help='Silent mode', action='store_true')
     group2.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
     group2.add_argument('-h', '--help', action='help', help='Show this help message and exit')
@@ -357,7 +358,7 @@ def main():
     logger.info('done')
 
     logger.info('Computing rankings...')
-    pd_rankings = rk.highscore_table(pd_metrics)
+    pd_rankings, ranks_scored = rk.highscore_table(pd_metrics, args.ranks)
     logger.info('done')
 
     if time_list or memory_list:
@@ -366,7 +367,7 @@ def main():
         logger.info('done')
 
     logger.info('Creating HTML page...')
-    html.create_html(pd_rankings, pd_metrics, labels, sample_ids_list, plots_list, output_dir, args.desc)
+    html.create_html(pd_rankings, ranks_scored, pd_metrics, labels, sample_ids_list, plots_list, output_dir, args.desc)
     logger.info('done')
 
     logger.info('OPAL finished successfully. All results have been saved to {}'.format(output_dir))

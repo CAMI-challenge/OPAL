@@ -2,9 +2,23 @@
 
 from src.utils import constants as c
 import pandas as pd
+import logging
 
 
-def highscore_table(metrics, useranks=['phylum', 'class', 'order', 'family', 'genus']):
+def get_user_ranks_list(ranks):
+    rank_high_low = [x.strip() for x in ranks.split(',')]
+    if len(rank_high_low) != 2 or rank_high_low[0] not in c.ALL_RANKS or rank_high_low[1] not in c.ALL_RANKS:
+        logging.getLogger('opal').warning('Invalid ranks provided with option --ranks. Default will be used.')
+        return c.ALL_RANKS[:7]
+    index1 = c.ALL_RANKS.index(rank_high_low[0])
+    index2 = c.ALL_RANKS.index(rank_high_low[1])
+    if index1 < index2:
+        return c.ALL_RANKS[index1:index2 + 1]
+    else:
+        return c.ALL_RANKS[index2:index1 + 1]
+
+
+def highscore_table(metrics, ranks):
     """Compile a ranking table like Figure 3c of CAMI publication.
     
     Note that Figure 3c took into account mean scores for all samples of one of the three
@@ -18,7 +32,7 @@ def highscore_table(metrics, useranks=['phylum', 'class', 'order', 'family', 'ge
         Information about metrics of tool performance.
         Must contain columns: metric, rank, tool, value
     useranks : [str]
-        Default: 'phylum', 'class', 'order', 'family', 'genus'
+        Old default (CAMI 1): 'phylum', 'class', 'order', 'family', 'genus'
         Which ranks should be considered for rank dependent metrics.
         Here we decided to exclude e.g. species, because most profilers
         fail at that rank and we don't want to emphasize on this rank.
@@ -26,6 +40,11 @@ def highscore_table(metrics, useranks=['phylum', 'class', 'order', 'family', 'ge
     -------
     Pandas.DataFrame holding a high scoring table as in Figure 3c.
     """
+    if ranks:
+        useranks = get_user_ranks_list(ranks)
+    else:
+        useranks = c.ALL_RANKS[:7]
+
     pd_metrics = metrics.copy()
     pd_metrics.loc[pd_metrics[pd.isnull(pd_metrics['rank'])].index, 'rank'] = 'rank independent'
 
@@ -48,7 +67,7 @@ def highscore_table(metrics, useranks=['phylum', 'class', 'order', 'family', 'ge
                 posresults.append(res)
     posresults = pd.concat(posresults)
 
-    return posresults.groupby(['metric', 'tool'])['position'].sum().to_frame()
+    return posresults.groupby(['metric', 'tool'])['position'].sum().to_frame(), useranks
 
     # reformat like Figure 3c
     os = []
