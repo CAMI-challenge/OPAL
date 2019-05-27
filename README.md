@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/CAMI-challenge/OPAL.svg?style=svg)](https://circleci.com/gh/CAMI-challenge/OPAL)
+[![CircleCI](https://circleci.com/gh/CAMI-challenge/OPAL.svg?style=shield)](https://circleci.com/gh/CAMI-challenge/OPAL) [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/cami-opal/README.html)
 
 # OPAL: Open-community Profiling Assessment tooL
 
@@ -44,7 +44,7 @@ See [default.txt](requirements/default.txt) for all dependencies.
 
 ### Steps
 
-You can run [OPAL using Docker (see below)](#running-opalpy-using-docker) or install it as follows.
+You can [install OPAL using Docker](#running-opalpy-using-docker), [Bioconda](http://bioconda.github.io/recipes/cami-opal/README.html), or as follows.
 
 Install pip if not already installed (tested on Linux Ubuntu 18.04):
 
@@ -88,22 +88,22 @@ The BIOM format used by OPAL is a sparse matrix stored in a JSON or HDF5 file, w
 ## Running _opal.py_
 ~~~BASH
 usage: opal.py -g GOLD_STANDARD_FILE -o OUTPUT_DIR [-n] [-p] [-l LABELS]
-               [-t TIME] [-m MEMORY] [-d DESC] [--silent] [-v] [-h]
+               [-t TIME] [-m MEMORY] [-d DESC] [-r RANKS] [--silent] [-v] [-h]
                profiles_files [profiles_files ...]
 
 OPAL: Open-community Profiling Assessment tooL
-                                                                                                                                            
-required arguments:                                                                                                                            
-  profiles_files        Files of profiles                                                                                                          
-  -g GOLD_STANDARD_FILE, --gold_standard_file GOLD_STANDARD_FILE                                                                                     
-                        Gold standard file                                                                                                              
-  -o OUTPUT_DIR, --output_dir OUTPUT_DIR                                                                                                                  
-                        Directory to write the results to                                                                                                     
-                                                                                                                                                                
-optional arguments:                                                                                                                                               
-  -n, --no_normalization                                                                                                                                            
-                        Do not normalize samples                                                                                                                     
-  -p, --plot_abundances                                                                                                                                                
+
+required arguments:
+  profiles_files        Files of profiles
+  -g GOLD_STANDARD_FILE, --gold_standard_file GOLD_STANDARD_FILE
+                        Gold standard file
+  -o OUTPUT_DIR, --output_dir OUTPUT_DIR
+                        Directory to write the results to
+
+optional arguments:
+  -n, --no_normalization
+                        Do not normalize samples
+  -p, --plot_abundances
                         Plot abundances in the gold standard (can take some
                         minutes)
   -l LABELS, --labels LABELS
@@ -112,6 +112,11 @@ optional arguments:
   -m MEMORY, --memory MEMORY
                         Comma-separated memory usages in gigabytes
   -d DESC, --desc DESC  Description for HTML page
+  -r RANKS, --ranks RANKS
+                        Highest and lowest taxonomic ranks to consider in
+                        performance rankings, comma-separated. Valid ranks:
+                        superkingdom, phylum, class, order, family, genus,
+                        species, strain (default:superkingdom,species)
   --silent              Silent mode
   -v, --version         show program's version number and exit
   -h, --help            Show this help message and exit
