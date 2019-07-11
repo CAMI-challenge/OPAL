@@ -6,6 +6,7 @@ import re
 import sys
 import subprocess
 import logging
+import shutil
 from opal import get_labels
 from opal import make_sure_path_exists
 from opal_stats import get_image_dir_name
@@ -124,7 +125,10 @@ def main():
             for volume in args.volume:
                 parameters.append('--volume=' + volume)
         try:
-            subprocess.run([sys.executable, 'opal_stats.py'] + parameters, check=True)
+            opal_stats = shutil.which('opal_stats.py', path=os.getcwd())
+            if not opal_stats:
+                opal_stats = shutil.which('opal_stats.py')
+            subprocess.run([sys.executable, opal_stats] + parameters, check=True)
         except subprocess.CalledProcessError:
             logger.error('Error: opal_stats.py returned non-zero exit status for ' + image)
     logger.info('done')
@@ -152,7 +156,10 @@ def main():
     if args.desc:
         parameters.append('--desc=' + args.desc)
     parameters += profiles_list
-    subprocess.run([sys.executable, 'opal.py'] + parameters, check=True)
+    opal = shutil.which('opal.py', path=os.getcwd())
+    if not opal:
+        opal = shutil.which('opal.py')
+    subprocess.run([sys.executable, opal] + parameters, check=True)
 
 
 if __name__ == "__main__":
