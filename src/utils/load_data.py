@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import biom
+# import biom
 import os
 import logging
 from collections import defaultdict
@@ -182,36 +182,42 @@ def open_profile(file_path, normalize):
         logging.getLogger('opal').critical("Input file {} does not exist.".format(file_path))
         exit(1)
     try:
-        table = biom.load_table(file_path)
+        return open_profile_from_tsv(file_path, normalize)
     except:
-        try:
-            return open_profile_from_tsv(file_path, normalize)
-        except:
-            logging.getLogger('opal').critical("Input file could not be read.")
-            exit(1)
+        logging.getLogger('opal').critical("Input file could not be read.")
+        exit(1)
 
-    samples_list = []
-    samples = table.ids(axis='sample')
-    ids = table.ids(axis='observation')
-
-    for sample_id in samples:
-        sample_metadata = table.metadata(id=sample_id, axis='sample')
-        profile = []
-        for id in ids:
-            prediction = Prediction()
-            metadata = table.metadata(id=id, axis='observation')
-            prediction.taxid = id
-            prediction.rank = metadata['rank']
-            prediction.percentage = float(table.get_value_by_ids(obs_id=id, samp_id=sample_id))
-            prediction.taxpath = metadata['taxpath']
-            prediction.taxpathsn = metadata['taxpathsn']
-            profile.append(prediction)
-        samples_list.append((sample_id, sample_metadata, profile))
-
-    if normalize:
-        normalize_samples(samples_list)
-
-    return samples_list
+    # try:
+    #     table = biom.load_table(file_path)
+    # except:
+    #     try:
+    #         return open_profile_from_tsv(file_path, normalize)
+    #     except:
+    #         logging.getLogger('opal').critical("Input file could not be read.")
+    #         exit(1)
+    #
+    # samples_list = []
+    # samples = table.ids(axis='sample')
+    # ids = table.ids(axis='observation')
+    #
+    # for sample_id in samples:
+    #     sample_metadata = table.metadata(id=sample_id, axis='sample')
+    #     profile = []
+    #     for id in ids:
+    #         prediction = Prediction()
+    #         metadata = table.metadata(id=id, axis='observation')
+    #         prediction.taxid = id
+    #         prediction.rank = metadata['rank']
+    #         prediction.percentage = float(table.get_value_by_ids(obs_id=id, samp_id=sample_id))
+    #         prediction.taxpath = metadata['taxpath']
+    #         prediction.taxpathsn = metadata['taxpathsn']
+    #         profile.append(prediction)
+    #     samples_list.append((sample_id, sample_metadata, profile))
+    #
+    # if normalize:
+    #     normalize_samples(samples_list)
+    #
+    # return samples_list
 
 
 def get_taxa_names(profile):

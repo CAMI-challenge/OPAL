@@ -38,7 +38,7 @@ Taxonomic metagenome profilers predict the presence and relative abundance of mi
 
 ### Requirements
 
-OPAL requires Python 3.5.
+OPAL requires Python 3.7.
 
 See [default.txt](requirements/default.txt) for all dependencies.
 
@@ -61,7 +61,7 @@ sudo apt update
 Then run:
 
 ~~~BASH
-pip3 install numpy==1.15.3
+pip3 install numpy==1.16.4
 pip3 install cami-opal
 ~~~
 
@@ -73,6 +73,8 @@ source ~/.bashrc
 ~~~
 
 ## Inputs
+_`Note: Support for the BIOM format has been dropped (temporarily) in OPAL 1.0.4 due to incompatibility with Python 3.7.*.`_
+
 OPAL uses at least two files:
 1. A gold standard taxonomic profile
 2. One or more taxonomic profiles to be assessed
