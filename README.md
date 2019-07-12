@@ -73,7 +73,7 @@ source ~/.bashrc
 ~~~
 
 ## Inputs
-_`Note: Support for the BIOM format has been dropped (temporarily) in OPAL 1.0.4 due to incompatibility with Python 3.7.*.`_
+_**`Note: Support for the BIOM format has been dropped (temporarily) in OPAL 1.0.4 due to incompatibility with Python 3.7.*.`**_
 
 OPAL uses at least two files:
 1. A gold standard taxonomic profile

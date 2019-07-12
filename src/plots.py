@@ -358,7 +358,7 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
     fig, axes = plt.subplots(figsize=(9, 9), nrows=2, ncols=3, subplot_kw=dict(projection='radar'))
     fig.subplots_adjust(wspace=0.35, hspace=0.05, top=0.87, bottom=0.3)
 
-    for ax, rank in zip(axes.flatten(), c.PHYLUM_SPECIES):
+    for ax, rank in zip(axes.flat, c.PHYLUM_SPECIES):
         if grid_points:
             ax.set_rgrids(grid_points, fontsize='xx-small')
         else:
@@ -385,14 +385,18 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
             it += 1
         ax.set_varlabels(labels)
 
-        ax.set_ylim([0.0, 1.0])
-        ax.set_xlim([0.0, 1.0])
+        ax.set_rmax(1)
 
         # color red label of tools without a value for at least one metric
         xticklabels = ax.get_xticklabels()
         for metric in metric_to_toolindex:
             for toolindex in metric:
                 xticklabels[toolindex].set_color([1, 0, 0])
+
+        # move ticks labels closer to plot and set font size
+        for xticklabel in xticklabels:
+            xticklabel.set_position((.1,.1))
+            xticklabel.set_fontsize('small')
 
     ax = axes[0, 0]
     ax.legend(metrics, loc=(1.6 - 0.353 * len(metrics), 1.3), labelspacing=0.1, fontsize='small', ncol=len(metrics))
