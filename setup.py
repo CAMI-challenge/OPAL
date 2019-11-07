@@ -14,7 +14,7 @@ setup(
     version              = __version__,
     description          = 'OPAL: Open-community Profiling Assessment tooL',
     author               = 'CAMI',
-    author_email         = 'contact@cami-challenge.org',
+    author_email         = 'support@cami-challenge.org',
     url                  = 'http://cami-challenge.org',
     scripts              = glob.glob('*.py'),
     install_requires     = dependencies(),
@@ -22,7 +22,7 @@ setup(
     classifiers = [
         'Natural Language :: English',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Intended Audience :: Science/Research',
         'Operating System :: POSIX'

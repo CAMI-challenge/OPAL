@@ -95,7 +95,19 @@ def normalize_samples(samples_list):
                 prediction.percentage = (prediction.percentage / sum_per_rank[prediction.rank]) * 100.0
 
 
-def open_profile_from_tsv(file_path, normalize):
+def filter_tail(samples_list, filter_tail_percentage):
+    for sample in samples_list:
+        sample_id, sample_metadata, profile = sample
+        sorted_profile = sorted(profile, key=lambda x: x.percentage)
+        sum_per_rank = defaultdict(float)
+        profile.clear()
+        for prediction in sorted_profile:
+            sum_per_rank[prediction.rank] += prediction.percentage
+            if sum_per_rank[prediction.rank] > filter_tail_percentage:
+                profile.append(prediction)
+
+
+def open_profile_from_tsv(file_path, normalize, filter_tail_percentage):
     header = {}
     column_name_to_index = {}
     profile = []
@@ -151,6 +163,8 @@ def open_profile_from_tsv(file_path, normalize):
                 prediction = predictions_dict[taxid]
                 prediction.percentage += float(row_data[index_percentage])
             else:
+                if float(row_data[index_percentage]) == .0:
+                    continue
                 prediction = Prediction()
                 predictions_dict[taxid] = prediction
                 prediction.taxid = row_data[index_taxid]
@@ -171,18 +185,21 @@ def open_profile_from_tsv(file_path, normalize):
         logging.getLogger('opal').critical("Header in file {} is incomplete. Check if the header of each sample contains at least SAMPLEID, VERSION, and RANKS.\n".format(file_path))
         raise RuntimeError
 
+    if filter_tail_percentage:
+        filter_tail(samples_list, filter_tail_percentage)
+
     if normalize:
         normalize_samples(samples_list)
 
     return samples_list
 
 
-def open_profile(file_path, normalize):
+def open_profile(file_path, normalize, filter_tail_percentage):
     if not os.path.exists(file_path):
         logging.getLogger('opal').critical("Input file {} does not exist.".format(file_path))
         exit(1)
     try:
-        return open_profile_from_tsv(file_path, normalize)
+        return open_profile_from_tsv(file_path, normalize, filter_tail_percentage)
     except:
         logging.getLogger('opal').critical("Input file could not be read.")
         exit(1)

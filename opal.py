@@ -128,10 +128,10 @@ def compute_metrics(sample_metadata, profile, gs_pf_profile, gs_rank_to_taxid_to
     return unifrac, shannon, l1norm, binary_metrics, braycurtis
 
 
-def load_profiles(gold_standard_file, profiles_files, no_normalization):
+def load_profiles(gold_standard_file, profiles_files, no_normalization, filter_tail_percentage):
     normalize = False if no_normalization else True
 
-    gs_samples_list = load_data.open_profile(gold_standard_file, normalize)
+    gs_samples_list = load_data.open_profile(gold_standard_file, normalize, filter_tail_percentage)
     sample_ids_list = []
     for sample in gs_samples_list:
         sample_id, sample_metadata, profile = sample
@@ -139,7 +139,7 @@ def load_profiles(gold_standard_file, profiles_files, no_normalization):
 
     profiles_list_to_samples_list = []
     for profile_file in profiles_files:
-        profiles_list_to_samples_list.append(load_data.open_profile(profile_file, normalize))
+        profiles_list_to_samples_list.append(load_data.open_profile(profile_file, normalize, filter_tail_percentage))
 
     return sample_ids_list, gs_samples_list, profiles_list_to_samples_list
 
@@ -299,6 +299,7 @@ def main():
     group1.add_argument('-o', '--output_dir', help='Directory to write the results to', required=True)
     group2 = parser.add_argument_group('optional arguments')
     group2.add_argument('-n', '--no_normalization', help='Do not normalize samples', action='store_true')
+    group2.add_argument('-f', '--filter', help='Filter out predictions with the smallest rel. abundances summing up to [FILTER]%% within a rank (default: 0)', type=float)
     group2.add_argument('-p', '--plot_abundances', help='Plot abundances in the gold standard (can take some minutes)', action='store_true')
     group2.add_argument('-l', '--labels', help='Comma-separated profiles names', required=False)
     group2.add_argument('-t', '--time', help='Comma-separated runtimes in hours', required=False)
@@ -320,7 +321,8 @@ def main():
     logger.info('Loading profiles...')
     sample_ids_list, gs_samples_list, profiles_list_to_samples_list = load_profiles(args.gold_standard_file,
                                                                                     args.profiles_files,
-                                                                                    args.no_normalization)
+                                                                                    args.no_normalization,
+                                                                                    args.filter)
     logger.info('done')
 
     plots_list = []
