@@ -6,6 +6,7 @@ import numpy as np
 import itertools
 import math
 import copy
+import logging
 from collections import defaultdict
 from collections import OrderedDict
 import matplotlib
@@ -393,7 +394,7 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
             for toolindex in metric:
                 xticklabels[toolindex].set_color([1, 0, 0])
 
-        # move ticks labels closer to plot and set font size
+        # move tick labels closer to plot and set font size
         for xticklabel in xticklabels:
             xticklabel.set_position((.1,.1))
             xticklabel.set_fontsize('small')
@@ -442,7 +443,20 @@ def plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir):
     plt.close(fig)
 
 
-def plot_all(pd_metrics, labels, output_dir):
+def get_metrics_for_spider_plot(metrics_plot):
+    initial_to_metric = {'w':c.UNIFRAC, 'l':c.L1NORM, 'c':c.RECALL, 'p':c.PRECISION, 'f':c.FP, 't':c.TP}
+    metrics_initial = [x.strip() for x in metrics_plot.split(',')]
+    metrics_list = []
+    for initial in metrics_initial:
+        if initial not in initial_to_metric:
+            logging.getLogger('opal').warning('Invalid metric initial {} provided with option --metrics_plot. Defaults will be used.'.format(initial))
+            return [c.UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.FP]
+        else:
+            metrics_list.append(initial_to_metric[initial])
+    return metrics_list
+
+
+def plot_all(pd_metrics, labels, output_dir, metrics_plot):
     metrics = [c.UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.FP]
     rank_to_metric_to_toolvalues = defaultdict(lambda : defaultdict(list))
 
@@ -457,6 +471,7 @@ def plot_all(pd_metrics, labels, output_dir):
 
     # store maximum values per rank
     rank_to_max_fp = defaultdict()
+    rank_to_max_tp = defaultdict()
     rank_to_max_unifrac = defaultdict()
     rank_to_max_l1norm = defaultdict()
     rank_to_max_recall = defaultdict()
@@ -464,6 +479,7 @@ def plot_all(pd_metrics, labels, output_dir):
     for rank in c.PHYLUM_SPECIES:
         pd_rank = pd_grouped.loc[(pd_grouped.index.get_level_values('rank') == rank) & (pd_grouped.index.get_level_values('tool') != c.GS)]
         rank_to_max_fp[rank] = pd_rank[c.FP].max()
+        rank_to_max_tp[rank] = pd_rank[c.TP].max()
         rank_to_max_l1norm[rank] = pd_rank[c.L1NORM].max()
         rank_to_max_recall[rank] = pd_rank[c.RECALL].max()
         rank_to_max_precision[rank] = pd_rank[c.PRECISION].max()
@@ -503,6 +519,12 @@ def plot_all(pd_metrics, labels, output_dir):
             else:
                 tool_to_rank_to_metric_to_value[tool][rank][c.FP] = g[c.FP].values[0] if len(g[c.FP].values) else None
 
+            if rank_to_max_tp[rank] > 0:
+                tool_to_rank_to_metric_to_value[tool][rank][c.TP] = (g[c.TP].values[0] / rank_to_max_tp[rank]) if len(g[c.TP].values) else None
+            else:
+                tool_to_rank_to_metric_to_value[tool][rank][c.TP] = g[c.TP].values[0] if len(g[c.TP].values) else None
+
+    metrics_for_plot = get_metrics_for_spider_plot(metrics_plot) if metrics_plot else metrics
     present_labels = []
     for label in labels:
         if label not in tool_to_rank_to_metric_to_value:
@@ -510,17 +532,18 @@ def plot_all(pd_metrics, labels, output_dir):
         else:
             present_labels.append(label)
         for rank in c.PHYLUM_SPECIES:
-            for metric in metrics + [c.RECALL+'absolute', c.PRECISION+'absolute']:
+            for metric in metrics_for_plot + [c.RECALL+'absolute', c.PRECISION+'absolute']:
                 if metric in tool_to_rank_to_metric_to_value[label][rank]:
                     rank_to_metric_to_toolvalues[rank][metric].append(tool_to_rank_to_metric_to_value[label][rank][metric])
             rank_to_metric_to_toolvalues[rank][c.UNIFRAC].append(tool_to_rank_to_metric_to_value[label]['rank independent'][c.UNIFRAC])
 
-    plots_list = spider_plot(metrics,
+    colors = ['b', 'g', 'r', 'k', 'm', 'y']
+    plots_list = spider_plot(metrics_for_plot,
                              present_labels,
                              rank_to_metric_to_toolvalues,
                              output_dir,
                              'spider_plot',
-                             ['b', 'g', 'r', 'k', 'm'])
+                             colors[:len(metrics_for_plot)])
 
     plots_list += spider_plot([c.RECALL, c.PRECISION],
                               present_labels,
