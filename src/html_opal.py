@@ -196,7 +196,7 @@ def create_rankings_html(pd_rankings, ranks_scored):
     weight_unifrac = Slider(start=0, end=10, value=1, step=.1, title=c.UNIFRAC + " weight", callback=callback)
     callback.args["weight_unifrac"] = weight_unifrac
 
-    p = figure(x_range=pd_show_unsorted_pos[SUM_OF_SCORES].tolist(), plot_width=800, plot_height=400, title=SUM_OF_SCORES + " - lower is better")
+    p = figure(x_range=pd_show_unsorted_pos[SUM_OF_SCORES].tolist(), plot_width=1000, plot_height=400, title=SUM_OF_SCORES + " - lower is better")
     p.vbar(x='x', top='top', source=source, width=0.5, bottom=0, color="firebrick")
 
     col_rankings = column([Div(text="<font color='navy'><u>Hint 1:</u> click on the columns of scores for sorting.</font>", style={"width": "600px", "margin-bottom": "0px"}),

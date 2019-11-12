@@ -191,9 +191,9 @@ def plot_samples_hist(gs_samples_list, sample_ids_list, output_dir):
         fig, axs = plt.subplots(figsize=(6, 5))
         axs.tick_params(axis='x',
                         which='both',
-                        bottom='off',
-                        top='off',
-                        labelbottom='off')
+                        bottom=False,
+                        top=False,
+                        labelbottom=False)
         axs.set_ylabel('Proportions [%]')
         axs.set_title('Rank: ' + rank)
         fig_name = os.path.join('gold_standard', rank)
@@ -210,7 +210,6 @@ def plot_samples_hist(gs_samples_list, sample_ids_list, output_dir):
 
         ncol = int(math.ceil(df_gs.shape[1]/35))
         axs2.legend(legend, labels, loc='center', frameon=True, ncol=ncol, handletextpad=0, columnspacing=1.0, borderaxespad=0., fontsize=9)
-        plt.tight_layout()
         fig2.savefig(os.path.join(output_dir, fig_name + '_legend.png'), dpi=100, format='png', bbox_inches='tight')
 
         plt.close(fig)
@@ -357,7 +356,7 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
         return []
     theta = spl.radar_factory(N, frame='polygon')
     fig, axes = plt.subplots(figsize=(9, 9), nrows=2, ncols=3, subplot_kw=dict(projection='radar'))
-    fig.subplots_adjust(wspace=0.35, hspace=0.05, top=0.87, bottom=0.3)
+    fig.subplots_adjust(wspace=0.55, hspace=0.05, top=0.87, bottom=0.35)
 
     for ax, rank in zip(axes.flat, c.PHYLUM_SPECIES):
         if grid_points:
@@ -400,7 +399,7 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
             xticklabel.set_fontsize('small')
 
     ax = axes[0, 0]
-    ax.legend(metrics, loc=(1.6 - 0.353 * len(metrics), 1.3), labelspacing=0.1, fontsize='small', ncol=len(metrics))
+    ax.legend(metrics, loc=(1.55 - 0.353 * len(metrics), 1.3), labelspacing=0.1, fontsize='small', ncol=len(metrics))
     fig.savefig(os.path.join(output_dir, file_name + '.pdf'), dpi=100, format='pdf', bbox_inches='tight')
     fig.savefig(os.path.join(output_dir, file_name + '.png'), dpi=100, format='png', bbox_inches='tight')
     plt.close(fig)
