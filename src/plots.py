@@ -233,7 +233,7 @@ def do_scatter_plot(profile_values, gs_values, output_dir, rank, label):
     axs.set_ylabel('Gold standard')
     axs.set_title(c.BRAY_CURTIS + ' - Rank: ' + rank)
 
-    fig_name = os.path.join("by_tool", label, 'beta_diversity_bc_' + rank)
+    fig_name = os.path.join("by_tool", label.replace(' ', '_'), 'beta_diversity_bc_' + rank)
     fig.savefig(os.path.join(output_dir, fig_name + '.pdf'), dpi=100, format='pdf', bbox_inches='tight')
     fig.savefig(os.path.join(output_dir, fig_name + '.png'), dpi=100, format='png', bbox_inches='tight')
     plt.close(fig)
@@ -356,14 +356,14 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
         return []
     theta = spl.radar_factory(N, frame='polygon')
     fig, axes = plt.subplots(figsize=(9, 9), nrows=2, ncols=3, subplot_kw=dict(projection='radar'))
-    fig.subplots_adjust(wspace=0.55, hspace=0.05, top=0.87, bottom=0.35)
+    fig.subplots_adjust(wspace=1.0, hspace=0.0, top=0.87, bottom=0.45)
 
     for ax, rank in zip(axes.flat, c.PHYLUM_SPECIES):
         if grid_points:
             ax.set_rgrids(grid_points, fontsize='xx-small')
         else:
             ax.set_rgrids([0.2, 0.4, 0.6, 0.8], ('', '', '', ''))  # get rid of the labels of the grid points
-        ax.set_title(rank, weight='bold', size='medium', position=(0.5, 1.1),
+        ax.set_title(rank, weight='bold', size=9, position=(0.5, 1.1),
                      horizontalalignment='center', verticalalignment='center')
 
         if absolute:
@@ -379,7 +379,7 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
             metric_to_toolindex.append([i for i, x in enumerate(d) if x is None or np.isnan(x)])
             d = [0 if x is None or np.isnan(x) else x for x in d]
 
-            ax.plot(theta, d, '--', color=color, linewidth=3, dashes=(it, 1))
+            ax.plot(theta, d, '--', color=color, linewidth=2, dashes=(it, 1))
             if fill:
                 ax.fill(theta, d, facecolor=color, alpha=0.25)
             it += 1
@@ -393,13 +393,23 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
             for toolindex in metric:
                 xticklabels[toolindex].set_color([1, 0, 0])
 
+        angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
+        angles += angles[:1]
+        for label, angle in zip(ax.get_xticklabels(), angles):
+            if angle in (0, np.pi):
+                label.set_horizontalalignment('center')
+            elif 0 < angle < np.pi:
+                label.set_horizontalalignment('right')
+            else:
+                label.set_horizontalalignment('left')
+
         # move tick labels closer to plot and set font size
         for xticklabel in xticklabels:
-            xticklabel.set_position((.1,.1))
-            xticklabel.set_fontsize('small')
+            xticklabel.set_position((0,.20))
+            xticklabel.set_fontsize('x-small')
 
     ax = axes[0, 0]
-    ax.legend(metrics, loc=(1.55 - 0.353 * len(metrics), 1.3), labelspacing=0.1, fontsize='small', ncol=len(metrics))
+    ax.legend(metrics, loc=(2.0 - 0.353 * len(metrics), 1.25), labelspacing=0.1, fontsize='small', ncol=len(metrics), frameon=False)
     fig.savefig(os.path.join(output_dir, file_name + '.pdf'), dpi=100, format='pdf', bbox_inches='tight')
     fig.savefig(os.path.join(output_dir, file_name + '.png'), dpi=100, format='png', bbox_inches='tight')
     plt.close(fig)
@@ -455,19 +465,59 @@ def get_metrics_for_spider_plot(metrics_plot):
     return metrics_list
 
 
-def plot_all(pd_metrics, labels, output_dir, metrics_plot):
-    metrics = [c.UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.FP]
-    rank_to_metric_to_toolvalues = defaultdict(lambda : defaultdict(list))
+def plot_purity_completeness_per_tool_and_rank(pd_grouped, pd_mean, output_dir):
+    ranks = c.ALL_RANKS[0:-1]
+    ranks_range = range(len(ranks))
+    rank_to_index = dict(zip(ranks, list(ranks_range)))
 
-    pd_copy = pd_metrics.copy()
-    pd_copy.loc[pd_copy[pd.isnull(pd_copy['rank'])].index, 'rank'] = 'rank independent'
-    # transform table
-    pd_grouped = pd_copy.pivot_table(index=['rank', 'tool', 'sample'], columns='metric', values='value')
+    pd_std_over_samples = pd_grouped.groupby(['rank', 'tool'], sort=False).std()
+    pd_mean = pd_mean.drop(c.GS, level='tool').drop(['strain', 'rank independent'], level='rank')
 
-    # compute mean over samples and collapse rows
-    cols = pd_grouped.columns
-    pd_grouped = pd_grouped.groupby(['rank', 'tool'], sort=False)[cols].mean()
+    for tool, tool_group in pd_mean.groupby(['tool']):
+        precision_list = [0] * len(ranks)
+        precision_sem_list = [0] * len(ranks)
+        recall_list = [0] * len(ranks)
+        recall_sem_list = [0] * len(ranks)
+        braycurtis_list = [0] * len(ranks)
+        braycurtis_sem_list = [0] * len(ranks)
+        for rank, rank_group in tool_group.groupby(['rank']):
+            index = rank_to_index[rank]
+            precision_list[index] = rank_group[c.PRECISION].values[0]
+            recall_list[index] = rank_group[c.RECALL].values[0]
+            precision_sem_list[index] = pd_std_over_samples.loc[(rank, tool)][c.PRECISION]
+            recall_sem_list[index] = pd_std_over_samples.loc[(rank, tool)][c.RECALL]
+            braycurtis_list[index] = rank_group[c.BRAY_CURTIS].values[0]
+            braycurtis_sem_list[index] = pd_std_over_samples.loc[(rank, tool)][c.BRAY_CURTIS]
 
+        fig, axs = plt.subplots(figsize=(6, 5))
+
+        axs.set_title(tool)
+
+        # force axis to be from 0 to 100%
+        axs.set_ylim([0.0, 1.0])
+        axs.set_xlim([0, 6])
+
+        plot1a = axs.plot(ranks_range, recall_list, color=plt.cm.tab10(2))
+        plot2a = axs.plot(ranks_range, precision_list, color=plt.cm.tab10(0))
+        plot3a = axs.plot(ranks_range, braycurtis_list, color=plt.cm.tab10(3))
+        plot1b = axs.fill_between(ranks_range, np.subtract(recall_list, recall_sem_list), np.add(recall_list, recall_sem_list), facecolor=plt.cm.tab10(2), alpha=0.3, edgecolor=None)
+        plot2b = axs.fill_between(ranks_range, np.subtract(precision_list, precision_sem_list), np.add(precision_list, precision_sem_list), facecolor=plt.cm.tab10(0), alpha=0.3, edgecolor=None)
+        plot3b = axs.fill_between(ranks_range, np.subtract(braycurtis_list, braycurtis_sem_list), np.add(braycurtis_list, braycurtis_sem_list), facecolor=plt.cm.tab10(3), alpha=0.3, edgecolor=None)
+
+        axs.set_xticklabels(ranks, horizontalalignment='right')
+        axs.tick_params(axis='x', labelrotation=45)
+
+        yticks = axs.get_yticks()
+        axs.set_yticklabels(['{:,.0%}'.format(x) for x in yticks])
+
+        lgd = plt.legend([(plot1a[0], plot1b), (plot2a[0], plot2b), (plot3a[0], plot3b)], [c.RECALL, c.PRECISION, c.L1NORM], bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handlelength=2, frameon=False)
+
+        fig.savefig(os.path.join(output_dir, 'by_tool', tool.replace(' ', '_'), 'purity_completeness_per_rank.pdf'), dpi=100, format='pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')
+        fig.savefig(os.path.join(output_dir, 'by_tool', tool.replace(' ', '_'), 'purity_completeness_per_rank.png'), dpi=100, format='png', bbox_extra_artists=(lgd,), bbox_inches='tight')
+        plt.close(fig)
+
+
+def spider_plot_preprocess_metrics(pd_mean, labels):
     # store maximum values per rank
     rank_to_max_fp = defaultdict()
     rank_to_max_tp = defaultdict()
@@ -476,17 +526,17 @@ def plot_all(pd_metrics, labels, output_dir, metrics_plot):
     rank_to_max_recall = defaultdict()
     rank_to_max_precision = defaultdict()
     for rank in c.PHYLUM_SPECIES:
-        pd_rank = pd_grouped.loc[(pd_grouped.index.get_level_values('rank') == rank) & (pd_grouped.index.get_level_values('tool') != c.GS)]
+        pd_rank = pd_mean.loc[(pd_mean.index.get_level_values('rank') == rank) & (pd_mean.index.get_level_values('tool') != c.GS)]
         rank_to_max_fp[rank] = pd_rank[c.FP].max()
         rank_to_max_tp[rank] = pd_rank[c.TP].max()
         rank_to_max_l1norm[rank] = pd_rank[c.L1NORM].max()
         rank_to_max_recall[rank] = pd_rank[c.RECALL].max()
         rank_to_max_precision[rank] = pd_rank[c.PRECISION].max()
-    pd_rank = pd_grouped.loc[(pd_grouped.index.get_level_values('rank') == 'rank independent') & (pd_grouped.index.get_level_values('tool') != c.GS)]
+    pd_rank = pd_mean.loc[(pd_mean.index.get_level_values('rank') == 'rank independent') & (pd_mean.index.get_level_values('tool') != c.GS)]
     rank_to_max_unifrac['rank independent'] = pd_rank[c.UNIFRAC].max()
 
     tool_to_rank_to_metric_to_value = defaultdict(lambda: defaultdict(dict))
-    for (rank, tool), g in pd_grouped.groupby(['rank', 'tool']):
+    for (rank, tool), g in pd_mean.groupby(['rank', 'tool']):
         if tool not in labels:
             continue
         if rank == 'rank independent':
@@ -496,6 +546,7 @@ def plot_all(pd_metrics, labels, output_dir, metrics_plot):
             # absolute values
             tool_to_rank_to_metric_to_value[tool][rank][c.RECALL+'absolute'] = g[c.RECALL].values[0] if len(g[c.RECALL].values) > 0 else None
             tool_to_rank_to_metric_to_value[tool][rank][c.PRECISION+'absolute'] = g[c.PRECISION].values[0] if len(g[c.PRECISION].values) > 0 else None
+            tool_to_rank_to_metric_to_value[tool][rank][c.BRAY_CURTIS+'absolute'] = g[c.BRAY_CURTIS].values[0] if len(g[c.BRAY_CURTIS].values) > 0 else None
 
             # relative values
             if rank_to_max_recall[rank] > 0:
@@ -522,6 +573,25 @@ def plot_all(pd_metrics, labels, output_dir, metrics_plot):
                 tool_to_rank_to_metric_to_value[tool][rank][c.TP] = (g[c.TP].values[0] / rank_to_max_tp[rank]) if len(g[c.TP].values) else None
             else:
                 tool_to_rank_to_metric_to_value[tool][rank][c.TP] = g[c.TP].values[0] if len(g[c.TP].values) else None
+    return tool_to_rank_to_metric_to_value
+
+
+def plot_all(pd_metrics, labels, output_dir, metrics_plot):
+    metrics = [c.UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.FP]
+    rank_to_metric_to_toolvalues = defaultdict(lambda : defaultdict(list))
+
+    pd_copy = pd_metrics.copy()
+    pd_copy.loc[pd_copy[pd.isnull(pd_copy['rank'])].index, 'rank'] = 'rank independent'
+    # transform table
+    pd_grouped = pd_copy.pivot_table(index=['rank', 'tool', 'sample'], columns='metric', values='value')
+
+    # compute mean over samples and collapse rows
+    cols = pd_grouped.columns
+    pd_mean = pd_grouped.groupby(['rank', 'tool'], sort=False)[cols].mean()
+
+    plot_purity_completeness_per_tool_and_rank(pd_grouped, pd_mean, output_dir)
+
+    tool_to_rank_to_metric_to_value = spider_plot_preprocess_metrics(pd_mean, labels)
 
     metrics_for_plot = get_metrics_for_spider_plot(metrics_plot) if metrics_plot else metrics
     present_labels = []
@@ -536,7 +606,7 @@ def plot_all(pd_metrics, labels, output_dir, metrics_plot):
                     rank_to_metric_to_toolvalues[rank][metric].append(tool_to_rank_to_metric_to_value[label][rank][metric])
             rank_to_metric_to_toolvalues[rank][c.UNIFRAC].append(tool_to_rank_to_metric_to_value[label]['rank independent'][c.UNIFRAC])
 
-    colors = ['b', 'g', 'r', 'k', 'm', 'y']
+    colors = [plt.cm.tab10(2), plt.cm.tab10(0), plt.cm.tab10(3), 'k', 'm', 'y']
     plots_list = spider_plot(metrics_for_plot,
                              present_labels,
                              rank_to_metric_to_toolvalues,

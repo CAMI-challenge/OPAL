@@ -59,18 +59,20 @@ def get_time_memory(time, memory, profiles_files):
     return time_list, memory_list
 
 
-def compute_binary_metrics(query_profile, query_truth):
-    all_metrics = bm.compute_tree_metrics(query_profile, query_truth)
+def compute_binary_metrics(query_profile, query_truth, filter_tail_percentage):
+    all_metrics = bm.compute_tree_metrics(query_profile, query_truth, filter_tail_percentage)
     return all_metrics
 
 
 def print_by_rank(output_dir, labels, pd_metrics):
     make_sure_path_exists(os.path.join(output_dir, "by_rank"))
+    # define ordering of rows, which is given my order of tool labels
+    order_rows = labels
+    # define ordering of columns, hard coded
+    order_columns = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.OTUS, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT, c.BRAY_CURTIS]
+    if c.FP_UNFILTERED in pd_metrics['metric'].values:
+        order_columns += [c.PRECISION_UNFILTERED, c.F1_SCORE_UNFILTERED, c.TP_UNFILTERED, c.FP_UNFILTERED]
     for rank in c.ALL_RANKS:
-        # define ordering of rows, which is given my order of tool labels
-        order_rows = labels
-        # define ordering of columns, hard coded
-        order_columns = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.OTUS, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT, c.BRAY_CURTIS]
         # subset to those information that either belong to the given rank or are rank independent, i.e. are unifrac values
         table = pd_metrics[(pd_metrics['rank'] == rank) | (pd_metrics['metric'].isin([c.UNIFRAC, c.UNW_UNIFRAC]))]
         # reformat the table with a pivot_table
@@ -90,6 +92,8 @@ def print_by_tool(output_dir, pd_metrics):
     make_sure_path_exists(os.path.join(output_dir, "by_tool"))
     # define ordering of columns, hard coded
     order_columns = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.OTUS, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT, c.BRAY_CURTIS]
+    if c.FP_UNFILTERED in pd_metrics['metric'].values:
+        order_columns += [c.PRECISION_UNFILTERED, c.F1_SCORE_UNFILTERED, c.TP_UNFILTERED, c.FP_UNFILTERED]
     for toolname, pd_metrics_tool in pd_metrics.groupby('tool'):
         if toolname == c.GS:
             continue
@@ -105,7 +109,7 @@ def print_by_tool(output_dir, pd_metrics):
         table.fillna('na').to_csv(os.path.join(output_dir, "by_tool", toolname + ".tsv"), sep='\t')
 
 
-def compute_metrics(sample_metadata, profile, gs_pf_profile, gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage):
+def compute_metrics(sample_metadata, profile, gs_pf_profile, gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage, filter_tail_percentage):
     # Unifrac
     if isinstance(profile, PF.Profile):
         pf_profile = profile
@@ -120,7 +124,7 @@ def compute_metrics(sample_metadata, profile, gs_pf_profile, gs_rank_to_taxid_to
     l1norm = l1.compute_l1norm(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage)
 
     # Binary metrics
-    binary_metrics = compute_binary_metrics(rank_to_taxid_to_percentage, gs_rank_to_taxid_to_percentage)
+    binary_metrics = compute_binary_metrics(rank_to_taxid_to_percentage, gs_rank_to_taxid_to_percentage, filter_tail_percentage)
 
     # Bray-Curtis
     braycurtis = bc.braycurtis(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage)
@@ -128,10 +132,10 @@ def compute_metrics(sample_metadata, profile, gs_pf_profile, gs_rank_to_taxid_to
     return unifrac, shannon, l1norm, binary_metrics, braycurtis
 
 
-def load_profiles(gold_standard_file, profiles_files, no_normalization, filter_tail_percentage):
+def load_profiles(gold_standard_file, profiles_files, no_normalization):
     normalize = False if no_normalization else True
 
-    gs_samples_list = load_data.open_profile(gold_standard_file, normalize, filter_tail_percentage)
+    gs_samples_list = load_data.open_profile(gold_standard_file, normalize)
     sample_ids_list = []
     for sample in gs_samples_list:
         sample_id, sample_metadata, profile = sample
@@ -139,12 +143,12 @@ def load_profiles(gold_standard_file, profiles_files, no_normalization, filter_t
 
     profiles_list_to_samples_list = []
     for profile_file in profiles_files:
-        profiles_list_to_samples_list.append(load_data.open_profile(profile_file, normalize, filter_tail_percentage))
+        profiles_list_to_samples_list.append(load_data.open_profile(profile_file, normalize))
 
     return sample_ids_list, gs_samples_list, profiles_list_to_samples_list
 
 
-def evaluate(gs_samples_list, profiles_list_to_samples_list, labels):
+def evaluate(gs_samples_list, profiles_list_to_samples_list, labels, filter_tail_percentage):
     gs_id_to_rank_to_taxid_to_percentage = {}
     gs_id_to_pf_profile = {}
     pd_metrics = pd.DataFrame()
@@ -157,7 +161,8 @@ def evaluate(gs_samples_list, profiles_list_to_samples_list, labels):
                                                                                gs_id_to_pf_profile[sample_id],
                                                                                gs_id_to_pf_profile[sample_id],
                                                                                gs_id_to_rank_to_taxid_to_percentage[sample_id],
-                                                                               gs_id_to_rank_to_taxid_to_percentage[sample_id])
+                                                                               gs_id_to_rank_to_taxid_to_percentage[sample_id],
+                                                                               999.0 if filter_tail_percentage else None)
         pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, c.GS, braycurtis, shannon, binary_metrics, l1norm, unifrac)], ignore_index=True)
 
     one_profile_assessed = False
@@ -177,7 +182,8 @@ def evaluate(gs_samples_list, profiles_list_to_samples_list, labels):
 
             unifrac, shannon, l1norm, binary_metrics, braycurtis = compute_metrics(sample_metadata, profile, gs_pf_profile,
                                                                                    gs_rank_to_taxid_to_percentage,
-                                                                                   rank_to_taxid_to_percentage)
+                                                                                   rank_to_taxid_to_percentage,
+                                                                                   filter_tail_percentage)
             pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac)], ignore_index=True)
             one_profile_assessed = True
 
@@ -226,22 +232,13 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
 
     # convert Binary metrics
     pd_binary_metrics = pd.DataFrame([binary_metrics[rank].get_pretty_dict() for rank in binary_metrics.keys()]).set_index('rank').stack().reset_index().rename(columns={'level_1': 'metric', 0: 'value'})
-    pd_binary_metrics['metric'].replace(['fp',
-                                         'tp',
-                                         "fn",
-                                         "jaccard",
-                                         "precision",
-                                         "recall",
-                                         "f1",
-                                         "otus"],
-                                        [c.FP,
-                                         c.TP,
-                                         c.FN,
-                                         c.JACCARD,
-                                         c.PRECISION,
-                                         c.RECALL,
-                                         c.F1_SCORE,
-                                         c.OTUS], inplace=True)
+    if 'fpfiltered' in pd_binary_metrics['metric'].values:
+        oldnames = ['fp', 'fpfiltered', 'tp', 'tpfiltered', 'fn', 'jaccard', 'precision', 'precisionfiltered', 'recall', 'f1', 'f1filtered', 'otus']
+        newnames = [c.FP_UNFILTERED, c.FP, c.TP_UNFILTERED, c.TP, c.FN, c.JACCARD, c.PRECISION_UNFILTERED, c.PRECISION, c.RECALL, c.F1_SCORE_UNFILTERED, c.F1_SCORE, c.OTUS]
+    else:
+        oldnames = ['fp', 'tp', 'fn', 'jaccard', 'precision', 'recall', 'f1', 'otus']
+        newnames = [c.FP, c.TP, c.FN, c.JACCARD, c.PRECISION, c.RECALL, c.F1_SCORE, c.OTUS]
+    pd_binary_metrics['metric'].replace(oldnames, newnames, inplace=True)
     pd_binary_metrics['sample'] = sample_id
     pd_binary_metrics['tool'] = label
 
@@ -257,7 +254,7 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
 def create_output_directories(output_dir, labels):
     make_sure_path_exists(os.path.join(output_dir, 'gold_standard'))
     for label in labels:
-        make_sure_path_exists(os.path.join(output_dir, "by_tool", label))
+        make_sure_path_exists(os.path.join(output_dir, "by_tool", label.replace(' ', '_')))
 
 
 def concat_pd(labels, metric, values, pd_metrics):
@@ -299,7 +296,7 @@ def main():
     group1.add_argument('-o', '--output_dir', help='Directory to write the results to', required=True)
     group2 = parser.add_argument_group('optional arguments')
     group2.add_argument('-n', '--no_normalization', help='Do not normalize samples', action='store_true')
-    group2.add_argument('-f', '--filter', help='Filter out the predictions with the smallest relative abundances summing up to [FILTER]%% within a rank (default: 0)', type=float)
+    group2.add_argument('-f', '--filter', help='Filter out the predictions with the smallest relative abundances summing up to [FILTER]%% within a rank (affects only precision, default: 0)', type=float)
     group2.add_argument('-p', '--plot_abundances', help='Plot abundances in the gold standard (can take some minutes)', action='store_true')
     group2.add_argument('-l', '--labels', help='Comma-separated profiles names', required=False)
     group2.add_argument('-t', '--time', help='Comma-separated runtimes in hours', required=False)
@@ -322,8 +319,7 @@ def main():
     logger.info('Loading profiles...')
     sample_ids_list, gs_samples_list, profiles_list_to_samples_list = load_profiles(args.gold_standard_file,
                                                                                     args.profiles_files,
-                                                                                    args.no_normalization,
-                                                                                    args.filter)
+                                                                                    args.no_normalization)
     logger.info('done')
 
     plots_list = []
@@ -335,7 +331,8 @@ def main():
     logger.info('Computing metrics...')
     pd_metrics = evaluate(gs_samples_list,
                           profiles_list_to_samples_list,
-                          labels)
+                          labels,
+                          args.filter)
     time_list, memory_list = get_time_memory(args.time, args.memory, args.profiles_files)
     if time_list or memory_list:
         pd_metrics = concat_time_memory(labels, time_list, memory_list, pd_metrics)
@@ -356,7 +353,7 @@ def main():
     plots_list += pl.plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=True)
     logger.info('done')
 
-    logger.info('Creating spider plots...')
+    logger.info('Creating more plots...')
     plots_list += pl.plot_all(pd_metrics, labels, output_dir, args.metrics_plot)
     logger.info('done')
 

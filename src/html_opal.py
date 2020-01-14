@@ -214,11 +214,11 @@ def get_colors_and_ranges(name, all_values, df_metrics):
     color2 = 'red'
     hue1 = 12
     hue2 = 240
-    if name == c.PRECISION or name == c.RECALL or name == c.F1_SCORE or name == c.JACCARD:
+    if name == c.PRECISION or name == c.RECALL or name == c.F1_SCORE or name == c.JACCARD or name == c.PRECISION_UNFILTERED or name == c.F1_SCORE_UNFILTERED:
         return color1, color2, hue1, hue2, 0, 1
-    if name == c.FP or name == c.UNIFRAC or name == c.UNW_UNIFRAC:
+    if name == c.FP or name == c.UNIFRAC or name == c.UNW_UNIFRAC or name == c.FP_UNFILTERED:
         return color2, color1, hue2, hue1, 0, max(all_values)
-    if name == c.TP:
+    if name == c.TP or name == c.TP_UNFILTERED:
         return color1, color2, hue1, hue2, 0, max(all_values)
     if name == c.FN:
         fn_values = df_metrics.loc[c.TP, ].values
@@ -295,7 +295,10 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
     all_sample_ids = sample_ids_list[:]
     all_sample_ids.insert(0, '(average over samples)')
 
-    presence_metrics = [c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD]
+    if c.FP_UNFILTERED in pd_metrics['metric'].values:
+        presence_metrics = [c.RECALL, c.PRECISION, c.PRECISION_UNFILTERED, c.F1_SCORE, c.F1_SCORE_UNFILTERED, c.TP, c.TP_UNFILTERED, c.FP, c.FP_UNFILTERED, c.FN, c.JACCARD]
+    else:
+        presence_metrics = [c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD]
     estimates_metrics = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.BRAY_CURTIS]
     alpha_diversity_metics = [c.OTUS, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
     rank_independent_metrics = [c.UNIFRAC, c.UNW_UNIFRAC]
@@ -313,20 +316,34 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
               {'selector': 'expand-toggle:checked ~ * .data', 'props': [('background-color', 'white !important')]}]
     styles_hidden_thead = styles + [{'selector': 'thead', 'props': [('display', 'none')]}]
 
-    d = {c.RECALL: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.RECALL, c.RECALL, c.TOOLTIP_RECALL),
-         c.PRECISION: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.PRECISION, c.PRECISION, c.TOOLTIP_PRECISION),
-         c.F1_SCORE: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.F1_SCORE, c.F1_SCORE, c.TOOLTIP_F1_SCORE),
-         c.TP: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.TP, c.TP, c.TOOLTIP_TP),
-         c.FP: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.FP, c.FP, c.TOOLTIP_FP),
-         c.FN: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.FN, c.FN, c.TOOLTIP_FN),
-         c.JACCARD: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.JACCARD, c.JACCARD, c.TOOLTIP_JACCARD),
-         c.UNIFRAC: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.UNIFRAC, c.UNIFRAC, c.TOOLTIP_UNIFRAC),
-         c.UNW_UNIFRAC: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.UNW_UNIFRAC, c.UNW_UNIFRAC, c.TOOLTIP_UNW_UNIFRAC),
-         c.L1NORM: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.L1NORM, c.L1NORM, c.TOOLTIP_L1NORM),
-         c.BRAY_CURTIS: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.BRAY_CURTIS, c.BRAY_CURTIS, c.TOOLTIP_BRAY_CURTIS),
-         c.OTUS: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.OTUS, c.OTUS, c.TOOLTIP_OTUS),
-         c.SHANNON_DIVERSITY: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.SHANNON_DIVERSITY, c.SHANNON_DIVERSITY, c.TOOLTIP_SHANNON_DIVERSITY),
-         c.SHANNON_EQUIT: '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(c.SHANNON_EQUIT, c.SHANNON_EQUIT, c.TOOLTIP_SHANNON_EQUIT)}
+    def get_html_dict(metrics):
+        d_dict = {}
+        for tuple in metrics:
+            d_dict[tuple[0]] = '<div class="tooltip">{}<span class="tooltiptext">{}: {}</span></div>'.format(tuple[0], tuple[0], tuple[1])
+        return d_dict
+
+    metrics_tuples = [(c.RECALL, c.TOOLTIP_RECALL),
+                      (c.PRECISION, c.TOOLTIP_PRECISION),
+                      (c.F1_SCORE, c.TOOLTIP_F1_SCORE),
+                      (c.TP, c.TOOLTIP_TP),
+                      (c.FP, c.TOOLTIP_FP),
+                      (c.FN, c.TOOLTIP_FN),
+                      (c.JACCARD, c.TOOLTIP_JACCARD),
+                      (c.UNIFRAC, c.TOOLTIP_UNIFRAC),
+                      (c.UNW_UNIFRAC, c.TOOLTIP_UNW_UNIFRAC),
+                      (c.L1NORM, c.TOOLTIP_L1NORM),
+                      (c.BRAY_CURTIS, c.TOOLTIP_BRAY_CURTIS),
+                      (c.OTUS, c.TOOLTIP_OTUS),
+                      (c.SHANNON_DIVERSITY, c.TOOLTIP_SHANNON_DIVERSITY),
+                      (c.SHANNON_EQUIT, c.TOOLTIP_SHANNON_EQUIT)]
+    if c.FP_UNFILTERED in pd_metrics['metric'].values:
+        metrics_tuples += [(c.FP_UNFILTERED, c.TOOLTIP_FP),
+                           (c.TP_UNFILTERED, c.TOOLTIP_TP),
+                           (c.PRECISION_UNFILTERED, c.TOOLTIP_PRECISION),
+                           (c.F1_SCORE_UNFILTERED, c.TOOLTIP_F1_SCORE)]
+
+    d = get_html_dict(metrics_tuples)
+
     pattern = re.compile('|'.join(map(re.escape, d)))
 
     def translate(match):
@@ -415,7 +432,7 @@ def create_beta_diversity_tab(labels, plots_list):
     rank_to_img = {rank: [''] for rank in c.ALL_RANKS}
     for rank in c.ALL_RANKS:
         for label in labels:
-            file = os.path.join("by_tool", label, 'beta_diversity_bc_' + rank)
+            file = os.path.join("by_tool", label.replace(' ', '_'), 'beta_diversity_bc_' + rank)
             if file in plots_list:
                 rank_to_img[rank][0] = rank_to_img[rank][0] + '<img src=' + '"' + file + '.png' + '"' + '/>'
     div_plots = Div(text=rank_to_img[c.SPECIES][0], css_classes=['bk-width-auto'])

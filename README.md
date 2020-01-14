@@ -89,8 +89,9 @@ The BIOM format used by OPAL is a sparse matrix stored in a JSON or HDF5 file, w
 
 ## Running _opal.py_
 ~~~BASH
-usage: opal.py -g GOLD_STANDARD_FILE -o OUTPUT_DIR [-n] [-p] [-l LABELS]
-               [-t TIME] [-m MEMORY] [-d DESC] [-r RANKS] [--silent] [-v] [-h]
+usage: opal.py -g GOLD_STANDARD_FILE -o OUTPUT_DIR [-n] [-f FILTER] [-p]
+               [-l LABELS] [-t TIME] [-m MEMORY] [-d DESC] [-r RANKS]
+               [--metrics_plot METRICS_PLOT] [--silent] [-v] [-h]
                profiles_files [profiles_files ...]
 
 OPAL: Open-community Profiling Assessment tooL
@@ -105,6 +106,10 @@ required arguments:
 optional arguments:
   -n, --no_normalization
                         Do not normalize samples
+  -f FILTER, --filter FILTER
+                        Filter out the predictions with the smallest relative
+                        abundances summing up to [FILTER]% within a rank
+                        (affects only precision, default: 0)
   -p, --plot_abundances
                         Plot abundances in the gold standard (can take some
                         minutes)
@@ -119,6 +124,12 @@ optional arguments:
                         performance rankings, comma-separated. Valid ranks:
                         superkingdom, phylum, class, order, family, genus,
                         species, strain (default:superkingdom,species)
+  --metrics_plot METRICS_PLOT
+                        Metrics for spider plot of relative performances,
+                        first character, comma-separated. Valid metrics:
+                        w:weighted Unifrac, l:L1 norm, c:completeness,
+                        p:purity, f:false positives, t:true positives
+                        (default: w,l,c,p,f)
   --silent              Silent mode
   -v, --version         show program's version number and exit
   -h, --help            Show this help message and exit
