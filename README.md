@@ -19,6 +19,8 @@ Taxonomic metagenome profilers predict the presence and relative abundance of mi
 **Example pages produced by OPAL**
 * [CAMI I high complexity challenge dataset](https://cami-challenge.github.io/OPAL/cami_i_hc/)
 * [CAMI II mouse gut toy dataset](https://cami-challenge.github.io/OPAL/cami_ii_mg/)
+* [CAMI II mouse gut toy dataset (using parameter --filter 1)](https://cami-challenge.github.io/OPAL/cami_ii_mg_filter1/)
+* [CAMI II mouse gut toy dataset (using parameters --filter 1 --no_normalization)](https://cami-challenge.github.io/OPAL/cami_ii_mg_filter1_nonormalization/)
 * [Human Microbiome Project Mock Community dataset](https://cami-challenge.github.io/OPAL/hmp_mc/)
 
 **See also**
