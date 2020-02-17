@@ -633,7 +633,7 @@ def plot_all(pd_metrics, labels, output_dir, metrics_plot):
     for (rank, tool), g in pd_grouped.groupby(['rank', 'tool']):
         if tool == c.GS or rank == 'rank independent':
             continue
-        tool_to_rank_to_shannon[tool][rank] = g[c.SHANNON_EQUIT].values[0] if len(g[c.SHANNON_EQUIT].values) > 0 else None
+        tool_to_rank_to_shannon[tool][rank] = g[c.SHANNON_EQUIT].mean() if len(g[c.SHANNON_EQUIT].values) > 0 else None
 
     # compute differences between each tool and gold standard
     tool_to_rank_to_shannon_difference = defaultdict(dict)
