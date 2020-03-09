@@ -175,7 +175,7 @@ def evaluate(gs_samples_list, profiles_list_to_samples_list, labels, filter_tail
                 gs_rank_to_taxid_to_percentage = gs_id_to_rank_to_taxid_to_percentage[sample_id]
                 gs_pf_profile = gs_id_to_pf_profile[sample_id]
             else:
-                sys.stderr.write("Skipping assessment of {} for sample {}. Make sure the SampleID of the gold standard and the profile are identical.\n".format(label, sample_id))
+                logging.getLogger('opal').warning("Skipping assessment of {} for sample {}. Make sure the SampleID of the gold standard and the profile are identical.\n".format(label, sample_id))
                 continue
 
             rank_to_taxid_to_percentage = load_data.get_rank_to_taxid_to_percentage(profile)
@@ -303,7 +303,8 @@ def main():
     group2.add_argument('-m', '--memory', help='Comma-separated memory usages in gigabytes', required=False)
     group2.add_argument('-d', '--desc', help='Description for HTML page', required=False)
     group2.add_argument('-r', '--ranks', help='Highest and lowest taxonomic ranks to consider in performance rankings, comma-separated. Valid ranks: superkingdom, phylum, class, order, family, genus, species, strain (default:superkingdom,species)', required=False)
-    group2.add_argument('--metrics_plot', help='Metrics for spider plot of relative performances, first character, comma-separated. Valid metrics: w:weighted Unifrac, l:L1 norm, c:completeness, p:purity, f:false positives, t:true positives (default: w,l,c,p,f)', required=False)
+    group2.add_argument('--metrics_plot_rel', help='Metrics for spider plot of relative performances, first character, comma-separated. Valid metrics: w:weighted Unifrac, l:L1 norm, c:completeness, p:purity, f:false positives, t:true positives (default: w,l,c,p,f)', required=False)
+    group2.add_argument('--metrics_plot_abs', help='Metrics for spider plot of absolute performances, first character, comma-separated. Valid metrics: c:completeness, p:purity, b:Bray-Curtis (default: c,p)', required=False)
     group2.add_argument('--silent', help='Silent mode', action='store_true')
     group2.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
     group2.add_argument('-h', '--help', action='help', help='Show this help message and exit')
@@ -354,7 +355,7 @@ def main():
     logger.info('done')
 
     logger.info('Creating more plots...')
-    plots_list += pl.plot_all(pd_metrics, labels, output_dir, args.metrics_plot)
+    plots_list += pl.plot_all(pd_metrics, labels, output_dir, args.metrics_plot_rel, args.metrics_plot_abs)
     logger.info('done')
 
     logger.info('Computing rankings...')

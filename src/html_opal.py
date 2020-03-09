@@ -114,7 +114,7 @@ def get_rank_to_sample_pd(pd_metrics):
     return rank_to_sample_pd
 
 
-def get_formatted_pd_rankings(pd_rankings):
+def get_formatted_pd_rankings(pd_rankings, labels):
     df_list = []
     df_list_unsorted_pos = []
     metrics_list = []
@@ -126,7 +126,8 @@ def get_formatted_pd_rankings(pd_rankings):
         df_list_unsorted_pos.append(pd.DataFrame({metric: df2['tool'].tolist(), 'score' + metric: df2['position'].tolist()}))
 
     df_sum = pd_rankings.groupby(['tool'])['position'].sum().reset_index().sort_values('position')
-    df_sum_unsorted_pos = pd_rankings.groupby(['tool'])['position'].sum().reset_index()
+    df_sum_unsorted_pos = pd_rankings.groupby(['tool'])['position'].sum().loc[labels].reset_index()
+
     df_list.append(
         pd.DataFrame({SUM_OF_SCORES: df_sum['tool'].tolist(), 'score' + SUM_OF_SCORES: df_sum['position'].tolist()}))
     df_list_unsorted_pos.append(
@@ -137,8 +138,8 @@ def get_formatted_pd_rankings(pd_rankings):
     return pd_show, pd_show_unsorted_pos
 
 
-def create_rankings_html(pd_rankings, ranks_scored):
-    pd_show, pd_show_unsorted_pos = get_formatted_pd_rankings(pd_rankings)
+def create_rankings_html(pd_rankings, ranks_scored, labels):
+    pd_show, pd_show_unsorted_pos = get_formatted_pd_rankings(pd_rankings, labels)
 
     table_source = ColumnDataSource(pd_show)
 
@@ -196,7 +197,7 @@ def create_rankings_html(pd_rankings, ranks_scored):
     weight_unifrac = Slider(start=0, end=10, value=1, step=.1, title=c.UNIFRAC + " weight", callback=callback)
     callback.args["weight_unifrac"] = weight_unifrac
 
-    p = figure(x_range=pd_show_unsorted_pos[SUM_OF_SCORES].tolist(), plot_width=1000, plot_height=400, title=SUM_OF_SCORES + " - lower is better")
+    p = figure(x_range=pd_show_unsorted_pos[SUM_OF_SCORES].tolist(), plot_width=800, plot_height=400, title=SUM_OF_SCORES + " - lower is better")
     p.vbar(x='x', top='top', source=source, width=0.5, bottom=0, color="firebrick")
 
     col_rankings = column([Div(text="<font color='navy'><u>Hint 1:</u> click on the columns of scores for sorting.</font>", style={"width": "600px", "margin-bottom": "0px"}),
@@ -309,8 +310,8 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
     alpha_diversity_metics = 'Alpha diversity'
     all_metrics_labels = [presence_metrics_label, estimates_metrics_label, alpha_diversity_metics]
 
-    styles = [{'selector': 'td', 'props': [('width', '100pt')]},
-              {'selector': 'th', 'props': [('width', '100pt'), ('text-align', 'left')]},
+    styles = [{'selector': 'td', 'props': [('width', '115pt')]},
+              {'selector': 'th', 'props': [('width', '115pt'), ('text-align', 'left')]},
               {'selector': 'th:nth-child(1)', 'props': [('width', '120pt'), ('font-weight', 'normal')]},
               {'selector': '', 'props': [('width', 'max-content'), ('width', '-moz-max-content'), ('border-top', '1px solid lightgray'), ('border-spacing', '0px')]},
               {'selector': 'expand-toggle:checked ~ * .data', 'props': [('background-color', 'white !important')]}]
@@ -418,10 +419,10 @@ def create_alpha_diversity_tab():
 def create_plots_html(plots_list):
     message_no_spdplot = 'Spider plots of performance require at least 3 profiles.'
 
-    text = '<img src="spider_plot.png" />' if 'spider_plot' in plots_list else message_no_spdplot
+    text = '<img src="spider_plot_relative.png" />' if 'spider_plot_relative' in plots_list else message_no_spdplot
     plot1 = Panel(child=Div(text=text), title='Relative performance', width=780)
 
-    text = '<img src="spider_plot_recall_precision.png" />' if 'spider_plot_recall_precision' in plots_list else message_no_spdplot
+    text = '<img src="spider_plot_absolute.png" />' if 'spider_plot_absolute' in plots_list else message_no_spdplot
     plot2 = Panel(child=Div(text=text), title='Absolute performance')
 
     tabs_plots = Tabs(tabs=[plot1, plot2], width=780, css_classes=['bk-tabs-margin'])
@@ -501,7 +502,7 @@ def create_computing_efficiency_tab(pd_metrics, plots_list, tabs_list):
 
 
 def create_html(pd_rankings, ranks_scored, pd_metrics, labels, sample_ids_list, plots_list, output_dir, desc_text):
-    col_rankings = create_rankings_html(pd_rankings, ranks_scored)
+    col_rankings = create_rankings_html(pd_rankings, ranks_scored, labels)
 
     create_heatmap_bar(output_dir)
 
