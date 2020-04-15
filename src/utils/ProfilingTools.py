@@ -5,6 +5,8 @@ import numpy as np
 import timeit
 
 
+# TODO: make sure that I'm not deleting the root "-1" that way Unifrac picks up on the missing superkingdoms
+
 class Profile(object):
     def __init__(self, sample_metadata=None, profile=None):
         self.sample_metadata = sample_metadata
@@ -17,7 +19,6 @@ class Profile(object):
         self._data["-1"]["tax_path_sn"] = list()
         self._data["-1"]["abundance"] = 0
         self._data["-1"]["descendants"] = list()
-        self._data["-1"]["branch_length"] = 0
         self._header = list()
         self._tax_id_pos = None
         self._rank_pos = None
@@ -27,7 +28,11 @@ class Profile(object):
         self._eps = .0000000000000001  # This is to act like zero, ignore any lines with abundance below this quantity
         self._all_keys = ["-1"]
         self._merged_flag = False
-        self.parse_file()
+        self.root_len = 1  # the length you want between the "root" of "-1" and the superkingdom level (eg. Bacteria)
+        self.branch_len_func = lambda x: 1#1/float(x)  # Given a node n at depth d in the tree, branch_len_func(d)
+        # is how long you want the branch length between n and ancestor(n) to be
+        self._data["-1"]["branch_length"] = self.root_len
+        self.parse_file()  # TODO: this sets all the branch lengths to 1 currently
 
     def parse_file(self):
         _data = self._data
@@ -53,19 +58,19 @@ class Profile(object):
             _data[tax_id]["rank"] = prediction.rank.strip()
 
             # Find the ancestor
-            if len(tax_path) <= 1:
+            if len(tax_path) <= 1:  # note, due to the format, we will never run into the case tax_path == []
                 _data[tax_id]["ancestor"] = "-1"  # no ancestor, it's a root
-                _data[tax_id]["branch_length"] = 1
+                _data[tax_id]["branch_length"] = self.tax_path_to_branch_len(tax_path, self.branch_len_func, self.root_len)
                 ancestor = "-1"
             else:
                 ancestor = tax_path[-2]
-                _data[tax_id]["branch_length"] = 1
-                i = -3
+                _data[tax_id]["branch_length"] = self.tax_path_to_branch_len(tax_path, self.branch_len_func, self.root_len)
+                i = -3  # started at tax_path[-2], so start at tax_path[-3] i.e. tax_path[i] for i = -3
                 while ancestor is "" or ancestor == tax_id:  # if it's a blank or repeated, go up until finding ancestor
                     ancestor = tax_path[i]
-                    _data[tax_id]["branch_length"] += 1
+                    #_data[tax_id]["branch_length"] += 1 # don't need due to tax_path_to_branch_len
                     i -= 1
-                    if i + len(tax_path) < 0:  # no ancestor available, manually set to -1 (the root)
+                    if i + len(tax_path) < 0:  # no ancestor available (eg. ["","","123"], manually set to -1 (the root)
                         ancestor = "-1"
                 _data[tax_id]["ancestor"] = ancestor
 
@@ -129,19 +134,48 @@ class Profile(object):
                 tax_path[index] = ''  # remove the bad tax_ids
             # fix the branch lengths and find the ancestors
             if len(tax_path) >= 2:
+                # FIXME: these branch lengths will need to be updated as well
+                #  here, I will need to sum up the ancestor branch lengths until it connects back to a non "" taxID
                 ancestor = tax_path[-2]
-                _data[key]["branch_length"] = 1
+                #_data[key]["branch_length"] = 1  # don't need due to tax_path_to_branch_len # FIXME: old method
                 i = -3
                 while ancestor is "" or ancestor == key:  # if it's a blank or repeated, go up until finding ancestor
                     if i < -len(tax_path):  # Path is all the way full with bad tax_ids, connect to root
-                        _data[key]["branch_length"] += 1
+                        _data[key]["branch_length"] += 1  # don't need due to tax_path_to_branch_len
                         ancestor = "-1"
-                        _data["-1"]["descendants"].append(key)  # note this is now a descendant of the root
+                        #_data["-1"]["descendants"].append(key)  # note this is now a descendant of the root # FIXME: old method
                         break
                     else:
                         ancestor = tax_path[i]
-                        _data[key]["branch_length"] += 1
+                        #_data[key]["branch_length"] += 1  # don't need due to tax_path_to_branch_len  # FIXME: old method
                         i -= 1
+                # now adjust the branch_length by summing up the appropriate branch lengths for the "" taxIDs
+                if ancestor == "-1":  # went all the way back to the root, must start at the beginning
+                    first_good_position = 0
+                    new_branch_length = self.root_len  # need to start with the initial branch length to the root "-1" since it's not included in the tax_path
+                else:
+                    first_good_position = tax_path.index(ancestor)  # otherwise start at the first good node/taxID
+                    new_branch_length = 0
+                # FIXME: sometimes people make mistakes in their formatting of the profiles, so we need to work around it
+                try:
+                    last_good_position = tax_path.index(key)
+                except ValueError:
+                    # FIXME: try to fix their formatting mistakes, this is a hacky workaround and will need to be addressed.
+                    tax_path.append(key)
+                    last_good_position = tax_path.index(key)
+                # add up the branch lengths of the edges connecting "" to their ancestors,
+                # put in an edge between key and ancestor with the sum of these branch lengths
+                for intermediate_index in range(first_good_position, last_good_position):
+                    new_branch_length += self.tax_path_to_branch_len(tax_path[0:intermediate_index], self.branch_len_func, self.root_len)
+
+                _data[key]['branch_length'] = new_branch_length
+                #if i != -3:
+                #if new_branch_length != _data[key]['branch_length']:
+                #    print(f"ancestor: {ancestor}")
+                #    print(f"tax_path: {tax_path}")
+                #    print(f"i: {i}")
+                #    print(f"branch length: {_data[key]['branch_length']}")
+                #    print(f"new branch length: {new_branch_length}")
                 _data[key]["ancestor"] = ancestor
                 if ancestor in _data:
                     if key not in _data[ancestor]["descendants"]:
@@ -318,6 +352,28 @@ class Profile(object):
             else:
                 _data[key] = copy.copy(_other_data[key])  # otherwise use the whole thing
 
+    @staticmethod
+    def tax_path_to_branch_len(tax_path, func, root_len=1):
+        """
+        This function modifies the branch lengths based on the input tax_path.
+        intent is: ["2", "", "123", "456"] would result in a branch length of root_len
+        Parameters
+        ----------
+        tax_path : a list of strings (tax ID's)
+        func : a function whose argument is the depth in the tree of a tax ID, and whose output is the branch length
+               from the tax ID to its ancestor.
+        root_len : how long you want the root of the tree "-1" to be to the descendants (eg. "-1" -> "Bacteria")
+        Returns
+        -------
+        float
+        """
+        # eg. "-1" -> "Bacteria" should have a branch length of root_len
+        if not tax_path:
+            return root_len
+        else:
+            depth_in_tree = len(tax_path)  # this takes into account that the tax_path doesn't include the root of "-1"
+            return func(depth_in_tree)
+
     def make_unifrac_input_and_normalize(self, other):
         if not isinstance(other, Profile):
             raise Exception
@@ -330,7 +386,7 @@ class Profile(object):
         tax_path_lengths2 = max([len(_other_data[key]["tax_path"]) for key in _other_data_keys])
         tax_path_lengths = max(tax_path_lengths1, tax_path_lengths2)
         all_keys = set(_data_keys)
-        all_keys.update(_other_data_keys)
+        all_keys.update(_other_data_keys)  # all the taxID's in the union of self and other profile
         nodes_in_order = []
         for path_length in range(tax_path_lengths, 0, -1):
             for key in all_keys:
@@ -362,8 +418,7 @@ class Profile(object):
                     ancestor = _other_data[key]["ancestor"]
                     Tint[key] = ancestor
                     lint[key, ancestor] = _other_data[key]["branch_length"]
-        nodes_to_index = dict(zip(nodes_in_order, range(len(nodes_in_order))))
-        # return Tint, lint, nodes_in_order, nodes_to_index
+        nodes_to_index = dict(zip(nodes_in_order, range(len(nodes_in_order))))  # maps '45202.15' -> 0 (i.e taxID to integer index)
 
         # Now need to change over to the integer-based indexing
         Tint2 = dict()
