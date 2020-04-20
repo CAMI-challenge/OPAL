@@ -29,7 +29,7 @@ class Profile(object):
         self._all_keys = ["-1"]
         self._merged_flag = False
         self.root_len = 1  # the length you want between the "root" of "-1" and the superkingdom level (eg. Bacteria)
-        self.branch_len_func = lambda x: 1#1/float(x)  # Given a node n at depth d in the tree, branch_len_func(d)
+        self.branch_len_func = lambda x: 1/float(x)  # Given a node n at depth d in the tree, branch_len_func(d)
         # is how long you want the branch length between n and ancestor(n) to be
         self._data["-1"]["branch_length"] = self.root_len
         self.parse_file()  # TODO: this sets all the branch lengths to 1 currently
