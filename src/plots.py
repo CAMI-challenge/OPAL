@@ -532,6 +532,7 @@ def spider_plot_preprocess_metrics(pd_mean, labels):
     rank_to_max_fp = defaultdict()
     rank_to_max_tp = defaultdict()
     rank_to_max_unifrac = defaultdict()
+    rank_to_max_unweighted_unifrac = defaultdict()
     rank_to_max_l1norm = defaultdict()
     rank_to_max_recall = defaultdict()
     rank_to_max_precision = defaultdict()
@@ -544,6 +545,7 @@ def spider_plot_preprocess_metrics(pd_mean, labels):
         rank_to_max_precision[rank] = pd_rank[c.PRECISION].max()
     pd_rank = pd_mean.loc[(pd_mean.index.get_level_values('rank') == 'rank independent') & (pd_mean.index.get_level_values('tool') != c.GS)]
     rank_to_max_unifrac['rank independent'] = pd_rank[c.UNIFRAC].max()
+    rank_to_max_unweighted_unifrac['rank independent'] = pd_rank[c.UNW_UNIFRAC].max()
 
     tool_to_rank_to_metric_to_value = defaultdict(lambda: defaultdict(dict))
     for (rank, tool), g in pd_mean.groupby(['rank', 'tool']):
@@ -552,6 +554,7 @@ def spider_plot_preprocess_metrics(pd_mean, labels):
         if rank == 'rank independent':
             # relative values
             tool_to_rank_to_metric_to_value[tool][rank][c.UNIFRAC] = (g[c.UNIFRAC].values[0] / (rank_to_max_unifrac[rank]) if rank_to_max_unifrac[rank] > 0 else g[c.UNIFRAC].values[0])
+            tool_to_rank_to_metric_to_value[tool][rank][c.UNW_UNIFRAC] = (g[c.UNW_UNIFRAC].values[0] / (rank_to_max_unweighted_unifrac[rank]) if rank_to_max_unweighted_unifrac[rank] > 0 else g[c.UNW_UNIFRAC].values[0])
         elif rank in c.PHYLUM_SPECIES:
             # absolute values
             tool_to_rank_to_metric_to_value[tool][rank][c.RECALL+'absolute'] = g[c.RECALL].values[0] if len(g[c.RECALL].values) > 0 else None
@@ -602,8 +605,11 @@ def plot_all(pd_metrics, labels, output_dir, metrics_plot_rel, metrics_plot_abs)
 
     tool_to_rank_to_metric_to_value = spider_plot_preprocess_metrics(pd_mean, labels)
 
-    metrics_for_plot_rel = get_metrics_for_spider_plot(metrics_plot_rel, absolute=False) if metrics_plot_rel else [c.UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.FP]
+    #metrics_for_plot_rel = get_metrics_for_spider_plot(metrics_plot_rel, absolute=False) if metrics_plot_rel else [c.UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.FP]
+    metrics_for_plot_rel = get_metrics_for_spider_plot(metrics_plot_rel, absolute=False) if metrics_plot_rel else [c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.FP]
     metrics_for_plot_abs = get_metrics_for_spider_plot(metrics_plot_abs, absolute=True) if metrics_plot_abs else [c.RECALL+'absolute', c.PRECISION+'absolute']
+    # TODO: if I want it displayed in the absolute metric plots
+    #metrics_for_plot_abs = get_metrics_for_spider_plot(metrics_plot_abs, absolute=True) if metrics_plot_abs else [c.RECALL + 'absolute', c.PRECISION + 'absolute', c.UNIFRAC]
 
     present_labels = []
     for label in labels:
@@ -616,6 +622,7 @@ def plot_all(pd_metrics, labels, output_dir, metrics_plot_rel, metrics_plot_abs)
                 if metric in tool_to_rank_to_metric_to_value[label][rank]:
                     rank_to_metric_to_toolvalues[rank][metric].append(tool_to_rank_to_metric_to_value[label][rank][metric])
             rank_to_metric_to_toolvalues[rank][c.UNIFRAC].append(tool_to_rank_to_metric_to_value[label]['rank independent'][c.UNIFRAC])
+            rank_to_metric_to_toolvalues[rank][c.UNW_UNIFRAC].append(tool_to_rank_to_metric_to_value[label]['rank independent'][c.UNW_UNIFRAC])
 
     colors = [plt.cm.tab10(2), plt.cm.tab10(0), plt.cm.tab10(3), 'k', 'm', 'y']
     colors2 = ['r', 'k', 'olive']
