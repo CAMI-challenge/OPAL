@@ -16,6 +16,7 @@ def compute_unifrac(pf1, pf2):
     (Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_and_normalize(P2)
     (weighted, _) = EMDU.EMDUnifrac_weighted(Tint, lint, nodes_in_order, P, Q)
     ##################################################################
+    # attempt 1:
     # compute normalizing factor: divide by worst possible
     # this is the theoretical max weighted unifrac. If the gold standard doesn't have abundance sum to 1 at the lowest
     # rank, the maximum weighted unifrac may be smaller # TODO
@@ -26,13 +27,22 @@ def compute_unifrac(pf1, pf2):
     # 100->(convert to percentage)
     # tax_path_to_branch_len->(use the branch lengths defined in EMDUnifrac)
     max_weighted_unifrac = 2 * 100 * P1.tax_path_to_branch_len(gs_tax_path, P1.branch_len_func, P1.root_len)
+    # TODO: Note: this makes the weighted unifrac a bit uninformative, since no reasonable profilier will get anywhere near the absolute worst weighted unifrac
     weighted = weighted / float(max_weighted_unifrac)
+    ##################################################################
+    # attempt 2:
+    # ||WP - WQ|| / ||WP||
+    # Basically: relative weighted unifrac error.
+    #(gs_weighted_unifrac, _) = EMDU.EMDUnifrac_weighted(Tint, lint, nodes_in_order, P, np.zeros(P.shape))
+    #(raw_weighted_unifrac, _) = EMDU.EMDUnifrac_weighted(Tint, lint, nodes_in_order, P, Q)
+    #weighted = raw_weighted_unifrac / float(gs_weighted_unifrac)
+    # TODO: Note: This really doesn't change the results at all, the same basic pattern is still there. revert to attempt 1
 
     # Unweighted
-    P1 = copy.deepcopy(pf1)
-    P2 = copy.deepcopy(pf2)
-    (Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_and_normalize(P2)
-    (unweighted, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, Q)
+    #P1 = copy.deepcopy(pf1)
+    #P2 = copy.deepcopy(pf2)
+    #(Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_and_normalize(P2)
+    #(unweighted, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, Q)
     ###################################################################
     # compute normalizing factor attempt 1:
     # max unweighted unifrac is much more difficult: will need to take the ground truth \union other profile tree,
@@ -49,15 +59,28 @@ def compute_unifrac(pf1, pf2):
     # compute normalizing factor attempt 2:
     # instead, compute the unweighted unifrac for the gold standard to an empty profile and the same for the
     # input profile, then take the (log?) ratio of these two
-    (gs_unweighted_unifrac, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, np.zeros(P.shape))
-    (other_unweighted_unifrac, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, Q, np.zeros(Q.shape))
+
+    ##(gs_unweighted_unifrac, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, np.zeros(P.shape))
+    ##(other_unweighted_unifrac, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, Q, np.zeros(Q.shape))
+
     # just the ratio
     # unweighted = other_unweighted_unifrac / float(gs_unweighted_unifrac)
     # 1 - ratio (so zero is best and smaller is better)
     #unweighted = 1- other_unweighted_unifrac / float(gs_unweighted_unifrac)
     # relative difference
-    unweighted = np.abs(other_unweighted_unifrac - gs_unweighted_unifrac) / float(gs_unweighted_unifrac)
+
+    ##unweighted = np.abs(other_unweighted_unifrac - gs_unweighted_unifrac) / float(gs_unweighted_unifrac)
+
+    # Just take the log
+    #unweighted = np.log(unweighted) if unweighted > 1 else 0
     ###################################################################
+    # compute normalizing factor attempt 3:
+    # ||WP - WQ|| / ||WP||
+    # Basically: relative unweighted unifrac error. This is the best so far
+    (gs_unweighted_unifrac, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, np.zeros(P.shape))
+    (raw_unweighted_unifrac, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, Q)
+    unweighted = raw_unweighted_unifrac / float(gs_unweighted_unifrac)
+
     return weighted, unweighted
 
 
