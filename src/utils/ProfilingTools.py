@@ -29,7 +29,7 @@ class Profile(object):
         self._all_keys = ["-1"]
         self._merged_flag = False
         self.root_len = 1  # the length you want between the "root" of "-1" and the superkingdom level (eg. Bacteria)
-        self.branch_len_func = lambda x: 1/float(x)  # Given a node n at depth d in the tree, branch_len_func(d)
+        self.branch_len_func = lambda x: 2#1/float(x)  # Given a node n at depth d in the tree, branch_len_func(d)
         # is how long you want the branch length between n and ancestor(n) to be
         self._data["-1"]["branch_length"] = self.root_len
         self.parse_file()  # TODO: this sets all the branch lengths to 1 currently
@@ -482,6 +482,116 @@ class Profile(object):
         return Tint2, lint2, nodes_in_order2, nodes_to_index, P, Q
 
 
+    def make_unifrac_input_no_normalize(self, other):
+        if not isinstance(other, Profile):
+            raise Exception
+        _data = self._data
+        _other_data = other._data
+
+        _data_keys = _data.keys()
+        tax_path_lengths1 = max([len(_data[key]["tax_path"]) for key in _data_keys])
+        _other_data_keys = _other_data.keys()
+        tax_path_lengths2 = max([len(_other_data[key]["tax_path"]) for key in _other_data_keys])
+        tax_path_lengths = max(tax_path_lengths1, tax_path_lengths2)
+        all_keys = set(_data_keys)
+        all_keys.update(_other_data_keys)  # all the taxID's in the union of self and other profile
+        nodes_in_order = []
+        for path_length in range(tax_path_lengths, 0, -1):
+            for key in all_keys:
+                if key in _data:
+                    if len(_data[key]["tax_path"]) == path_length:
+                        if key not in nodes_in_order:
+                            nodes_in_order.append(key)
+                elif key in _other_data:
+                    if len(_other_data[key]["tax_path"]) == path_length:
+                        if key not in nodes_in_order:
+                            nodes_in_order.append(key)
+        # Make the graph
+        # Put the root at the very end
+        if '-1' in nodes_in_order:
+            nodes_in_order.pop(nodes_in_order.index('-1'))
+            nodes_in_order.append('-1')
+        else:
+            nodes_in_order.append('-1')
+        Tint = dict()
+        lint = dict()
+        for key in nodes_in_order:
+            if key in _data:
+                if "ancestor" in _data[key]:  # If ancestor is not in there, then it's an ancestor
+                    ancestor = _data[key]["ancestor"]
+                    Tint[key] = ancestor
+                    lint[key, ancestor] = _data[key]["branch_length"]
+            elif key in _other_data:
+                if "ancestor" in _other_data[key]:
+                    ancestor = _other_data[key]["ancestor"]
+                    Tint[key] = ancestor
+                    lint[key, ancestor] = _other_data[key]["branch_length"]
+        nodes_to_index = dict(zip(nodes_in_order, range(len(nodes_in_order))))  # maps '45202.15' -> 0 (i.e taxID to integer index)
+
+        # Now need to change over to the integer-based indexing
+        Tint2 = dict()
+        lint2 = dict()
+        nodes_in_order2 = []
+        for key in nodes_in_order:
+            if key in Tint:
+                ancestor = Tint[key]
+                Tint2[nodes_to_index[key]] = nodes_to_index[ancestor]
+                if (key, ancestor) in lint:
+                    lint2[nodes_to_index[key], nodes_to_index[ancestor]] = lint[key, ancestor]
+            nodes_in_order2.append(nodes_to_index[key])
+
+        # Next make the probability distributions
+        # Would be nice if I could find a non-destructive way to subtract up and normalize
+
+        # Do it for P
+        self._subtract_down()
+        keys = _data.keys()
+        total_abundance = 0
+        for key in keys:
+            total_abundance += _data[key]["abundance"]
+        # print(total_abundance)
+        for key in keys:
+            if total_abundance > 0:
+                #_data[key]["abundance"] /= total_abundance  # Should be a fraction, summing to 1
+                pass
+        P = np.zeros(len(nodes_in_order))
+        for key_ind in range(len(nodes_in_order)):
+            key = nodes_in_order[key_ind]
+            if key in _data:
+                P[key_ind] = _data[key]["abundance"]
+
+        # Make back into percentages and add the mass back up (effectively normalizing the vector)
+        #for key in keys:
+        #    if total_abundance > 0:
+        #        _data[key]["abundance"] *= 100
+        self._add_up()
+
+        # Next do for Q
+        other._subtract_down()
+        keys = _other_data.keys()
+        total_abundance = 0
+        for key in keys:
+            total_abundance += _other_data[key]["abundance"]
+        # print(total_abundance)
+        for key in keys:
+            if total_abundance > 0:
+                #_other_data[key]["abundance"] /= total_abundance  # should be a fraction, summing to 1
+                pass
+        Q = np.zeros(len(nodes_in_order))
+        for key_ind in range(len(nodes_in_order)):
+            key = nodes_in_order[key_ind]
+            if key in _other_data:
+                Q[key_ind] = _other_data[key]["abundance"]
+
+        # Make back into percentages and add the mass back up (effectively normalizing the vector)
+        #for key in keys:
+        #    if total_abundance > 0:
+        #        _other_data[key]["abundance"] *= 100
+        other._add_up()
+
+        return Tint2, lint2, nodes_in_order2, nodes_to_index, P/100., Q/100.
+
+
 def test_normalize():
     profile = Profile('/home/dkoslicki/Dropbox/Repositories/CAMIProfilingTools/src/test1.profile')
     profile.write_file('/home/dkoslicki/Dropbox/Repositories/CAMIProfilingTools/src/test1.profile.import')
@@ -489,6 +599,57 @@ def test_normalize():
     profile.write_file('/home/dkoslicki/Dropbox/Repositories/CAMIProfilingTools/src/test1.profile.normalize')
     return profile
 
+
+def test_normalize2():
+    import EMDUnifrac as EMDU
+    from load_data import open_profile_from_tsv
+    import os
+    # test files
+    file_path1 = os.path.dirname(os.path.abspath(__file__)) + "/../../data/agitated_blackwell_7"
+    file_path2 = os.path.dirname(os.path.abspath(__file__)) + "/../../data/goldstandard_low_1.bin"
+
+    # import one test profile
+    profile_list = open_profile_from_tsv(file_path1, False)
+    name1, metadata1, profile1 = profile_list[0]
+    profile1 = Profile(sample_metadata=metadata1, profile=profile1)
+
+    # import another test profile
+    profile_list = open_profile_from_tsv(file_path2, False)
+    name2, metadata2, profile2 = profile_list[0]
+    profile2 = Profile(sample_metadata=metadata2, profile=profile2)
+
+    print("Normalized:")
+    Tint, lint, nodes_in_order, nodes_to_index, P, Q = profile1.make_unifrac_input_and_normalize(profile2)  # normalized
+    print(f"P sum: {np.sum(P)}")
+    print(f"Q sum: {np.sum(Q)}")
+    (weighted_norm, diffab) = EMDU.EMDUnifrac_weighted(Tint, lint, nodes_in_order, P, Q)
+    (unweighted_norm, diffab) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, Q)
+    print(f"weighted, normalized: {weighted_norm}")
+    print(f"unweighted, normalized: {unweighted_norm}")
+
+
+    print("No normalized:")
+    profile_list = open_profile_from_tsv(file_path1, False)
+    name1, metadata1, profile1 = profile_list[0]
+    profile1 = Profile(sample_metadata=metadata1, profile=profile1)
+    # import another test profile
+    profile_list = open_profile_from_tsv(file_path2, False)
+    name2, metadata2, profile2 = profile_list[0]
+    profile2 = Profile(sample_metadata=metadata2, profile=profile2)
+    Tint, lint, nodes_in_order, nodes_to_index, P, Q = profile1.make_unifrac_input_no_normalize(profile2)  # not normalized
+    print(f"P sum: {np.sum(P)}")
+    print(f"Q sum: {np.sum(Q)}")
+    P_missing_mass = 1-np.sum(P)
+    (weighted_no_norm, diffab) = EMDU.EMDUnifrac_weighted(Tint, lint, nodes_in_order, P, Q)
+    (unweighted_no_norm, diffab) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, Q)
+    print(f"weighted, not normalized: {weighted_no_norm}")
+    print(f"unweighted, not normalized: {unweighted_no_norm}")
+    print(f"weighted, not normalized, but missing mass added to root node: {weighted_no_norm + P_missing_mass}")
+
+    assert unweighted_norm == unweighted_no_norm
+    assert weighted_norm != unweighted_no_norm
+
+    return
 
 def test_unifrac():
     sys.path.append('/home/dkoslicki/Dropbox/Repositories/EMDUnifrac/src')
