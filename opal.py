@@ -132,9 +132,7 @@ def compute_metrics(sample_metadata, profile, gs_pf_profile, gs_rank_to_taxid_to
     return unifrac, shannon, l1norm, binary_metrics, braycurtis
 
 
-def load_profiles(gold_standard_file, profiles_files, no_normalization):
-    normalize = False if no_normalization else True
-
+def load_profiles(gold_standard_file, profiles_files, normalize):
     gs_samples_list = load_data.open_profile(gold_standard_file, normalize)
     sample_ids_list = []
     for sample in gs_samples_list:
@@ -295,7 +293,7 @@ def main():
     group1.add_argument('-g', '--gold_standard_file', help='Gold standard file', required=True)
     group1.add_argument('-o', '--output_dir', help='Directory to write the results to', required=True)
     group2 = parser.add_argument_group('optional arguments')
-    group2.add_argument('-n', '--no_normalization', help='Do not normalize samples', action='store_true')
+    group2.add_argument('-n', '--normalize', help='Normalize samples', action='store_true')
     group2.add_argument('-f', '--filter', help='Filter out the predictions with the smallest relative abundances summing up to [FILTER]%% within a rank (affects only precision, default: 0)', type=float)
     group2.add_argument('-p', '--plot_abundances', help='Plot abundances in the gold standard (can take some minutes)', action='store_true')
     group2.add_argument('-l', '--labels', help='Comma-separated profiles names', required=False)
@@ -320,7 +318,7 @@ def main():
     logger.info('Loading profiles...')
     sample_ids_list, gs_samples_list, profiles_list_to_samples_list = load_profiles(args.gold_standard_file,
                                                                                     args.profiles_files,
-                                                                                    args.no_normalization)
+                                                                                    args.normalize)
     logger.info('done')
 
     plots_list = []
