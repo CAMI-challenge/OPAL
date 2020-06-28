@@ -8,7 +8,7 @@ import timeit
 # TODO: make sure that I'm not deleting the root "-1" that way Unifrac picks up on the missing superkingdoms
 
 class Profile(object):
-    def __init__(self, sample_metadata=None, profile=None, branch_length_fun=lambda x: 1/float(x)):
+    def __init__(self, sample_metadata=None, profile=None, branch_length_fun=lambda x: 1/x):
         self.sample_metadata = sample_metadata
         self.profile = profile
         self._data = dict()
