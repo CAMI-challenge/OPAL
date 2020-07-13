@@ -300,7 +300,7 @@ def main():
     group2 = parser.add_argument_group('optional arguments')
     group2.add_argument('-n', '--normalize', help='Normalize samples', action='store_true')
     group2.add_argument('-f', '--filter', help='Filter out the predictions with the smallest relative abundances summing up to [FILTER]%% within a rank (affects only precision, default: 0)', type=float)
-    group2.add_argument('-b', '--branch_length_function', help='UniFrac tree branch length function (default: "lambda x: 1/x", x=tree depth)', required=False, default='lambda x: 1/x')
+    group2.add_argument('-b', '--branch_length_function', help='UniFrac tree branch length function (default: "lambda x: 1/float(x)", x=tree depth)', required=False, default='lambda x: 1/float(x)')
     group2.add_argument('-p', '--plot_abundances', help='Plot abundances in the gold standard (can take some minutes)', action='store_true')
     group2.add_argument('-l', '--labels', help='Comma-separated profiles names', required=False)
     group2.add_argument('-t', '--time', help='Comma-separated runtimes in hours', required=False)
