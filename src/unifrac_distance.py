@@ -13,7 +13,7 @@ def get_branch_length_function(function_str):
         return eval(function_str)
     except SyntaxError as exception:
         logging.getLogger('opal').warning('Invalid function provided with -b, --branch_length_function: {}. lambda x: 1/x will be used.'.format(exception.msg))
-        return eval('lambda x: 1/x')
+        return eval('lambda x: 1/float(x)')
 
 
 def compute_unifrac(pf1, pf2, normalize):
