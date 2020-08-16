@@ -116,54 +116,29 @@ def get_rank_to_sample_pd(pd_metrics):
 
 def get_formatted_pd_rankings(pd_rankings, labels):
     df_list = []
-    df_list_unsorted_pos = []
-    metrics_list = []
     for metric, g in pd_rankings.groupby(level=0):
-        metrics_list.append(metric)
         df = g.reset_index().sort_values('position')
-        df2 = g.reset_index()
         df_list.append(pd.DataFrame({metric: df['tool'].tolist(), 'score' + metric: df['position'].tolist()}))
-        df_list_unsorted_pos.append(pd.DataFrame({metric: df2['tool'].tolist(), 'score' + metric: df2['position'].tolist()}))
-
     df_sum = pd_rankings.groupby(['tool'])['position'].sum().reset_index().sort_values('position')
-    df_sum_unsorted_pos = pd_rankings.groupby(['tool'])['position'].sum().loc[labels].reset_index()
-
     df_list.append(
         pd.DataFrame({SUM_OF_SCORES: df_sum['tool'].tolist(), 'score' + SUM_OF_SCORES: df_sum['position'].tolist()}))
-    df_list_unsorted_pos.append(
-        pd.DataFrame({SUM_OF_SCORES: df_sum_unsorted_pos['tool'].tolist(), 'score' + SUM_OF_SCORES: df_sum_unsorted_pos['position'].tolist()}))
-
     pd_show = pd.concat(df_list, axis=1)
-    pd_show_unsorted_pos = pd.concat(df_list_unsorted_pos, axis=1)
-    return pd_show, pd_show_unsorted_pos
+
+    pd_plot = pd_rankings.reset_index().pivot(index='tool', columns='metric')
+    pd_plot[SUM_OF_SCORES] = pd_plot.sum(axis=1)
+    pd_plot = pd_plot.reindex(labels)
+    return pd_show, pd_plot
 
 
 def create_rankings_html(pd_rankings, ranks_scored, labels):
-    pd_show, pd_show_unsorted_pos = get_formatted_pd_rankings(pd_rankings, labels)
+    pd_show, pd_plot = get_formatted_pd_rankings(pd_rankings, labels)
 
-    table_source = ColumnDataSource(pd_show)
-
-    columns = [
-        TableColumn(field=SUM_OF_SCORES, title=SUM_OF_SCORES, sortable=False),
-        TableColumn(field='score' + SUM_OF_SCORES, title='', width=50),
-        TableColumn(field=c.RECALL, title=c.RECALL, sortable=False),
-        TableColumn(field='score' + c.RECALL, title='', width=50),
-        TableColumn(field=c.PRECISION, title=c.PRECISION, sortable=False),
-        TableColumn(field='score' + c.PRECISION, title='', width=50),
-        TableColumn(field=c.L1NORM, title=c.L1NORM, sortable=False),
-        TableColumn(field='score' + c.L1NORM, title='', width=50),
-        TableColumn(field=c.UNIFRAC, title=c.UNIFRAC, sortable=False),
-        TableColumn(field='score' + c.UNIFRAC, title='', width=50),
-    ]
-    data_table = DataTable(source=table_source, columns=columns, width=800, height=25 + len(pd_show) * 25)
-
-    top = [float(x) for x in pd_show_unsorted_pos['score' + SUM_OF_SCORES]]
-    source = ColumnDataSource(data=dict(x=pd_show_unsorted_pos[SUM_OF_SCORES].tolist(),
-                                        top=top,
-                                        recall=pd_show_unsorted_pos['score' + c.RECALL],
-                                        precision=pd_show_unsorted_pos['score' + c.PRECISION],
-                                        l1norm=pd_show_unsorted_pos['score' + c.L1NORM],
-                                        unifrac=pd_show_unsorted_pos['score' + c.UNIFRAC]))
+    source = ColumnDataSource(data=dict(x=labels,
+                                        top=pd_plot[SUM_OF_SCORES],
+                                        recall=pd_plot['position', c.RECALL],
+                                        precision=pd_plot['position', c.PRECISION],
+                                        l1norm=pd_plot['position', c.L1NORM],
+                                        unifrac=pd_plot['position', c.UNIFRAC]))
 
     callback = CustomJS(args=dict(source=source), code="""
         var data = source.data;
@@ -176,7 +151,6 @@ def create_rankings_html(pd_rankings, ranks_scored, labels):
         precision = data['precision'];
         l1norm = data['l1norm'];
         unifrac = data['unifrac'];
-        
         
         for (i = 0; i < topx.length; i++) {
             topx[i] = recall[i] * wrecall + precision[i] * wprecision + l1norm[i] * wl1norm + unifrac[i] * wunifrac;
@@ -197,9 +171,23 @@ def create_rankings_html(pd_rankings, ranks_scored, labels):
     weight_unifrac = Slider(start=0, end=10, value=1, step=.1, title=c.UNIFRAC + " weight", callback=callback)
     callback.args["weight_unifrac"] = weight_unifrac
 
-    p = figure(x_range=pd_show_unsorted_pos[SUM_OF_SCORES].tolist(), plot_width=800, plot_height=400, title=SUM_OF_SCORES + " - lower is better")
+    p = figure(x_range=pd_plot.index.to_list(), plot_width=1200, plot_height=400, title=SUM_OF_SCORES + " - lower is better")
     p.vbar(x='x', top='top', source=source, width=0.5, bottom=0, color="firebrick")
 
+    table_source = ColumnDataSource(pd_show)
+    columns = [
+        TableColumn(field=SUM_OF_SCORES, title=SUM_OF_SCORES, sortable=False),
+        TableColumn(field='score' + SUM_OF_SCORES, title='', width=50),
+        TableColumn(field=c.RECALL, title=c.RECALL, sortable=False),
+        TableColumn(field='score' + c.RECALL, title='', width=50),
+        TableColumn(field=c.PRECISION, title=c.PRECISION, sortable=False),
+        TableColumn(field='score' + c.PRECISION, title='', width=50),
+        TableColumn(field=c.L1NORM, title=c.L1NORM, sortable=False),
+        TableColumn(field='score' + c.L1NORM, title='', width=50),
+        TableColumn(field=c.UNIFRAC, title=c.UNIFRAC, sortable=False),
+        TableColumn(field='score' + c.UNIFRAC, title='', width=50),
+    ]
+    data_table = DataTable(source=table_source, columns=columns, width=800, height=25 + len(pd_show) * 25)
     col_rankings = column([Div(text="<font color='navy'><u>Hint 1:</u> click on the columns of scores for sorting.</font>", style={"width": "600px", "margin-bottom": "0px"}),
                            Div(text="Taxonomic ranks scored: " + ", ".join(ranks_scored), style={"width": "600px", "margin-bottom": "0px"}),
                            data_table,
