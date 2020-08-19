@@ -59,8 +59,8 @@ def get_time_memory(time, memory, profiles_files):
     return time_list, memory_list
 
 
-def compute_binary_metrics(query_profile, query_truth, filter_tail_percentage):
-    all_metrics = bm.compute_tree_metrics(query_profile, query_truth, filter_tail_percentage)
+def compute_binary_metrics(query_profile, query_truth):
+    all_metrics = bm.compute_tree_metrics(query_profile, query_truth)
     return all_metrics
 
 
@@ -110,7 +110,7 @@ def print_by_tool(output_dir, pd_metrics):
 
 
 def compute_metrics(sample_metadata, profile, gs_pf_profile, gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage,
-                    normalize, filter_tail_percentage, branch_length_fun):
+                    normalize, branch_length_fun):
     # Unifrac
     if isinstance(profile, PF.Profile):
         pf_profile = profile
@@ -125,7 +125,7 @@ def compute_metrics(sample_metadata, profile, gs_pf_profile, gs_rank_to_taxid_to
     l1norm = l1.compute_l1norm(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage)
 
     # Binary metrics
-    binary_metrics = compute_binary_metrics(rank_to_taxid_to_percentage, gs_rank_to_taxid_to_percentage, filter_tail_percentage)
+    binary_metrics = compute_binary_metrics(rank_to_taxid_to_percentage, gs_rank_to_taxid_to_percentage)
 
     # Bray-Curtis
     braycurtis = bc.braycurtis(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage)
@@ -162,9 +162,13 @@ def evaluate(gs_samples_list, profiles_list_to_samples_list, labels, normalize, 
                                                                                gs_id_to_rank_to_taxid_to_percentage[sample_id],
                                                                                gs_id_to_rank_to_taxid_to_percentage[sample_id],
                                                                                normalize,
-                                                                               999.0 if filter_tail_percentage else None,
                                                                                branch_length_fun)
         pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, c.GS, braycurtis, shannon, binary_metrics, l1norm, unifrac)], ignore_index=True)
+    if filter_tail_percentage:
+        metrics_list = pd_metrics['metric'].unique().tolist()
+        pd_metrics_copy = pd_metrics.copy()
+        pd_metrics_copy['metric'].replace(metrics_list, [metric + ' (unfiltered)' for metric in metrics_list], inplace=True)
+        pd_metrics = pd.concat([pd_metrics, pd_metrics_copy], ignore_index=True)
 
     one_profile_assessed = False
     for samples_list, label in zip(profiles_list_to_samples_list, labels):
@@ -185,9 +189,20 @@ def evaluate(gs_samples_list, profiles_list_to_samples_list, labels, normalize, 
                                                                                    gs_rank_to_taxid_to_percentage,
                                                                                    rank_to_taxid_to_percentage,
                                                                                    normalize,
-                                                                                   filter_tail_percentage,
                                                                                    branch_length_fun)
-            pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac)], ignore_index=True)
+            rename_as_unfiltered = True if filter_tail_percentage else False
+            pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac, rename_as_unfiltered)], ignore_index=True)
+
+            if filter_tail_percentage:
+                rank_to_taxid_to_percentage_filtered = \
+                    load_data.get_rank_to_taxid_to_percentage_filtered(rank_to_taxid_to_percentage, filter_tail_percentage)
+                unifrac, shannon, l1norm, binary_metrics, braycurtis = compute_metrics(sample_metadata, profile, gs_pf_profile,
+                                                                                       gs_rank_to_taxid_to_percentage,
+                                                                                       rank_to_taxid_to_percentage_filtered,
+                                                                                       normalize,
+                                                                                       branch_length_fun)
+                pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac)], ignore_index=True)
+
             one_profile_assessed = True
 
     if not one_profile_assessed:
@@ -197,7 +212,7 @@ def evaluate(gs_samples_list, profiles_list_to_samples_list, labels, normalize, 
     return pd_metrics
 
 
-def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac):
+def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac, rename_as_unfiltered=False):
     """Reformats metrics data into one unified pandas DataFrame.
 
     Parameters
@@ -251,7 +266,13 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
     pd_braycurtis['tool'] = label
     pd_braycurtis['metric'] = c.BRAY_CURTIS
 
-    return pd.concat([pd_braycurtis, pd_shannon, pd_binary_metrics, pd_l1norm, pd_unifrac], ignore_index=True, sort=False)
+    pd_formatted = pd.concat([pd_braycurtis, pd_shannon, pd_binary_metrics, pd_l1norm, pd_unifrac], ignore_index=True, sort=False)
+
+    if rename_as_unfiltered:
+        metrics_list = pd_formatted['metric'].unique().tolist()
+        pd_formatted['metric'].replace(metrics_list, [metric + ' (unfiltered)' for metric in metrics_list], inplace=True)
+
+    return pd_formatted
 
 
 def create_output_directories(output_dir, labels):

@@ -238,3 +238,15 @@ def get_rank_to_taxid_to_percentage(profile, rank=None):
             rank_to_taxid_to_percentage[prediction.rank] = {}
         rank_to_taxid_to_percentage[prediction.rank][prediction.taxid] = prediction.percentage
     return rank_to_taxid_to_percentage
+
+
+def get_rank_to_taxid_to_percentage_filtered(rank_to_taxid_to_percentage, filter_tail_percentage):
+    rank_to_taxid_to_percentage_filtered = defaultdict(lambda: defaultdict(float))
+    for rank in rank_to_taxid_to_percentage:
+        sorted_profile = sorted(rank_to_taxid_to_percentage[rank].items(), key=lambda x: x[1])
+        sum_all = .0
+        for item in sorted_profile:
+            sum_all += item[1]
+            if sum_all > filter_tail_percentage and item[1] > 0:
+                rank_to_taxid_to_percentage_filtered[rank][item[0]] = item[1]
+    return rank_to_taxid_to_percentage_filtered

@@ -30,10 +30,6 @@ class RankMetrics:
         return self.__tp
 
     @property
-    def tpfiltered(self):
-        return self.__tpfiltered
-
-    @property
     def fn(self):
         return self.__fn
 
@@ -42,16 +38,8 @@ class RankMetrics:
         return self.__fp
 
     @property
-    def fpfiltered(self):
-        return self.__fpfiltered
-
-    @property
     def precision(self):
         return self.__precision
-
-    @property
-    def precisionfiltered(self):
-        return self.__precisionfiltered
 
     @property
     def recall(self):
@@ -64,10 +52,6 @@ class RankMetrics:
     @property
     def f1(self):
         return self.__f1
-
-    @property
-    def f1filtered(self):
-        return self.__f1filtered
 
     @property
     def otus(self):
@@ -85,25 +69,13 @@ class RankMetrics:
     def tp(self, tp):
         self.__tp = tp
 
-    @tpfiltered.setter
-    def tpfiltered(self, tpfiltered):
-        self.__tpfiltered = tpfiltered
-
     @fp.setter
     def fp(self, fp):
         self.__fp = fp
 
-    @fpfiltered.setter
-    def fpfiltered(self, fpfiltered):
-        self.__fpfiltered = fpfiltered
-
     @precision.setter
     def precision(self, precision):
         self.__precision = precision
-
-    @precisionfiltered.setter
-    def precisionfiltered(self, precisionfiltered):
-        self.__precisionfiltered = precisionfiltered
 
     @recall.setter
     def recall(self, recall):
@@ -116,10 +88,6 @@ class RankMetrics:
     @f1.setter
     def f1(self, f1):
         self.__f1 = f1
-
-    @f1filtered.setter
-    def f1filtered(self, f1filtered):
-        self.__f1filtered = f1filtered
 
     @otus.setter
     def otus(self, otus):
@@ -136,7 +104,7 @@ class RankMetrics:
         return {metric.split("_")[3]: value for metric, value in self.__dict__.items()}
 
 
-def __get_taxa(rank, filter_tail_percentage=None):
+def __get_taxa(rank):
     """ Return set of taxids with abundance > 0
 
     >>> __get_taxa(query_rank)
@@ -145,15 +113,6 @@ def __get_taxa(rank, filter_tail_percentage=None):
     :param rank: Set of taxids of specific rank
     :return: list of taxids
     """
-    if filter_tail_percentage:
-        sorted_profile = sorted(rank.items(), key=lambda x: x[1])
-        sum_all = .0
-        taxa = set()
-        for item in sorted_profile:
-            sum_all += item[1]
-            if sum_all > filter_tail_percentage and item[1] > 0:
-                taxa.add(item[0])
-        return taxa
     return set(k for k, v in rank.items() if v > 0)
 
 
@@ -221,7 +180,7 @@ def f1_score(this_precision, this_recall):
         return None
 
 
-def compute_rank_metrics(rank_query, rank_truth, rank, filter_tail_percentage):
+def compute_rank_metrics(rank_query, rank_truth, rank):
     """ Returns metrics for one rank
     >>> compute_rank_metrics(test_query_rank, test_truth_rank, "species", None).get_ordered_dict()
     OrderedDict([('_RankMetrics__f1', 1.0), ('_RankMetrics__fn', 0), ('_RankMetrics__fp', 0), ('_RankMetrics__jaccard', 1.0), ('_RankMetrics__otus', 1), ('_RankMetrics__precision', 1.0), ('_RankMetrics__rank', 'species'), ('_RankMetrics__recall', 1.0), ('_RankMetrics__tp', 1)])
@@ -243,24 +202,10 @@ def compute_rank_metrics(rank_query, rank_truth, rank, filter_tail_percentage):
     rank_metrics.jaccard = jaccard_index(rank_metrics.tp, rank_query_taxids, rank_truth_taxids)
     rank_metrics.otus = rank_metrics.tp + rank_metrics.fp
 
-    # if it is gold standard, copy values without filtering
-    if filter_tail_percentage == 999.0:
-        rank_metrics.tpfiltered = rank_metrics.tp
-        rank_metrics.fpfiltered = rank_metrics.fp
-        rank_metrics.precisionfiltered = rank_metrics.precision
-        rank_metrics.f1filtered = rank_metrics.f1
-    elif filter_tail_percentage:
-        rank_query_taxidsfiltered = __get_taxa(rank_query, filter_tail_percentage)
-        rank_query_fp_taxidsfiltered = rank_query_taxidsfiltered.difference(rank_truth_taxids)
-        rank_metrics.tpfiltered = __get_tp(rank_query_taxidsfiltered, rank_truth_taxids)
-        rank_metrics.fpfiltered = __get_fp(rank_query_fp_taxidsfiltered)
-        rank_metrics.precisionfiltered = precision(rank_metrics.tpfiltered, rank_metrics.fpfiltered)
-        rank_metrics.f1filtered = f1_score(rank_metrics.precisionfiltered, rank_metrics.recall)
-
     return rank_metrics
 
 
-def compute_tree_metrics(query, truth, filter_tail_percentage):
+def compute_tree_metrics(query, truth):
     """ Return metrics for tree
     >>> compute_tree_metrics(query_tree, truth_tree, None)["species"].get_ordered_dict()
     OrderedDict([('_RankMetrics__f1', 0.5), ('_RankMetrics__fn', 1), ('_RankMetrics__fp', 3), ('_RankMetrics__jaccard', 0.3333333333333333), ('_RankMetrics__otus', 5), ('_RankMetrics__precision', 0.4), ('_RankMetrics__rank', 'species'), ('_RankMetrics__recall', 0.6666666666666666), ('_RankMetrics__tp', 2)])
@@ -274,7 +219,7 @@ def compute_tree_metrics(query, truth, filter_tail_percentage):
         else:
             return {}
 
-    return {rank: compute_rank_metrics(check_for_rank(query, rank), taxids, rank, filter_tail_percentage) for rank, taxids in truth.items()}
+    return {rank: compute_rank_metrics(check_for_rank(query, rank), taxids, rank) for rank, taxids in truth.items()}
 
 
 def print_all_metrics(tree_metrics, path):
