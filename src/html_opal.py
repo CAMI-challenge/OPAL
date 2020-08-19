@@ -203,21 +203,29 @@ def get_colors_and_ranges(name, all_values, df_metrics):
     color2 = 'red'
     hue1 = 12
     hue2 = 240
-    if name == c.PRECISION or name == c.RECALL or name == c.F1_SCORE or name == c.JACCARD or name == c.PRECISION_UNFILTERED or name == c.F1_SCORE_UNFILTERED:
+
+    metrics = [c.PRECISION, c.RECALL, c.F1_SCORE, c.JACCARD]
+    metrics = metrics + [metric + ' (unfiltered)' for metric in metrics]
+    if name in metrics:
         return color1, color2, hue1, hue2, 0, 1
-    if name == c.FP or name == c.UNIFRAC or name == c.UNW_UNIFRAC or name == c.FP_UNFILTERED:
+
+    metrics = [c.FP, c.UNIFRAC, c.UNW_UNIFRAC]
+    metrics = metrics + [metric + ' (unfiltered)' for metric in metrics]
+    if name in metrics:
         return color2, color1, hue2, hue1, 0, max(all_values)
-    if name == c.TP or name == c.TP_UNFILTERED:
+
+    if name == c.TP or name == c.TP + ' (unfiltered)':
         return color1, color2, hue1, hue2, 0, max(all_values)
-    if name == c.FN:
-        fn_values = df_metrics.loc[c.TP, ].values
+
+    if name == c.FN or name == c.FN + ' (unfiltered)':
+        fn_values = df_metrics.loc[name, ].values
         # convert "<mean> (<standard error>)" to float of <mean>
         if len(fn_values) > 0 and isinstance(fn_values[0], str):
             fn_values = [float(x.split(' ')[0]) for x in fn_values]
         return color2, color1, hue2, hue1, 0, max(fn_values)
-    if name == c.L1NORM:
+    if name == c.L1NORM or name == c.L1NORM + ' (unfiltered)':
         return color2, color1, hue2, hue1, 0, 2
-    if name == c.BRAY_CURTIS:
+    if name == c.BRAY_CURTIS or name == c.BRAY_CURTIS + ' (unfiltered)':
         return color2, color1, hue2, hue1, 0, 1
     return color1, color2, hue1, hue2, max(all_values), min(all_values)
 
