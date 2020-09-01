@@ -105,6 +105,10 @@ def get_rank_to_sample_pd(pd_metrics):
     for index, row in pd_grouped_copy.iterrows():
         pd_grouped.loc[index][c.UNIFRAC] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC]
         pd_grouped.loc[index][c.UNW_UNIFRAC] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC]
+    if c.UNIFRAC + c.UNFILTERED_SUF in pd_grouped.columns:
+        for index, row in pd_grouped_copy.iterrows():
+            pd_grouped.loc[index][c.UNIFRAC + c.UNFILTERED_SUF] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC + c.UNFILTERED_SUF]
+            pd_grouped.loc[index][c.UNW_UNIFRAC + c.UNFILTERED_SUF] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC + c.UNFILTERED_SUF]
 
     for (rank, sample), g in pd_grouped.groupby(['rank', 'sample']):
         rank_to_sample_pd[rank][sample] = g.reset_index().rename(columns={'tool': 'Tool'}).drop(['rank', 'sample'], axis=1).set_index('Tool').T
@@ -217,27 +221,27 @@ def get_colors_and_ranges(name, all_values, df_metrics):
     hue2 = 240
 
     metrics = [c.PRECISION, c.RECALL, c.F1_SCORE, c.JACCARD]
-    metrics = metrics + [metric + ' (unfiltered)' for metric in metrics]
+    metrics = metrics + [metric + c.UNFILTERED_SUF for metric in metrics]
     if name in metrics:
         return color1, color2, hue1, hue2, 0, 1
 
     metrics = [c.FP, c.UNIFRAC, c.UNW_UNIFRAC]
-    metrics = metrics + [metric + ' (unfiltered)' for metric in metrics]
+    metrics = metrics + [metric + c.UNFILTERED_SUF for metric in metrics]
     if name in metrics:
         return color2, color1, hue2, hue1, 0, max(all_values)
 
-    if name == c.TP or name == c.TP + ' (unfiltered)':
+    if name == c.TP or name == c.TP + c.UNFILTERED_SUF:
         return color1, color2, hue1, hue2, 0, max(all_values)
 
-    if name == c.FN or name == c.FN + ' (unfiltered)':
+    if name == c.FN or name == c.FN + c.UNFILTERED_SUF:
         fn_values = df_metrics.loc[name, ].values
         # convert "<mean> (<standard error>)" to float of <mean>
         if len(fn_values) > 0 and isinstance(fn_values[0], str):
             fn_values = [float(x.split(' ')[0]) for x in fn_values]
         return color2, color1, hue2, hue1, 0, max(fn_values)
-    if name == c.L1NORM or name == c.L1NORM + ' (unfiltered)':
+    if name == c.L1NORM or name == c.L1NORM + c.UNFILTERED_SUF:
         return color2, color1, hue2, hue1, 0, 2
-    if name == c.BRAY_CURTIS or name == c.BRAY_CURTIS + ' (unfiltered)':
+    if name == c.BRAY_CURTIS or name == c.BRAY_CURTIS + c.UNFILTERED_SUF:
         return color2, color1, hue2, hue1, 0, 1
     return color1, color2, hue1, hue2, max(all_values), min(all_values)
 
@@ -304,13 +308,21 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
     all_sample_ids = sample_ids_list[:]
     all_sample_ids.insert(0, '(average over samples)')
 
-    if c.FP_UNFILTERED in pd_metrics['metric'].values:
-        presence_metrics = [c.RECALL, c.PRECISION, c.PRECISION_UNFILTERED, c.F1_SCORE, c.F1_SCORE_UNFILTERED, c.TP, c.TP_UNFILTERED, c.FP, c.FP_UNFILTERED, c.FN, c.JACCARD]
-    else:
-        presence_metrics = [c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD]
+    presence_metrics = [c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD]
     estimates_metrics = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.BRAY_CURTIS]
     alpha_diversity_metics = [c.OTUS, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
     rank_independent_metrics = [c.UNIFRAC, c.UNW_UNIFRAC]
+
+    if c.FP + c.UNFILTERED_SUF in pd_metrics['metric'].values:
+        presence_metrics = [[metric, metric + c.UNFILTERED_SUF] for metric in presence_metrics]
+        presence_metrics = [metric for elem in presence_metrics for metric in elem]
+        estimates_metrics = [[metric, metric + c.UNFILTERED_SUF] for metric in estimates_metrics]
+        estimates_metrics = [metric for elem in estimates_metrics for metric in elem]
+        alpha_diversity_metics = [[metric, metric + c.UNFILTERED_SUF] for metric in alpha_diversity_metics]
+        alpha_diversity_metics = [metric for elem in alpha_diversity_metics for metric in elem]
+        rank_independent_metrics = [[metric, metric + c.UNFILTERED_SUF] for metric in rank_independent_metrics]
+        rank_independent_metrics = [metric for elem in rank_independent_metrics for metric in elem]
+
     all_metrics = [presence_metrics, estimates_metrics, alpha_diversity_metics]
 
     presence_metrics_label = 'Presence/absence of taxa'
@@ -345,11 +357,6 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
                       (c.OTUS, c.TOOLTIP_OTUS),
                       (c.SHANNON_DIVERSITY, c.TOOLTIP_SHANNON_DIVERSITY),
                       (c.SHANNON_EQUIT, c.TOOLTIP_SHANNON_EQUIT)]
-    if c.FP_UNFILTERED in pd_metrics['metric'].values:
-        metrics_tuples += [(c.FP_UNFILTERED, c.TOOLTIP_FP),
-                           (c.TP_UNFILTERED, c.TOOLTIP_TP),
-                           (c.PRECISION_UNFILTERED, c.TOOLTIP_PRECISION),
-                           (c.F1_SCORE_UNFILTERED, c.TOOLTIP_F1_SCORE)]
 
     d = get_html_dict(metrics_tuples)
 
