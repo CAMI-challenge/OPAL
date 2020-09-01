@@ -70,11 +70,11 @@ def print_by_rank(output_dir, labels, pd_metrics):
     order_rows = labels
     # define ordering of columns, hard coded
     order_columns = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.OTUS, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT, c.BRAY_CURTIS]
-    if c.FP_UNFILTERED in pd_metrics['metric'].values:
-        order_columns += [c.PRECISION_UNFILTERED, c.F1_SCORE_UNFILTERED, c.TP_UNFILTERED, c.FP_UNFILTERED]
+    if c.FP + c.UNFILTERED_SUF in pd_metrics['metric'].values:
+        order_columns += [metric + c.UNFILTERED_SUF for metric in order_columns]
     for rank in c.ALL_RANKS:
         # subset to those information that either belong to the given rank or are rank independent, i.e. are unifrac values
-        table = pd_metrics[(pd_metrics['rank'] == rank) | (pd_metrics['metric'].isin([c.UNIFRAC, c.UNW_UNIFRAC]))]
+        table = pd_metrics[(pd_metrics['rank'] == rank) | (pd_metrics['metric'].isin([c.UNIFRAC, c.UNW_UNIFRAC, c.UNIFRAC + c.UNFILTERED_SUF, c.UNW_UNIFRAC + c.UNFILTERED_SUF]))]
         # reformat the table with a pivot_table
         table = table.pivot_table(index=['tool', 'sample'], columns='metric', values='value')
         # select only tools in labels and get rid of gold standard
@@ -92,14 +92,16 @@ def print_by_tool(output_dir, pd_metrics):
     make_sure_path_exists(os.path.join(output_dir, "by_tool"))
     # define ordering of columns, hard coded
     order_columns = [c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.OTUS, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT, c.BRAY_CURTIS]
-    if c.FP_UNFILTERED in pd_metrics['metric'].values:
-        order_columns += [c.PRECISION_UNFILTERED, c.F1_SCORE_UNFILTERED, c.TP_UNFILTERED, c.FP_UNFILTERED]
+    unifrac_list = [c.UNIFRAC, c.UNW_UNIFRAC]
+    if c.FP + c.UNFILTERED_SUF in pd_metrics['metric'].values:
+        order_columns += [metric + c.UNFILTERED_SUF for metric in order_columns]
+        unifrac_list += [c.UNIFRAC + c.UNFILTERED_SUF, c.UNW_UNIFRAC + c.UNFILTERED_SUF]
     for toolname, pd_metrics_tool in pd_metrics.groupby('tool'):
         if toolname == c.GS:
             continue
         table = pd_metrics_tool.pivot_table(index=['rank', 'sample'], columns='metric', values='value')
         # little hack to carry unifrac over to every rank
-        for unifrac_col in order_columns[:2]:
+        for unifrac_col in unifrac_list:
             table[unifrac_col] = pd_metrics_tool[pd_metrics_tool['metric'] == unifrac_col]['value'].values[0]
         # order table
         table['rank_cat'] = pd.Categorical(table.index.get_level_values('rank'), categories=c.ALL_RANKS, ordered=True)
@@ -167,7 +169,7 @@ def evaluate(gs_samples_list, profiles_list_to_samples_list, labels, normalize, 
     if filter_tail_percentage:
         metrics_list = pd_metrics['metric'].unique().tolist()
         pd_metrics_copy = pd_metrics.copy()
-        pd_metrics_copy['metric'].replace(metrics_list, [metric + ' (unfiltered)' for metric in metrics_list], inplace=True)
+        pd_metrics_copy['metric'].replace(metrics_list, [metric + c.UNFILTERED_SUF for metric in metrics_list], inplace=True)
         pd_metrics = pd.concat([pd_metrics, pd_metrics_copy], ignore_index=True)
 
     one_profile_assessed = False
@@ -250,13 +252,9 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
 
     # convert Binary metrics
     pd_binary_metrics = pd.DataFrame([binary_metrics[rank].get_pretty_dict() for rank in binary_metrics.keys()]).set_index('rank').stack().reset_index().rename(columns={'level_1': 'metric', 0: 'value'})
-    if 'fpfiltered' in pd_binary_metrics['metric'].values:
-        oldnames = ['fp', 'fpfiltered', 'tp', 'tpfiltered', 'fn', 'jaccard', 'precision', 'precisionfiltered', 'recall', 'f1', 'f1filtered', 'otus']
-        newnames = [c.FP_UNFILTERED, c.FP, c.TP_UNFILTERED, c.TP, c.FN, c.JACCARD, c.PRECISION_UNFILTERED, c.PRECISION, c.RECALL, c.F1_SCORE_UNFILTERED, c.F1_SCORE, c.OTUS]
-    else:
-        oldnames = ['fp', 'tp', 'fn', 'jaccard', 'precision', 'recall', 'f1', 'otus']
-        newnames = [c.FP, c.TP, c.FN, c.JACCARD, c.PRECISION, c.RECALL, c.F1_SCORE, c.OTUS]
-    pd_binary_metrics['metric'].replace(oldnames, newnames, inplace=True)
+    pd_binary_metrics['metric'].replace(['fp', 'tp', 'fn', 'jaccard', 'precision', 'recall', 'f1', 'otus'],
+                                        [c.FP, c.TP, c.FN, c.JACCARD, c.PRECISION, c.RECALL, c.F1_SCORE, c.OTUS],
+                                        inplace=True)
     pd_binary_metrics['sample'] = sample_id
     pd_binary_metrics['tool'] = label
 
@@ -270,7 +268,7 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
 
     if rename_as_unfiltered:
         metrics_list = pd_formatted['metric'].unique().tolist()
-        pd_formatted['metric'].replace(metrics_list, [metric + ' (unfiltered)' for metric in metrics_list], inplace=True)
+        pd_formatted['metric'].replace(metrics_list, [metric + c.UNFILTERED_SUF for metric in metrics_list], inplace=True)
 
     return pd_formatted
 
