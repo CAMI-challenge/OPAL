@@ -21,6 +21,7 @@ from src.utils import spider_plot_functions as spl
 from src.utils import constants as c
 from src.utils import load_data
 import scipy.special
+import seaborn as sns
 
 
 def create_colors_list():
@@ -356,7 +357,7 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
         return []
     theta = spl.radar_factory(N, frame='polygon')
     fig, axes = plt.subplots(figsize=(9, 9), nrows=2, ncols=3, subplot_kw=dict(projection='radar'))
-    fig.subplots_adjust(wspace=.5, hspace=0.3, top=0.87, bottom=0.45)
+    fig.subplots_adjust(wspace=1.0, hspace=0.0, top=0.87, bottom=0.45)
 
     for ax, rank in zip(axes.flat, c.PHYLUM_SPECIES):
         if grid_points:
@@ -401,7 +402,7 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
 
         # move tick labels closer to plot and set font size
         for xticklabel in xticklabels:
-            xticklabel.set_position((0,.20))
+            xticklabel.set_position((0,.21))
             xticklabel.set_fontsize('x-small')
 
     if absolute:
@@ -460,7 +461,7 @@ def get_metrics_for_spider_plot(metrics_plot, absolute):
         for initial in metrics_initial:
             if initial not in initial_to_metric:
                 logging.getLogger('opal').warning('Invalid metric initial {} provided with option --metrics_plot_rel. Defaults will be used.'.format(initial))
-                return [c.UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.FP]
+                return [c.RECALL, c.PRECISION, c.L1NORM, c.UNIFRAC]
             else:
                 metrics_list.append(initial_to_metric[initial])
         return metrics_list
@@ -469,7 +470,7 @@ def get_metrics_for_spider_plot(metrics_plot, absolute):
     for initial in metrics_initial:
         if initial not in initial_to_metric:
             logging.getLogger('opal').warning('Invalid metric initial {} provided with option --metrics_plot_abs. Defaults will be used.'.format(initial))
-            return [c.RECALL+'absolute', c.PRECISION+'absolute']
+            return [c.RECALL+'absolute', c.PRECISION+'absolute', c.BRAY_CURTIS+'absolute']
         else:
             metrics_list.append(initial_to_metric[initial])
     return metrics_list
@@ -602,8 +603,8 @@ def plot_all(pd_metrics, labels, output_dir, metrics_plot_rel, metrics_plot_abs)
 
     tool_to_rank_to_metric_to_value = spider_plot_preprocess_metrics(pd_mean, labels)
 
-    metrics_for_plot_rel = get_metrics_for_spider_plot(metrics_plot_rel, absolute=False) if metrics_plot_rel else [c.UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.FP]
-    metrics_for_plot_abs = get_metrics_for_spider_plot(metrics_plot_abs, absolute=True) if metrics_plot_abs else [c.RECALL+'absolute', c.PRECISION+'absolute']
+    metrics_for_plot_rel = get_metrics_for_spider_plot(metrics_plot_rel, absolute=False) if metrics_plot_rel else [c.RECALL, c.PRECISION, c.L1NORM, c.UNIFRAC]
+    metrics_for_plot_abs = get_metrics_for_spider_plot(metrics_plot_abs, absolute=True) if metrics_plot_abs else [c.RECALL+'absolute', c.PRECISION+'absolute', c.BRAY_CURTIS+'absolute']
 
     present_labels = []
     for label in labels:
@@ -617,22 +618,22 @@ def plot_all(pd_metrics, labels, output_dir, metrics_plot_rel, metrics_plot_abs)
                     rank_to_metric_to_toolvalues[rank][metric].append(tool_to_rank_to_metric_to_value[label][rank][metric])
             rank_to_metric_to_toolvalues[rank][c.UNIFRAC].append(tool_to_rank_to_metric_to_value[label]['rank independent'][c.UNIFRAC])
 
-    colors = [plt.cm.tab10(2), plt.cm.tab10(0), plt.cm.tab10(3), 'k', 'm', 'y']
-    colors2 = ['r', 'k', 'olive']
+    colors = [sns.color_palette('colorblind')[x] for x in [0, 1, 2, 4, 7, 8]]
 
     plots_list = spider_plot(metrics_for_plot_rel,
                              present_labels,
                              rank_to_metric_to_toolvalues,
                              output_dir,
                              'spider_plot_relative',
-                             colors[:len(metrics_for_plot_rel)])
+                             colors[:len(metrics_for_plot_rel)],
+                             fill=True)
 
     plots_list += spider_plot(metrics_for_plot_abs,
                               present_labels,
                               rank_to_metric_to_toolvalues,
                               output_dir,
                               'spider_plot_absolute',
-                              colors2[:len(metrics_for_plot_abs)],
+                              colors[:len(metrics_for_plot_abs)],
                               grid_points=[0.2, 0.4, 0.6, 0.8, 1.0],
                               fill=True,
                               absolute=True)

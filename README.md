@@ -129,13 +129,14 @@ optional arguments:
   --metrics_plot_rel METRICS_PLOT_REL
                         Metrics for spider plot of relative performances,
                         first character, comma-separated. Valid metrics:
-                        w:weighted Unifrac, l:L1 norm, c:completeness,
-                        p:purity, f:false positives, t:true positives
-                        (default: w,l,c,p,f)
+                        c:completeness, p:purity, l:L1 norm, w:weighted
+                        Unifrac, f:false positives, t:true positives (default:
+                        c,p,l,w)
   --metrics_plot_abs METRICS_PLOT_ABS
                         Metrics for spider plot of absolute performances,
                         first character, comma-separated. Valid metrics:
-                        c:completeness, p:purity, b:Bray-Curtis (default: c,p)
+                        c:completeness, p:purity, b:Bray-Curtis (default:
+                        c,p,b)
   --silent              Silent mode
   -v, --version         show program's version number and exit
   -h, --help            Show this help message and exit
