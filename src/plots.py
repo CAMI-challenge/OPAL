@@ -462,7 +462,7 @@ def get_metrics_for_spider_plot(metrics_plot, absolute):
             if initial not in initial_to_metric:
                 logging.getLogger('opal').warning('Invalid metric initial {} provided with option --metrics_plot_rel. Defaults will be used.'.format(initial))
                 return [c.RECALL, c.PRECISION, c.L1NORM, c.UNIFRAC]
-            else:
+            elif initial_to_metric[initial] not in metrics_list:
                 metrics_list.append(initial_to_metric[initial])
         return metrics_list
 
@@ -471,7 +471,7 @@ def get_metrics_for_spider_plot(metrics_plot, absolute):
         if initial not in initial_to_metric:
             logging.getLogger('opal').warning('Invalid metric initial {} provided with option --metrics_plot_abs. Defaults will be used.'.format(initial))
             return [c.RECALL+'absolute', c.PRECISION+'absolute', c.BRAY_CURTIS+'absolute']
-        else:
+        elif initial_to_metric[initial] not in metrics_list:
             metrics_list.append(initial_to_metric[initial])
     return metrics_list
 
