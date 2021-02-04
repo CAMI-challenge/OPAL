@@ -558,6 +558,7 @@ def spider_plot_preprocess_metrics(pd_mean, labels):
             tool_to_rank_to_metric_to_value[tool][rank][c.RECALL+'absolute'] = g[c.RECALL].values[0] if len(g[c.RECALL].values) > 0 else None
             tool_to_rank_to_metric_to_value[tool][rank][c.PRECISION+'absolute'] = g[c.PRECISION].values[0] if len(g[c.PRECISION].values) > 0 else None
             tool_to_rank_to_metric_to_value[tool][rank][c.BRAY_CURTIS+'absolute'] = g[c.BRAY_CURTIS].values[0] if len(g[c.BRAY_CURTIS].values) > 0 else None
+            tool_to_rank_to_metric_to_value[tool][rank][c.L1NORM+'absolute'] = g[c.L1NORM].values[0] / 2 if len(g[c.L1NORM].values) > 0 else None
 
             # relative values
             if rank_to_max_recall[rank] > 0:
