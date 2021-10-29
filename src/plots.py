@@ -14,7 +14,6 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 from matplotlib.ticker import MaxNLocator
-from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.lines import Line2D
 from src import braycurtis as bc
 from src.utils import spider_plot_functions as spl
@@ -32,6 +31,8 @@ def create_colors_list():
     for color in plt.cm.Set2(np.linspace(0, 1, 8)):
         colors_list.append(tuple(color))
     for color in plt.cm.Set3(np.linspace(0, 1, 12)):
+        colors_list.append(tuple(color))
+    for color in plt.cm.Dark2(np.linspace(0, 1, 8)):
         colors_list.append(tuple(color))
     return colors_list
 

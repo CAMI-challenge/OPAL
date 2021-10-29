@@ -131,7 +131,12 @@ def compute_metrics(sample_metadata, profile, gs_pf_profile, gs_rank_to_taxid_to
     # Bray-Curtis
     braycurtis = bc.braycurtis(gs_rank_to_taxid_to_percentage, rank_to_taxid_to_percentage)
 
-    return unifrac, shannon, l1norm, binary_metrics, braycurtis
+    # Sum of abundances
+    rank_to_sum = {}
+    for rank in rank_to_taxid_to_percentage:
+        rank_to_sum[rank] = sum(rank_to_taxid_to_percentage[rank].values())
+
+    return unifrac, shannon, l1norm, binary_metrics, braycurtis, rank_to_sum
 
 
 def load_profiles(gold_standard_file, profiles_files, normalize):
@@ -157,12 +162,13 @@ def evaluate(gs_samples_list, profiles_list_to_samples_list, labels, filter_tail
         sample_id, sample_metadata, profile = sample
         gs_id_to_rank_to_taxid_to_percentage[sample_id] = load_data.get_rank_to_taxid_to_percentage(profile)
         gs_id_to_pf_profile[sample_id] = PF.Profile(sample_metadata=sample_metadata, profile=profile)
-        unifrac, shannon, l1norm, binary_metrics, braycurtis = compute_metrics(sample_metadata,
-                                                                               gs_id_to_pf_profile[sample_id],
-                                                                               gs_id_to_pf_profile[sample_id],
-                                                                               gs_id_to_rank_to_taxid_to_percentage[sample_id],
-                                                                               gs_id_to_rank_to_taxid_to_percentage[sample_id])
-        pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, c.GS, braycurtis, shannon, binary_metrics, l1norm, unifrac)], ignore_index=True)
+        unifrac, shannon, l1norm, binary_metrics, braycurtis, rank_to_sum = \
+            compute_metrics(sample_metadata,
+                            gs_id_to_pf_profile[sample_id],
+                            gs_id_to_pf_profile[sample_id],
+                            gs_id_to_rank_to_taxid_to_percentage[sample_id],
+                            gs_id_to_rank_to_taxid_to_percentage[sample_id])
+        pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, c.GS, braycurtis, shannon, binary_metrics, l1norm, unifrac, rank_to_sum)], ignore_index=True)
     if filter_tail_percentage:
         metrics_list = pd_metrics['metric'].unique().tolist()
         pd_metrics_copy = pd_metrics.copy()
@@ -184,20 +190,22 @@ def evaluate(gs_samples_list, profiles_list_to_samples_list, labels, filter_tail
 
             rank_to_taxid_to_percentage = load_data.get_rank_to_taxid_to_percentage(profile)
 
-            unifrac, shannon, l1norm, binary_metrics, braycurtis = compute_metrics(sample_metadata, profile, gs_pf_profile,
-                                                                                   gs_rank_to_taxid_to_percentage,
-                                                                                   rank_to_taxid_to_percentage)
+            unifrac, shannon, l1norm, binary_metrics, braycurtis, rank_to_sum = \
+                compute_metrics(sample_metadata, profile, gs_pf_profile,
+                                gs_rank_to_taxid_to_percentage,
+                                rank_to_taxid_to_percentage)
             rename_as_unfiltered = True if filter_tail_percentage else False
-            pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac, rename_as_unfiltered)], ignore_index=True)
+            pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac, rank_to_sum, rename_as_unfiltered)], ignore_index=True)
 
             if filter_tail_percentage:
                 rank_to_taxid_to_percentage_filtered = \
                     load_data.get_rank_to_taxid_to_percentage_filtered(rank_to_taxid_to_percentage, filter_tail_percentage)
                 profile_filtered = [prediction for prediction in profile if prediction.taxid in rank_to_taxid_to_percentage_filtered[prediction.rank]]
-                unifrac, shannon, l1norm, binary_metrics, braycurtis = compute_metrics(sample_metadata, profile_filtered, gs_pf_profile,
-                                                                                       gs_rank_to_taxid_to_percentage,
-                                                                                       rank_to_taxid_to_percentage_filtered)
-                pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac)], ignore_index=True)
+                unifrac, shannon, l1norm, binary_metrics, braycurtis, rank_to_sum = \
+                    compute_metrics(sample_metadata, profile_filtered, gs_pf_profile,
+                                    gs_rank_to_taxid_to_percentage,
+                                    rank_to_taxid_to_percentage_filtered)
+                pd_metrics = pd.concat([pd_metrics, reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac, rank_to_sum)], ignore_index=True)
 
             one_profile_assessed = True
 
@@ -208,7 +216,7 @@ def evaluate(gs_samples_list, profiles_list_to_samples_list, labels, filter_tail
     return pd_metrics
 
 
-def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac, rename_as_unfiltered=False):
+def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1norm, unifrac, rank_to_sum, rename_as_unfiltered=False):
     """Reformats metrics data into one unified pandas DataFrame.
 
     Parameters
@@ -226,6 +234,9 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
     -------
     Pandas.DataFrame with following columns: metric, rank, tool, value
     """
+    if not l1norm:
+        return pd.DataFrame()
+
     # convert Unifrac
     pd_unifrac = pd.DataFrame(index=[sample_id], data=[unifrac], columns=[c.UNIFRAC, c.UNW_UNIFRAC]).stack().reset_index()
     pd_unifrac.columns = ['sample', 'metric', 'value']
@@ -258,7 +269,15 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
     pd_braycurtis['tool'] = label
     pd_braycurtis['metric'] = c.BRAY_CURTIS
 
-    pd_formatted = pd.concat([pd_braycurtis, pd_shannon, pd_binary_metrics, pd_l1norm, pd_unifrac], ignore_index=True, sort=False)
+    # convert Sum of abundances
+    pd_sum = pd.DataFrame(index=[sample_id], data=rank_to_sum).stack().reset_index()
+    pd_sum.columns = ['sample', 'rank', 'value']
+    pd_sum['tool'] = label
+    pd_sum['metric'] = c.SUM_ABUNDANCES
+    pd_sum = pd_sum[pd_sum['rank'].isin(c.ALL_RANKS)]
+    pd_sum['value'] = pd_sum['value'] / 100.0
+
+    pd_formatted = pd.concat([pd_braycurtis, pd_shannon, pd_binary_metrics, pd_l1norm, pd_unifrac, pd_sum], ignore_index=True, sort=False)
 
     if rename_as_unfiltered:
         metrics_list = pd_formatted['metric'].unique().tolist()
