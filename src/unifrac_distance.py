@@ -5,79 +5,31 @@ import numpy as np
 import argparse
 import copy
 import sys
-import logging
 
 
-def get_branch_length_function(function_str):
-    try:
-        return eval(function_str)
-    except SyntaxError as exception:
-        logging.getLogger('opal').warning('Invalid function provided with -b, --branch_length_function: {}. lambda x: 1/x will be used.'.format(exception.msg))
-        return eval('lambda x: 1/x')
-
-
-def compute_unifrac(pf1, pf2, normalize):
-    weighted = weighted_unifrac(pf1, pf2, normalize)
-    unweighted = unweighted_unifrac(pf1, pf2)
-
-    return weighted, unweighted
-
-
-def weighted_unifrac(pf1, pf2, normalize):
-    """
-    computes a normalized version of weighted unifrac by dividing by the theoretical max unweighted unifrac.
-    Parameters
-    ----------
-    pf1 : taxonomic profile (gold standard)
-    pf2 : taxonomic profile (tool profile)
-
-    Returns
-    -------
-
-    """
-    P1 = copy.deepcopy(pf1)
-    P2 = copy.deepcopy(pf2)
-    if normalize:
-        (Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_and_normalize(P2)
-    else:
-        (Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_no_normalize(P2)
-    (weighted, _) = EMDU.EMDUnifrac_weighted(Tint, lint, nodes_in_order, P, Q)
-    # compute normalizing factor: divide by worst possible
-    # this is the theoretical max weighted unifrac. If the gold standard doesn't have abundance sum to 1 at the lowest
-    # rank, the maximum weighted unifrac may be smaller # TODO
-    gs_tax_path = P1.sample_metadata['RANKS'].split('|')  # effectively gets the max depth of the gs tree
-    # max weighted unifrac:
-    # 2->(all weight at tips whose LCA is the root of the taxonomic tree (so mass must move all the way up, then down)
-    # 100->(convert to percentage)
-    # tax_path_to_branch_len->(use the branch lengths defined in EMDUnifrac)
-    max_weighted_unifrac = 2 * 100 * P1.tax_path_to_branch_len(gs_tax_path, P1.branch_len_func, P1.root_len)
-    # TODO: Note: this makes the weighted unifrac a bit uninformative, since no reasonable profilier will get anywhere near the absolute worst weighted unifrac
-    weighted = weighted / float(max_weighted_unifrac)
-    return weighted
-
-
-def unweighted_unifrac(pf1, pf2):
-    """
-    This is a normalized version of unweighted unifrac which basically boils down to "relative unweighted unifrac."
-    More technically: it computes ||WP - WQ|| / ||WP|| where P is the gold standard profile (using the notation of:
-    https://ir.library.oregonstate.edu/concern/graduate_thesis_or_dissertations/76537620h?locale=en
-    contained in Theorem 2.2.1 on page 90
-    Parameters
-    ----------
-    pf1 : taxonomic profile (gold standard)
-    pf2 : taxonomic profile (tool profile)
-
-    Returns
-    -------
-
-    """
+def compute_unifrac(pf1, pf2):
     P1 = copy.deepcopy(pf1)
     P2 = copy.deepcopy(pf2)
     (Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_and_normalize(P2)
-    (gs_unweighted_unifrac, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, np.zeros(P.shape))  # ||WP||
-    (raw_unweighted_unifrac, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, Q)  # ||WP - WQ||
-    unweighted = raw_unweighted_unifrac / float(gs_unweighted_unifrac)
-    return unweighted
+    (weighted, _) = EMDU.EMDUnifrac_weighted(Tint, lint, nodes_in_order, P, Q)
+    (unweighted, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, Q)
+    return weighted, unweighted
+
+
+def weighted_unifrac(pf1, pf2):
+    P1 = copy.deepcopy(pf1)
+    P2 = copy.deepcopy(pf2)
+    (Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_and_normalize(P2)
+    (val, _) = EMDU.EMDUnifrac_weighted(Tint, lint, nodes_in_order, P, Q)
+    return val
+
+
+def unweighted_unifrac(pf1, pf2):
+    P1 = copy.deepcopy(pf1)
+    P2 = copy.deepcopy(pf2)
+    (Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_and_normalize(P2)
+    (val, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, Q)
+    return val
 
 
 def print_list_unifrac(unifrac_list, labels, stream=sys.stdout):
