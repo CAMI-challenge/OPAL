@@ -483,7 +483,7 @@ def plot_purity_completeness_per_tool_and_rank(pd_grouped, pd_mean, output_dir):
     rank_to_index = dict(zip(ranks, list(ranks_range)))
 
     pd_std_over_samples = pd_grouped.groupby(['rank', 'tool'], sort=False).std()
-    pd_mean = pd_mean.drop(c.GS, level='tool').drop(['strain', 'rank independent'], level='rank')
+    pd_mean = pd_mean.drop(c.GS, level='tool').drop(['strain', 'rank independent'], level='rank', errors='ignore')
 
     for tool, tool_group in pd_mean.groupby(['tool']):
         precision_list = [0] * len(ranks)
