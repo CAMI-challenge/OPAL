@@ -56,14 +56,6 @@ def create_title_div(id, name, info):
     return div
 
 
-def get_columns(labels, current_columns):
-        columns = [c.GS]
-        for label in labels:
-            if label in current_columns:
-                columns.append(label)
-        return columns
-
-
 def get_rank_to_sample_pd(pd_metrics):
     rank_to_sample_pd = defaultdict(dict)
     pd_copy = pd_metrics.copy()
@@ -301,7 +293,7 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
 
     presence_metrics = [c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD]
     estimates_metrics = [c.SUM_ABUNDANCES, c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.BRAY_CURTIS]
-    alpha_diversity_metics = [c.OTUS, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
+    alpha_diversity_metrics = [c.OTUS, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
     rank_independent_metrics = [c.UNIFRAC, c.UNW_UNIFRAC]
 
     if c.FP + c.UNFILTERED_SUF in pd_metrics['metric'].values:
@@ -309,17 +301,17 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
         presence_metrics = [metric for elem in presence_metrics for metric in elem]
         estimates_metrics = [[metric, metric + c.UNFILTERED_SUF] for metric in estimates_metrics]
         estimates_metrics = [metric for elem in estimates_metrics for metric in elem]
-        alpha_diversity_metics = [[metric, metric + c.UNFILTERED_SUF] for metric in alpha_diversity_metics]
-        alpha_diversity_metics = [metric for elem in alpha_diversity_metics for metric in elem]
+        alpha_diversity_metrics = [[metric, metric + c.UNFILTERED_SUF] for metric in alpha_diversity_metrics]
+        alpha_diversity_metrics = [metric for elem in alpha_diversity_metrics for metric in elem]
         rank_independent_metrics = [[metric, metric + c.UNFILTERED_SUF] for metric in rank_independent_metrics]
         rank_independent_metrics = [metric for elem in rank_independent_metrics for metric in elem]
 
-    all_metrics = [presence_metrics, estimates_metrics, alpha_diversity_metics]
+    all_metrics = [presence_metrics, estimates_metrics, alpha_diversity_metrics]
 
     presence_metrics_label = 'Presence/absence of taxa'
     estimates_metrics_label = 'Abundance estimates'
-    alpha_diversity_metics = 'Alpha diversity'
-    all_metrics_labels = [presence_metrics_label, estimates_metrics_label, alpha_diversity_metics]
+    alpha_diversity_metrics = 'Alpha diversity'
+    all_metrics_labels = [presence_metrics_label, estimates_metrics_label, alpha_diversity_metrics]
 
     styles = [{'selector': 'td', 'props': [('width', '115pt')]},
               {'selector': 'th', 'props': [('width', '115pt'), ('text-align', 'left')]},
@@ -374,7 +366,10 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
                 html += '<p style="margin-bottom: auto"><b>{}</b></p>'.format(metrics_label)
                 mydf_metrics = mydf.loc[metrics]
 
-                sorted_columns = get_columns(labels, mydf_metrics.columns.tolist())
+                sorted_columns = [x for x in labels if x in mydf_metrics.columns]
+                if c.GS in mydf_metrics.columns:
+                    sorted_columns.insert(0, c.GS)
+
                 mydf_metrics = mydf_metrics.loc[:, sorted_columns]
 
                 if first_metrics:
@@ -382,9 +377,9 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
                 else:
                     this_style = styles_hidden_thead
                 if metrics_label == presence_metrics_label or metrics_label == estimates_metrics_label:
-                    html += mydf_metrics.style.apply(get_heatmap_colors, df_metrics=mydf_metrics, axis=1).set_precision(3).set_table_styles(this_style).render()
+                    html += mydf_metrics.style.apply(get_heatmap_colors, df_metrics=mydf_metrics, axis=1).format(precision=3).set_table_styles(this_style).render()
                 else:
-                    html += mydf_metrics.style.set_precision(3).set_table_styles(this_style).render()
+                    html += mydf_metrics.style.format(precision=3).set_table_styles(this_style).render()
                 if rank == 'rank independent':
                     break
                 first_metrics = False
