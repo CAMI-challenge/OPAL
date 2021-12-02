@@ -20,7 +20,7 @@ Taxonomic metagenome profilers predict the presence and relative abundance of mi
 * [CAMI I high complexity challenge dataset](https://cami-challenge.github.io/OPAL/cami_i_hc/)
 * [CAMI II mouse gut toy dataset](https://cami-challenge.github.io/OPAL/cami_ii_mg/)
 * [CAMI II mouse gut toy dataset (using parameter --filter 1)](https://cami-challenge.github.io/OPAL/cami_ii_mg_filter1/)
-* [CAMI II mouse gut toy dataset (using parameters --filter 1 --no_normalization)](https://cami-challenge.github.io/OPAL/cami_ii_mg_filter1_nonormalization/)
+* [CAMI II mouse gut toy dataset (using parameters --filter 1 --normalize)](https://cami-challenge.github.io/OPAL/cami_ii_mg_filter1_normalized)
 * [Human Microbiome Project Mock Community dataset](https://cami-challenge.github.io/OPAL/hmp_mc/)
 
 **See also**
@@ -93,7 +93,8 @@ The BIOM format used by OPAL is a sparse matrix stored in a JSON or HDF5 file, w
 ~~~BASH
 usage: opal.py -g GOLD_STANDARD_FILE -o OUTPUT_DIR [-n] [-f FILTER] [-p]
                [-l LABELS] [-t TIME] [-m MEMORY] [-d DESC] [-r RANKS]
-               [--metrics_plot METRICS_PLOT] [--silent] [-v] [-h]
+               [--metrics_plot_rel METRICS_PLOT_REL]
+               [--metrics_plot_abs METRICS_PLOT_ABS] [--silent] [-v] [-h]
                profiles_files [profiles_files ...]
 
 OPAL: Open-community Profiling Assessment tooL
@@ -106,8 +107,7 @@ required arguments:
                         Directory to write the results to
 
 optional arguments:
-  -n, --no_normalization
-                        Do not normalize samples
+  -n, --normalize       Normalize samples
   -f FILTER, --filter FILTER
                         Filter out the predictions with the smallest relative
                         abundances summing up to [FILTER]% within a rank
@@ -126,12 +126,17 @@ optional arguments:
                         performance rankings, comma-separated. Valid ranks:
                         superkingdom, phylum, class, order, family, genus,
                         species, strain (default:superkingdom,species)
-  --metrics_plot METRICS_PLOT
+  --metrics_plot_rel METRICS_PLOT_REL
                         Metrics for spider plot of relative performances,
                         first character, comma-separated. Valid metrics:
-                        w:weighted Unifrac, l:L1 norm, c:completeness,
-                        p:purity, f:false positives, t:true positives
-                        (default: w,l,c,p,f)
+                        c:completeness, p:purity, l:L1 norm, w:weighted
+                        Unifrac, f:false positives, t:true positives (default:
+                        c,p,l,w)
+  --metrics_plot_abs METRICS_PLOT_ABS
+                        Metrics for spider plot of absolute performances,
+                        first character, comma-separated. Valid metrics:
+                        c:completeness, p:purity, b:Bray-Curtis (default:
+                        c,p,b)
   --silent              Silent mode
   -v, --version         show program's version number and exit
   -h, --help            Show this help message and exit
