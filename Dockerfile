@@ -1,4 +1,4 @@
-FROM python:3.5.6-slim
+FROM python:3.7.12-slim
 
 ADD *.py /usr/local/bin/
 ADD src /usr/local/bin/src
