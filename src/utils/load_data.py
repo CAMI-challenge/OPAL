@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
-import biom
 import os
 import logging
 from collections import defaultdict
-from src.utils import constants as c
 
 
 class Prediction:
@@ -190,46 +188,42 @@ def open_profile(file_path, normalize):
         logging.getLogger('opal').critical("Input file could not be read.")
         exit(1)
 
-
-    if not os.path.exists(file_path):
-        logging.getLogger('opal').critical("Input file {} does not exist.".format(file_path))
-        exit(1)
-    try:
-        table = biom.load_table(file_path)
-    except:
-        try:
-            return open_profile_from_tsv(file_path, normalize)
-        except:
-            logging.getLogger('opal').critical("Input file could not be read.")
-            exit(1)
-
-    samples_list = []
-    samples = table.ids(axis='sample')
-    obs_ids = table.ids(axis='observation')
-
-    for sample_id in samples:
-        sample_metadata = table.metadata(id=sample_id, axis='sample')
-        profile = []
-        for obs_id in obs_ids:
-            percentage = float(table.get_value_by_ids(obs_id=obs_id, samp_id=sample_id))
-            if percentage == 0:
-                continue
-            prediction = Prediction()
-            metadata = table.metadata(id=obs_id, axis='observation')
-            taxpathsn_list = [x for x in metadata['taxonomy'] if x[3:]]
-            taxpathsn = '|'.join(taxpathsn_list)
-            prediction.taxid = taxpathsn_list[-1]
-            prediction.rank = c.ALL_RANKS[len(taxpathsn_list) - 1]
-            prediction.percentage = percentage
-            prediction.taxpath = taxpathsn
-            prediction.taxpathsn = taxpathsn
-            profile.append(prediction)
-        samples_list.append((sample_id, sample_metadata, profile))
-
-    if normalize:
-        normalize_samples(samples_list)
-
-    return samples_list
+    # try:
+    #     table = biom.load_table(file_path)
+    # except:
+    #     try:
+    #         return open_profile_from_tsv(file_path, normalize)
+    #     except:
+    #         logging.getLogger('opal').critical("Input file could not be read.")
+    #         exit(1)
+    #
+    # samples_list = []
+    # samples = table.ids(axis='sample')
+    # obs_ids = table.ids(axis='observation')
+    #
+    # for sample_id in samples:
+    #     sample_metadata = table.metadata(id=sample_id, axis='sample')
+    #     profile = []
+    #     for obs_id in obs_ids:
+    #         percentage = float(table.get_value_by_ids(obs_id=obs_id, samp_id=sample_id))
+    #         if percentage == 0:
+    #             continue
+    #         prediction = Prediction()
+    #         metadata = table.metadata(id=obs_id, axis='observation')
+    #         taxpathsn_list = [x for x in metadata['taxonomy'] if x[3:]]
+    #         taxpathsn = '|'.join(taxpathsn_list)
+    #         prediction.taxid = taxpathsn_list[-1]
+    #         prediction.rank = c.ALL_RANKS[len(taxpathsn_list) - 1]
+    #         prediction.percentage = percentage
+    #         prediction.taxpath = taxpathsn
+    #         prediction.taxpathsn = taxpathsn
+    #         profile.append(prediction)
+    #     samples_list.append((sample_id, sample_metadata, profile))
+    #
+    # if normalize:
+    #     normalize_samples(samples_list)
+    #
+    # return samples_list
 
 
 def get_taxa_names(profile):
