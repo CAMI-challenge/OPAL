@@ -1,33 +1,15 @@
 # This is a collection of scripts that will allow manipulation of CAMI profiling files
-import sys
 import copy
 import numpy as np
-import timeit
+from src.utils.ProfilingToolsABC import ProfileABC
+from src.utils import EMDUnifrac as EMDU
 
 
 # TODO: make sure that I'm not deleting the root "-1" that way Unifrac picks up on the missing superkingdoms
 
-class Profile(object):
+class Profile(ProfileABC):
     def __init__(self, sample_metadata=None, profile=None, branch_length_fun=lambda x: 1/x):
-        self.sample_metadata = sample_metadata
-        self.profile = profile
-        self._data = dict()
-        # Stick in the root node just to make sure everything is consistent
-        self._data["-1"] = dict()
-        self._data["-1"]["rank"] = None
-        self._data["-1"]["tax_path"] = list()
-        self._data["-1"]["tax_path_sn"] = list()
-        self._data["-1"]["abundance"] = 0
-        self._data["-1"]["descendants"] = list()
-        self._header = list()
-        self._tax_id_pos = None
-        self._rank_pos = None
-        self._tax_path_pos = None
-        self._tax_path_sn_pos = None
-        self._abundance_pos = None
-        self._eps = .0000000000000001  # This is to act like zero, ignore any lines with abundance below this quantity
-        self._all_keys = ["-1"]
-        self._merged_flag = False
+        super().__init__(sample_metadata, profile)
         self.root_len = 1  # the length you want between the "root" of "-1" and the superkingdom level (eg. Bacteria)
         self.branch_len_func = branch_length_fun  # Given a node n at depth d in the tree, branch_len_func(d)
         # is how long you want the branch length between n and ancestor(n) to be
@@ -118,113 +100,6 @@ class Profile(object):
                     pass  # don't include the taxids that aren't actually in the final tax tree
             self._data[key]["descendants"] = clean_descendants
         return
-
-    def write_file(self, out_file_name=None):
-        if out_file_name is None:
-            raise Exception
-        _data = self._data
-        keys = _data.keys()
-        # This will be annoying to keep things in order...
-        # Let's iterate on the length of the tax_path since we know that will be in there
-        tax_path_lengths = max([len(_data[key]["tax_path"]) for key in keys])
-        fid = open(out_file_name, 'w')
-        # Write the header
-        for head in self._header:
-            fid.write("%s\n" % head)
-
-        # Loop over length of tax_path and write data
-        # always make the output tax_id, rank, tax_path, tax_path_sn, abundance in that order
-        for path_length in range(1, tax_path_lengths + 1):
-            for key in keys:
-                if len(_data[key]["tax_path"]) == path_length and _data[key]["abundance"] > self._eps:
-                    line_data = _data[key]
-                    fid.write("%s\t" % key)
-                    if self._rank_pos is not None:
-                        fid.write("%s\t" % line_data["rank"])
-                    fid.write("%s\t" % "|".join(line_data["tax_path"]))
-                    if self._tax_path_sn_pos is not None:
-                        fid.write("%s\t" % "|".join(line_data["tax_path_sn"]))
-                    fid.write("%f\n" % line_data["abundance"])
-        fid.close()
-        return
-
-    def threshold(self, threshold=None):
-        if threshold is None:
-            raise Exception
-        _data = self._data
-        keys = _data.keys()
-        for key in keys:
-            if _data[key]["abundance"] < threshold:
-                _data[key]["abundance"] = 0
-        return
-
-    def _subtract_down(self):
-        # helper function to push all the weights up by subtracting
-        # NOTE: when subtracting, need to start at root and go down
-        # NOTE: when adding, need to start at leaves and go up
-        _data = self._data
-        keys = _data.keys()
-        # This will be annoying to keep things in order...
-        # Let's iterate on the length of the tax_path since we know that will be in there
-        tax_path_lengths = max([len(_data[key]["tax_path"]) for key in keys])
-        for path_length in range(1, tax_path_lengths):  # eg tax_path_lengths = 5, use 1,2,3,4 since we stop at leaves
-            for key in keys:
-                if len(_data[key]["tax_path"]) == path_length:
-                    descendants = _data[key]["descendants"]  # get all descendants
-                    for descendant in descendants:
-                        _data[key]["abundance"] -= _data[descendant]["abundance"]  # subtract the descendants abundance
-
-    def _add_up(self):
-        # helper function to push all the weights up by subtracting
-        # NOTE: when subtracting, need to start at root and go down
-        # NOTE: when adding, need to start at leaves and go up
-        _data = self._data
-        keys = _data.keys()
-        # This will be annoying to keep things in order...
-        # Let's iterate on the length of the tax_path since we know that will be in there
-        tax_path_lengths = max([len(_data[key]["tax_path"]) for key in keys])
-        for path_length in range(tax_path_lengths, 1,
-                                 -1):  # eg tax_path_lengths = 5, use 5,4,3,2, since we stop at roots
-            for key in keys:
-                if len(_data[key]["tax_path"]) == path_length:
-                    ancestor = _data[key]["ancestor"]
-                    if ancestor in _data:  # don't do anything if this is a/the root node
-                        _data[ancestor]["abundance"] += _data[key]["abundance"]  # add the descendants abundance
-
-    def normalize(self):
-        # Need to really push it up while subtracting, then normalize, then push up wile adding
-        # self._push_up(operation="subtract")
-        self._subtract_down()
-        _data = self._data
-        keys = _data.keys()
-        total_abundance = 0
-        for key in keys:
-            total_abundance += _data[key]["abundance"]
-        # print(total_abundance)
-        for key in keys:
-            if total_abundance > 0:
-                _data[key]["abundance"] /= total_abundance
-                _data[key]["abundance"] *= 100  # make back into a percentage
-        # self._push_up(operation="add")
-        self._add_up()
-        return
-
-    def merge(self, other):
-        # Warning: not checking for taxonomic consistency
-        if not isinstance(other, Profile):
-            print("Only works with other Profiles")
-            raise Exception
-        if self._merged_flag is False:
-            self._header.insert(0, "# This is a merged file, ignore files in headers below")
-            self._merged_flag = True
-        _data = self._data
-        _other_data = other._data
-        other_keys = _other_data.keys()
-        for key in other_keys:
-            if key in _data:
-                _data[key]["abundance"] += _other_data[key]["abundance"]  # if already in there, add abundances
-            else:
-                _data[key] = copy.copy(_other_data[key])  # otherwise use the whole thing
 
     @staticmethod
     def tax_path_to_branch_len(tax_path, func, root_len=1):
@@ -355,8 +230,9 @@ class Profile(object):
 
         return Tint2, lint2, nodes_in_order2, nodes_to_index, P, Q
 
-
     def make_unifrac_input_no_normalize(self, other):
+        # print(type(other))
+        # exit()
         if not isinstance(other, Profile):
             raise Exception
         _data = self._data
@@ -464,6 +340,69 @@ class Profile(object):
         other._add_up()
 
         return Tint2, lint2, nodes_in_order2, nodes_to_index, P/100., Q/100.
+
+    @staticmethod
+    def compute_unifrac(pf1, pf2, normalize=False):
+        weighted = Profile._weighted_unifrac(pf1, pf2, normalize)
+        unweighted = Profile._unweighted_unifrac(pf1, pf2)
+        return weighted, unweighted
+
+    @staticmethod
+    def _weighted_unifrac(pf1, pf2, normalize):
+        """
+        computes a normalized version of weighted unifrac by dividing by the theoretical max unweighted unifrac.
+        Parameters
+        ----------
+        pf1 : taxonomic profile (gold standard)
+        pf2 : taxonomic profile (tool profile)
+
+        Returns
+        -------
+
+        """
+        P1 = copy.deepcopy(pf1)
+        P2 = copy.deepcopy(pf2)
+        if normalize:
+            (Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_and_normalize(P2)
+        else:
+            (Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_no_normalize(P2)
+        (weighted, _) = EMDU.EMDUnifrac_weighted(Tint, lint, nodes_in_order, P, Q)
+        # compute normalizing factor: divide by worst possible
+        # this is the theoretical max weighted unifrac. If the gold standard doesn't have abundance sum to 1 at the lowest
+        # rank, the maximum weighted unifrac may be smaller # TODO
+        gs_tax_path = P1.sample_metadata['RANKS'].split('|')  # effectively gets the max depth of the gs tree
+        # max weighted unifrac:
+        # 2->(all weight at tips whose LCA is the root of the taxonomic tree (so mass must move all the way up, then down)
+        # 100->(convert to percentage)
+        # tax_path_to_branch_len->(use the branch lengths defined in EMDUnifrac)
+        max_weighted_unifrac = 2 * 100 * P1.tax_path_to_branch_len(gs_tax_path, P1.branch_len_func, P1.root_len)
+        # TODO: Note: this makes the weighted unifrac a bit uninformative, since no reasonable profilier will get anywhere near the absolute worst weighted unifrac
+        weighted = weighted / float(max_weighted_unifrac)
+        return weighted
+
+    @staticmethod
+    def _unweighted_unifrac(pf1, pf2):
+        """
+        This is a normalized version of unweighted unifrac which basically boils down to "relative unweighted unifrac."
+        More technically: it computes ||WP - WQ|| / ||WP|| where P is the gold standard profile (using the notation of:
+        https://ir.library.oregonstate.edu/concern/graduate_thesis_or_dissertations/76537620h?locale=en
+        contained in Theorem 2.2.1 on page 90
+        Parameters
+        ----------
+        pf1 : taxonomic profile (gold standard)
+        pf2 : taxonomic profile (tool profile)
+
+        Returns
+        -------
+
+        """
+        P1 = copy.deepcopy(pf1)
+        P2 = copy.deepcopy(pf2)
+        (Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_and_normalize(P2)
+        (gs_unweighted_unifrac, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, np.zeros(P.shape))  # ||WP||
+        (raw_unweighted_unifrac, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, Q)  # ||WP - WQ||
+        unweighted = raw_unweighted_unifrac / float(gs_unweighted_unifrac)
+        return unweighted
 
 
 def test_normalize():

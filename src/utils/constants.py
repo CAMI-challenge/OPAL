@@ -12,6 +12,8 @@ ALL_RANKS = [SUPERKINGDOM, PHYLUM, CLASS, ORDER, FAMILY, GENUS, SPECIES, STRAIN]
 
 UNIFRAC = 'Weighted UniFrac error'
 UNW_UNIFRAC = 'Unweighted UniFrac error'
+UNIFRAC_CAMI = 'Weighted UniFrac (CAMI)'
+UNW_UNIFRAC_CAMI = 'Unweighted UniFrac (CAMI)'
 L1NORM = 'L1 norm error'
 PRECISION = 'Purity'
 RECALL = 'Completeness'
@@ -26,7 +28,7 @@ SHANNON_EQUIT = 'Shannon equitability'
 BRAY_CURTIS = 'Bray-Curtis distance'
 SUM_ABUNDANCES = 'Sum of abundances'
 UNFILTERED_SUF = ' (unfiltered)'
-ALL_METRICS = [UNIFRAC, UNW_UNIFRAC, SUM_ABUNDANCES, L1NORM, PRECISION, RECALL, F1_SCORE, TP, FP, FN, JACCARD, SHANNON_DIVERSITY, SHANNON_EQUIT, BRAY_CURTIS]
+ALL_METRICS = [UNIFRAC, UNW_UNIFRAC, UNIFRAC_CAMI, UNW_UNIFRAC_CAMI, SUM_ABUNDANCES, L1NORM, PRECISION, RECALL, F1_SCORE, TP, FP, FN, JACCARD, SHANNON_DIVERSITY, SHANNON_EQUIT, BRAY_CURTIS]
 
 TOOLTIP_UNIFRAC = 'tree-based measure of similarity between the true and predicted abundances at all taxonomic ranks ranging from 0 (high similarity) to 16 (low similarity).'
 TOOLTIP_UNW_UNIFRAC = 'similar to the weighted UniFrac error, but measuring how well a profiler correctly identified the presence and absence of taxa instead of their relative abundances. The maximal value is the product of the number of taxonomic ranks minus 1 and the number of true taxa at all taxonomic ranks.'

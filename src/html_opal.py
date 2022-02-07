@@ -97,16 +97,20 @@ def get_rank_to_sample_pd(pd_metrics):
     for index, row in pd_grouped_copy.iterrows():
         pd_grouped.loc[index][c.UNIFRAC] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC]
         pd_grouped.loc[index][c.UNW_UNIFRAC] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC]
+        pd_grouped.loc[index][c.UNIFRAC_CAMI] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC_CAMI]
+        pd_grouped.loc[index][c.UNW_UNIFRAC_CAMI] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC_CAMI]
     if c.UNIFRAC + c.UNFILTERED_SUF in pd_grouped.columns:
         for index, row in pd_grouped_copy.iterrows():
             pd_grouped.loc[index][c.UNIFRAC + c.UNFILTERED_SUF] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC + c.UNFILTERED_SUF]
             pd_grouped.loc[index][c.UNW_UNIFRAC + c.UNFILTERED_SUF] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC + c.UNFILTERED_SUF]
+            pd_grouped.loc[index][c.UNIFRAC_CAMI + c.UNFILTERED_SUF] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC_CAMI + c.UNFILTERED_SUF]
+            pd_grouped.loc[index][c.UNW_UNIFRAC_CAMI + c.UNFILTERED_SUF] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC_CAMI + c.UNFILTERED_SUF]
 
     for (rank, sample), g in pd_grouped.groupby(['rank', 'sample']):
         rank_to_sample_pd[rank][sample] = g.reset_index().rename(columns={'tool': 'Tool'}).drop(['rank', 'sample'], axis=1).set_index('Tool').T
         # drop all metrics except unifrac for 'rank independent'
         if rank == 'rank independent':
-            rank_to_sample_pd[rank][sample] = rank_to_sample_pd[rank][sample].drop(c.ALL_METRICS[2:])
+            rank_to_sample_pd[rank][sample] = rank_to_sample_pd[rank][sample].drop(c.ALL_METRICS[4:])
     return rank_to_sample_pd
 
 
@@ -205,7 +209,7 @@ def get_colors_and_ranges(name, all_values, df_metrics):
     if name in metrics:
         return color1, color2, hue1, hue2, 0, 1
 
-    metrics = [c.FP, c.UNIFRAC, c.UNW_UNIFRAC]
+    metrics = [c.FP, c.UNIFRAC, c.UNW_UNIFRAC, c.UNIFRAC_CAMI, c.UNW_UNIFRAC_CAMI]
     metrics = metrics + [metric + c.UNFILTERED_SUF for metric in metrics]
     if name in metrics:
         return color2, color1, hue2, hue1, 0, max(all_values)
@@ -292,9 +296,9 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
     all_sample_ids.insert(0, '(average over samples)')
 
     presence_metrics = [c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD]
-    estimates_metrics = [c.SUM_ABUNDANCES, c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.BRAY_CURTIS]
+    estimates_metrics = [c.SUM_ABUNDANCES, c.UNIFRAC, c.UNW_UNIFRAC, c.UNIFRAC_CAMI, c.UNW_UNIFRAC_CAMI, c.L1NORM, c.BRAY_CURTIS]
     alpha_diversity_metrics = [c.OTUS, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
-    rank_independent_metrics = [c.UNIFRAC, c.UNW_UNIFRAC]
+    rank_independent_metrics = [c.UNIFRAC, c.UNW_UNIFRAC, c.UNIFRAC_CAMI, c.UNW_UNIFRAC_CAMI]
 
     if c.FP + c.UNFILTERED_SUF in pd_metrics['metric'].values:
         presence_metrics = [[metric, metric + c.UNFILTERED_SUF] for metric in presence_metrics]
@@ -315,7 +319,7 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
 
     styles = [{'selector': 'td', 'props': [('width', '115pt')]},
               {'selector': 'th', 'props': [('width', '115pt'), ('text-align', 'left')]},
-              {'selector': 'th:nth-child(1)', 'props': [('width', '120pt'), ('font-weight', 'normal')]},
+              {'selector': 'th:nth-child(1)', 'props': [('width', '130pt'), ('font-weight', 'normal')]},
               {'selector': '', 'props': [('width', 'max-content'), ('width', '-moz-max-content'), ('border-top', '1px solid lightgray'), ('border-spacing', '0px')]},
               {'selector': 'expand-toggle:checked ~ * .data', 'props': [('background-color', 'white !important')]}]
     styles_hidden_thead = styles + [{'selector': 'thead', 'props': [('display', 'none')]}]
@@ -335,6 +339,8 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
                       (c.JACCARD, c.TOOLTIP_JACCARD),
                       (c.UNIFRAC, c.TOOLTIP_UNIFRAC),
                       (c.UNW_UNIFRAC, c.TOOLTIP_UNW_UNIFRAC),
+                      (c.UNIFRAC_CAMI, c.TOOLTIP_UNIFRAC),
+                      (c.UNW_UNIFRAC_CAMI, c.TOOLTIP_UNW_UNIFRAC),
                       (c.L1NORM, c.TOOLTIP_L1NORM),
                       (c.BRAY_CURTIS, c.TOOLTIP_BRAY_CURTIS),
                       (c.OTUS, c.TOOLTIP_OTUS),
