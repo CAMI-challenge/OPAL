@@ -124,8 +124,8 @@ def compute_metrics(sample_metadata, profile, gs_pf_profile, profile_cami, gs_pf
     else:
         pf_profile = PF.Profile(sample_metadata=sample_metadata, profile=profile, branch_length_fun=branch_length_fun)
         pf_profile_cami = PFCAMI.Profile(sample_metadata=sample_metadata, profile=profile_cami)
-    unifrac = pf_profile.compute_unifrac(gs_pf_profile, pf_profile, normalized_unifrac)
-    unifrac_cami = pf_profile_cami.compute_unifrac(gs_pf_profile_cami, pf_profile_cami, normalized_unifrac)
+    unifrac = uf.compute_unifrac(gs_pf_profile, pf_profile, normalized_unifrac)
+    unifrac_cami = uf.compute_unifrac(gs_pf_profile_cami, pf_profile_cami)
 
     # Shannon
     shannon = sh.compute_shannon_index(rank_to_taxid_to_percentage)
@@ -379,7 +379,7 @@ def main():
     group2.add_argument('-h', '--help', action='help', help='Show this help message and exit')
 
     group3 = parser.add_argument_group('UniFrac arguments')
-    group3.add_argument('-b', '--branch_length_function', help='UniFrac tree branch length function (default: "lambda x: 1/float(x)", where x=tree depth)', required=False, default='lambda x: 1/x')
+    group3.add_argument('-b', '--branch_length_function', help='UniFrac tree branch length function (default: "lambda x: 1/x", where x=tree depth)', required=False, default='lambda x: 1/x')
     group3.add_argument('--normalized_unifrac', help='Compute normalized version of weighted UniFrac by dividing by the theoretical max unweighted UniFrac', action='store_true')
 
     args = parser.parse_args()

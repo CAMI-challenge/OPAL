@@ -4,7 +4,6 @@ import copy
 import numpy as np
 import timeit
 from src.utils.ProfilingToolsABC import ProfileABC
-from src.utils import EMDUnifrac as EMDU
 
 
 class Profile(ProfileABC):
@@ -301,16 +300,7 @@ class Profile(ProfileABC):
                 _other_data[key]["abundance"] *= 100
         other._add_up()
 
-        return Tint2, lint2, nodes_in_order2, nodes_to_index, P, Q
-
-    @staticmethod
-    def compute_unifrac(pf1, pf2, normalize=False):
-        P1 = copy.deepcopy(pf1)
-        P2 = copy.deepcopy(pf2)
-        (Tint, lint, nodes_in_order, nodes_to_index, P, Q) = P1.make_unifrac_input_and_normalize(P2)
-        (weighted, _) = EMDU.EMDUnifrac_weighted(Tint, lint, nodes_in_order, P, Q)
-        (unweighted, _) = EMDU.EMDUnifrac_unweighted(Tint, lint, nodes_in_order, P, Q)
-        return weighted, unweighted
+        return Tint2, lint2, nodes_in_order2, P, Q
 
 
 def test_normalize():

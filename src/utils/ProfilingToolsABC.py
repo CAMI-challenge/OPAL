@@ -138,8 +138,3 @@ class ProfileABC(ABC):
     @abstractmethod
     def make_unifrac_input_and_normalize(self, other):
         pass
-
-    @staticmethod
-    @abstractmethod
-    def compute_unifrac(pf1, pf2, normalize=False):
-        pass
