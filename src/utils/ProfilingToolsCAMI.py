@@ -6,7 +6,7 @@ import timeit
 from src.utils.ProfilingToolsABC import ProfileABC
 
 
-class Profile(ProfileABC):
+class ProfileCAMI(ProfileABC):
     def __init__(self, sample_metadata=None, profile=None):
         super().__init__(sample_metadata, profile)
         self._data["-1"]["branch_length"] = 0
@@ -195,7 +195,7 @@ class Profile(ProfileABC):
         return
 
     def make_unifrac_input_and_normalize(self, other):
-        if not isinstance(other, Profile):
+        if not isinstance(other, ProfileCAMI):
             raise Exception
         _data = self._data
         _other_data = other._data
@@ -304,7 +304,7 @@ class Profile(ProfileABC):
 
 
 def test_normalize():
-    profile = Profile('/home/dkoslicki/Dropbox/Repositories/CAMIProfilingTools/src/test1.profile')
+    profile = ProfileCAMI('/home/dkoslicki/Dropbox/Repositories/CAMIProfilingTools/src/test1.profile')
     profile.write_file('/home/dkoslicki/Dropbox/Repositories/CAMIProfilingTools/src/test1.profile.import')
     profile.normalize()
     profile.write_file('/home/dkoslicki/Dropbox/Repositories/CAMIProfilingTools/src/test1.profile.normalize')
@@ -314,8 +314,8 @@ def test_normalize():
 def test_unifrac():
     sys.path.append('/home/dkoslicki/Dropbox/Repositories/EMDUnifrac/src')
     import EMDUnifrac as EMDU
-    profile1 = Profile('/home/dkoslicki/Dropbox/Repositories/EMDUnifrac/data/test1.profile')
-    profile2 = Profile('/home/dkoslicki/Dropbox/Repositories/EMDUnifrac/data/test2.profile')
+    profile1 = ProfileCAMI('/home/dkoslicki/Dropbox/Repositories/EMDUnifrac/data/test1.profile')
+    profile2 = ProfileCAMI('/home/dkoslicki/Dropbox/Repositories/EMDUnifrac/data/test2.profile')
     t0 = timeit.default_timer()
     (Tint, lint, nodes_in_order, nodes_to_index, P, Q) = profile1.make_unifrac_input_and_normalize(profile2)
     t1 = timeit.default_timer()
@@ -337,9 +337,9 @@ def test_unifrac():
 
 
 def test_real_data():
-    profile1 = Profile(
+    profile1 = ProfileCAMI(
         '/home/dkoslicki/Dropbox/Repositories/CAMIProfilingTools/src/lane4-s041-indexN722-S502-ATGCGCAG-ATAGAGAG-41_M5-2_S41_L004_R1_001.fa.gz.metaphlan.profile')
-    profile2 = Profile(
+    profile2 = ProfileCAMI(
         '/home/dkoslicki/Dropbox/Repositories/CAMIProfilingTools/src/lane8-s092-indexN729-S505-TCGACGTC-CTCCTTAC-91_Z0299_S92_L008_R1_001.fa.gz.metaphlan.profile')
     sys.path.append('/home/dkoslicki/Dropbox/Repositories/EMDUnifrac/src')
     import EMDUnifrac as EMDU

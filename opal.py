@@ -123,7 +123,7 @@ def compute_metrics(sample_metadata, profile, gs_pf_profile, profile_cami, gs_pf
         pf_profile_cami = profile_cami
     else:
         pf_profile = PF.Profile(sample_metadata=sample_metadata, profile=profile, branch_length_fun=branch_length_fun)
-        pf_profile_cami = PFCAMI.Profile(sample_metadata=sample_metadata, profile=profile_cami)
+        pf_profile_cami = PFCAMI.ProfileCAMI(sample_metadata=sample_metadata, profile=profile_cami)
     unifrac = uf.compute_unifrac(gs_pf_profile, pf_profile, normalized_unifrac)
     unifrac_cami = uf.compute_unifrac(gs_pf_profile_cami, pf_profile_cami)
 
@@ -173,7 +173,7 @@ def evaluate(gs_samples_list, profiles_list_to_samples_list, labels, filter_tail
         sample_id, sample_metadata, profile = sample
         gs_id_to_rank_to_taxid_to_percentage[sample_id] = load_data.get_rank_to_taxid_to_percentage(profile)
         gs_id_to_pf_profile[sample_id] = PF.Profile(sample_metadata=sample_metadata, profile=profile)
-        gs_id_to_pf_profile_cami[sample_id] = PFCAMI.Profile(sample_metadata=sample_metadata, profile=profile)
+        gs_id_to_pf_profile_cami[sample_id] = PFCAMI.ProfileCAMI(sample_metadata=sample_metadata, profile=profile)
         unifrac, unifrac_cami, shannon, l1norm, binary_metrics, braycurtis, rank_to_sum, rank_to_ntaxa = \
             compute_metrics(sample_metadata,
                             gs_id_to_pf_profile[sample_id], gs_id_to_pf_profile[sample_id],
