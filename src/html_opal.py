@@ -296,9 +296,9 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
     all_sample_ids.insert(0, '(average over samples)')
 
     presence_metrics = [c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.JACCARD]
-    estimates_metrics = [c.SUM_ABUNDANCES, c.UNIFRAC, c.UNW_UNIFRAC, c.UNIFRAC_CAMI, c.UNW_UNIFRAC_CAMI, c.L1NORM, c.BRAY_CURTIS]
+    estimates_metrics = [c.SUM_ABUNDANCES, c.UNIFRAC_CAMI, c.UNW_UNIFRAC_CAMI, c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.BRAY_CURTIS]
     alpha_diversity_metrics = [c.OTUS, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT]
-    rank_independent_metrics = [c.UNIFRAC, c.UNW_UNIFRAC, c.UNIFRAC_CAMI, c.UNW_UNIFRAC_CAMI]
+    rank_independent_metrics = [c.UNIFRAC_CAMI, c.UNW_UNIFRAC_CAMI, c.UNIFRAC, c.UNW_UNIFRAC]
 
     if c.FP + c.UNFILTERED_SUF in pd_metrics['metric'].values:
         presence_metrics = [[metric, metric + c.UNFILTERED_SUF] for metric in presence_metrics]
@@ -339,8 +339,8 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
                       (c.JACCARD, c.TOOLTIP_JACCARD),
                       (c.UNIFRAC, c.TOOLTIP_UNIFRAC),
                       (c.UNW_UNIFRAC, c.TOOLTIP_UNW_UNIFRAC),
-                      (c.UNIFRAC_CAMI, c.TOOLTIP_UNIFRAC),
-                      (c.UNW_UNIFRAC_CAMI, c.TOOLTIP_UNW_UNIFRAC),
+                      (c.UNIFRAC_CAMI, c.TOOLTIP_UNIFRAC_CAMI),
+                      (c.UNW_UNIFRAC_CAMI, c.TOOLTIP_UNW_UNIFRAC_CAMI),
                       (c.L1NORM, c.TOOLTIP_L1NORM),
                       (c.BRAY_CURTIS, c.TOOLTIP_BRAY_CURTIS),
                       (c.OTUS, c.TOOLTIP_OTUS),

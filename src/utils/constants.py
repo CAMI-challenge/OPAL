@@ -30,8 +30,10 @@ SUM_ABUNDANCES = 'Sum of abundances'
 UNFILTERED_SUF = ' (unfiltered)'
 ALL_METRICS = [UNIFRAC, UNW_UNIFRAC, UNIFRAC_CAMI, UNW_UNIFRAC_CAMI, SUM_ABUNDANCES, L1NORM, PRECISION, RECALL, F1_SCORE, TP, FP, FN, JACCARD, SHANNON_DIVERSITY, SHANNON_EQUIT, BRAY_CURTIS]
 
-TOOLTIP_UNIFRAC = 'tree-based measure of similarity between the true and predicted abundances at all taxonomic ranks ranging from 0 (high similarity) to 16 (low similarity).'
-TOOLTIP_UNW_UNIFRAC = 'similar to the weighted UniFrac error, but measuring how well a profiler correctly identified the presence and absence of taxa instead of their relative abundances. The maximal value is the product of the number of taxonomic ranks minus 1 and the number of true taxa at all taxonomic ranks.'
+TOOLTIP_UNIFRAC = 'weighted UniFrac computed from tree with branch lengths defined by a function.'
+TOOLTIP_UNW_UNIFRAC = 'unweighted UniFrac computed from tree with branch lengths defined by a function.'
+TOOLTIP_UNIFRAC_CAMI = 'tree-based measure of similarity between the true and predicted abundances at all taxonomic ranks ranging from 0 (high similarity) to 16 (low similarity).'
+TOOLTIP_UNW_UNIFRAC_CAMI = 'similar to the weighted UniFrac error, but measuring how well a profiler correctly identified the presence and absence of taxa instead of their relative abundances. The maximal value is the product of the number of taxonomic ranks minus 1 and the number of true taxa at all taxonomic ranks.'
 TOOLTIP_L1NORM = 'sum of the absolute differences between the true and predicted abundances at the selected taxonomic rank ranging from 0 (perfect reconstruction of the relative abundances) to 2 (totally incorrect reconstruction).'
 TOOLTIP_PRECISION = 'ratio of taxa correctly predicted as present and all predicted taxa at the selected taxonomic rank. It ranges from 0 (worst) to 1 (best).'
 TOOLTIP_RECALL = 'ratio of taxa correctly predicted as present and all taxa present at the selected taxonomic rank. It ranges from 0 (worst) to 1 (best).'

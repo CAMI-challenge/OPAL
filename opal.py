@@ -8,6 +8,7 @@ import os.path
 import pandas as pd
 import numpy as np
 import logging
+import shlex
 from src import l1norm as l1
 from src import binary_metrics as bm
 from src import unifrac_distance as uf
@@ -348,6 +349,8 @@ def get_logger(output_dir, silent):
     logging_fh = logging.FileHandler(os.path.join(output_dir, 'log.txt'))
     logging_fh.setFormatter(formatter)
     logger.addHandler(logging_fh)
+
+    logger.info(' '.join(map(shlex.quote, sys.argv)))
 
     if not silent:
         logging_stdout = logging.StreamHandler(sys.stdout)
