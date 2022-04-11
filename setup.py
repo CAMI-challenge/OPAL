@@ -16,11 +16,13 @@ setup(
     author               = 'CAMI',
     author_email         = 'support@cami-challenge.org',
     url                  = 'http://cami-challenge.org',
+    license              = 'Apache-2.0 License',
     scripts              = glob.glob('*.py'),
     install_requires     = dependencies(),
     packages             = find_packages(),
     classifiers = [
         'Natural Language :: English',
+        'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.7',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
