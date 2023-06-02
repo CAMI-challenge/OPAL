@@ -2,7 +2,7 @@
 
 import math
 from collections import OrderedDict
-from src.utils import constants as c
+from cami_opal.utils import constants as c
 
 
 class Shannon:

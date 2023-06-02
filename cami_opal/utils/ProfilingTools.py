@@ -1,6 +1,6 @@
 # This is a collection of scripts that will allow manipulation of CAMI profiling files
 import numpy as np
-from src.utils.ProfilingToolsABC import ProfileABC
+from cami_opal.utils.ProfilingToolsABC import ProfileABC
 
 
 # TODO: make sure that I'm not deleting the root "-1" that way Unifrac picks up on the missing superkingdoms

@@ -13,12 +13,13 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
+import matplotlib.ticker as ticker
 from matplotlib.ticker import MaxNLocator
 from matplotlib.lines import Line2D
-from src import braycurtis as bc
-from src.utils import spider_plot_functions as spl
-from src.utils import constants as c
-from src.utils import load_data
+from cami_opal import braycurtis as bc
+from cami_opal.utils import spider_plot_functions as spl
+from cami_opal.utils import constants as c
+from cami_opal.utils import load_data
 import scipy.special
 import seaborn as sns
 
@@ -339,8 +340,9 @@ def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir, f
                 y.append(rank_to_shannon[rank])
         axs.plot(x, y, color=colors_list[i], marker='o', markersize=10)
 
-    axs.set_xticklabels([''] + c.ALL_RANKS)
-    plt.setp(axs.get_xticklabels(), fontsize=9, rotation=25)
+    vals = [''] + c.ALL_RANKS
+    axs.xaxis.set_major_locator(ticker.FixedLocator(range(len(vals))))
+    axs.set_xticklabels(vals, fontsize=9, rotation=25)
 
     axs.set_ylabel(ylabel)
 
@@ -409,8 +411,12 @@ def spider_plot(metrics, labels, rank_to_metric_to_toolvalues, output_dir, file_
     if absolute:
         metrics = [metric[:-8] for metric in metrics]
 
-    ax = axes[0, 0]
-    ax.legend(metrics, loc=(2.0 - 0.353 * len(metrics), 1.25), labelspacing=0.1, fontsize='small', ncol=len(metrics), frameon=False)
+    # Create legend. Workaround for possible bug in matplotlib > 3.2.1
+    lines = []
+    for metric, color in zip(metrics, colors):
+        lines.append(Line2D([], [], linestyle="--", color=color, linewidth=2))
+
+    axes[0, 0].legend(lines, metrics, loc=(2.0 - 0.353 * len(metrics), 1.25), labelspacing=0.1, fontsize='small', ncol=len(metrics), frameon=False)
     fig.savefig(os.path.join(output_dir, file_name + '.pdf'), dpi=100, format='pdf', bbox_inches='tight')
     fig.savefig(os.path.join(output_dir, file_name + '.png'), dpi=100, format='png', bbox_inches='tight')
     plt.close(fig)
@@ -485,14 +491,14 @@ def plot_purity_completeness_per_tool_and_rank(pd_grouped, pd_mean, output_dir):
     pd_std_over_samples = pd_grouped.groupby(['rank', 'tool'], sort=False).std()
     pd_mean = pd_mean.drop(c.GS, level='tool').drop(['strain', 'rank independent'], level='rank', errors='ignore')
 
-    for tool, tool_group in pd_mean.groupby(['tool']):
+    for tool, tool_group in pd_mean.groupby('tool'):
         precision_list = [0] * len(ranks)
         precision_sem_list = [0] * len(ranks)
         recall_list = [0] * len(ranks)
         recall_sem_list = [0] * len(ranks)
         braycurtis_list = [0] * len(ranks)
         braycurtis_sem_list = [0] * len(ranks)
-        for rank, rank_group in tool_group.groupby(['rank']):
+        for rank, rank_group in tool_group.groupby('rank'):
             index = rank_to_index[rank]
             precision_list[index] = rank_group[c.PRECISION].values[0]
             recall_list[index] = rank_group[c.RECALL].values[0]
@@ -516,10 +522,12 @@ def plot_purity_completeness_per_tool_and_rank(pd_grouped, pd_mean, output_dir):
         plot2b = axs.fill_between(ranks_range, np.subtract(precision_list, precision_sem_list), np.add(precision_list, precision_sem_list), facecolor=plt.cm.tab10(0), alpha=0.3, edgecolor=None)
         plot3b = axs.fill_between(ranks_range, np.subtract(braycurtis_list, braycurtis_sem_list), np.add(braycurtis_list, braycurtis_sem_list), facecolor=plt.cm.tab10(3), alpha=0.3, edgecolor=None)
 
+        axs.xaxis.set_major_locator(ticker.FixedLocator(ranks_range))
         axs.set_xticklabels(ranks, horizontalalignment='right')
         axs.tick_params(axis='x', labelrotation=45)
 
         yticks = axs.get_yticks()
+        axs.yaxis.set_major_locator(ticker.FixedLocator(yticks))
         axs.set_yticklabels(['{:,.0%}'.format(x) for x in yticks])
 
         lgd = plt.legend([(plot1a[0], plot1b), (plot2a[0], plot2b), (plot3a[0], plot3b)], [c.RECALL, c.PRECISION, c.L1NORM], bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handlelength=2, frameon=False)

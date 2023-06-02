@@ -2,8 +2,8 @@
 
 import sys
 import argparse
-from src.utils import load_data
-from src.utils import constants as c
+from cami_opal.utils import load_data
+from cami_opal.utils import constants as c
 
 
 def compute_l1norm(f1_rank_to_taxid_to_percentage, f2_rank_to_taxid_to_percentage):

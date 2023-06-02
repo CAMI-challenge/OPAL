@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from src.utils import constants as c
+from cami_opal.utils import constants as c
 import pandas as pd
 import logging
 
@@ -59,7 +59,7 @@ def highscore_table(metrics, ranks):
     for (metric, sample, rank), g in pd_metrics.groupby(['metric', 'sample', 'rank']):
         if metric in sort_ascendingly:
             if ((rank in useranks) and (metric != c.UNIFRAC)) or ((rank == 'rank independent') and (metric == c.UNIFRAC)):
-                res = g.groupby('tool').sum()
+                res = g.groupby('tool').sum(numeric_only=True)
                 res['position'] = res['value'].rank(method='min', ascending=sort_ascendingly[metric]) - 1
                 res['metric'] = metric
                 res['sample'] = sample

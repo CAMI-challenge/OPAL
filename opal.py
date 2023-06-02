@@ -9,18 +9,18 @@ import pandas as pd
 import numpy as np
 import logging
 import shlex
-from src import l1norm as l1
-from src import binary_metrics as bm
-from src import unifrac_distance as uf
-from src import shannon as sh
-from src import braycurtis as bc
-from src import rankings as rk
-from src import html_opal as html
-from src import plots as pl
-from src.utils import load_data
-from src.utils import ProfilingTools as PF
-from src.utils import ProfilingToolsCAMI as PFCAMI
-from src.utils import constants as c
+from cami_opal import l1norm as l1
+from cami_opal import binary_metrics as bm
+from cami_opal import unifrac_distance as uf
+from cami_opal import shannon as sh
+from cami_opal import braycurtis as bc
+from cami_opal import rankings as rk
+from cami_opal import html_opal as html
+from cami_opal import plots as pl
+from cami_opal.utils import load_data
+from cami_opal.utils import ProfilingTools as PF
+from cami_opal.utils import ProfilingToolsCAMI as PFCAMI
+from cami_opal.utils import constants as c
 from version import __version__
 
 

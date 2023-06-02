@@ -3,7 +3,7 @@ import sys
 import copy
 import numpy as np
 import timeit
-from src.utils.ProfilingToolsABC import ProfileABC
+from cami_opal.utils.ProfilingToolsABC import ProfileABC
 
 
 class ProfileCAMI(ProfileABC):

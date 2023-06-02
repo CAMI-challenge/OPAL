@@ -2,6 +2,7 @@ import numpy as np
 
 import matplotlib
 matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, RegularPolygon
 from matplotlib.path import Path
 from matplotlib.projections.polar import PolarAxes
@@ -11,7 +12,8 @@ from matplotlib.transforms import Affine2D
 
 
 def radar_factory(num_vars, frame='circle'):
-    """Create a radar chart with `num_vars` axes.
+    """
+    Create a radar chart with `num_vars` axes.
 
     This function creates a RadarAxes projection and registers it.
 
@@ -19,18 +21,27 @@ def radar_factory(num_vars, frame='circle'):
     ----------
     num_vars : int
         Number of variables for radar chart.
-    frame : {'circle' | 'polygon'}
+    frame : {'circle', 'polygon'}
         Shape of frame surrounding axes.
 
     """
     # calculate evenly-spaced axis angles
     theta = np.linspace(0, 2*np.pi, num_vars, endpoint=False)
 
+    class RadarTransform(PolarAxes.PolarTransform):
+
+        def transform_path_non_affine(self, path):
+            # Paths with non-unit interpolation steps correspond to gridlines,
+            # in which case we force interpolation (to defeat PolarTransform's
+            # autoconversion to circular arcs).
+            if path._interpolation_steps > 1:
+                path = path.interpolated(num_vars)
+            return Path(self.transform(path.vertices), path.codes)
+
     class RadarAxes(PolarAxes):
 
         name = 'radar'
-        # use 1 line segment to connect specified points
-        RESOLUTION = 1
+        PolarTransform = RadarTransform
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
@@ -51,12 +62,12 @@ def radar_factory(num_vars, frame='circle'):
             x, y = line.get_data()
             # FIXME: markers at x[0], y[0] get doubled-up
             if x[0] != x[-1]:
-                x = np.concatenate((x, [x[0]]))
-                y = np.concatenate((y, [y[0]]))
+                x = np.append(x, x[0])
+                y = np.append(y, y[0])
                 line.set_data(x, y)
 
         def set_varlabels(self, labels):
-            return self.set_thetagrids(np.degrees(theta), labels)
+            self.set_thetagrids(np.degrees(theta), labels)
 
         def _gen_axes_patch(self):
             # The Axes patch must be centered at (0.5, 0.5) and of radius 0.5
@@ -67,7 +78,7 @@ def radar_factory(num_vars, frame='circle'):
                 return RegularPolygon((0.5, 0.5), num_vars,
                                       radius=.5, edgecolor="k")
             else:
-                raise ValueError("unknown value for 'frame': %s" % frame)
+                raise ValueError("Unknown value for 'frame': %s" % frame)
 
         def _gen_axes_spines(self):
             if frame == 'circle':
@@ -84,7 +95,7 @@ def radar_factory(num_vars, frame='circle'):
                                     + self.transAxes)
                 return {'polar': spine}
             else:
-                raise ValueError("unknown value for 'frame': %s" % frame)
+                raise ValueError("Unknown value for 'frame': %s" % frame)
 
     register_projection(RadarAxes)
     return theta

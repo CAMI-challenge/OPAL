@@ -1,6 +1,7 @@
 import os
+import io
 from collections import defaultdict
-from src.utils import constants as c
+from cami_opal.utils import constants as c
 import pandas as pd
 import datetime
 import numpy as np
@@ -20,15 +21,121 @@ from version import __version__
 
 from bokeh.plotting import figure
 from bokeh.layouts import column, row
-from bokeh.models.widgets import TableColumn, Slider, Div, Select, Panel, Tabs
-from bokeh.models import (DataTable,
-                          CustomJS)
-from bokeh.embed import components
+from bokeh.models.widgets import TableColumn, Slider, Div, Select
+from bokeh.models import DataTable, CustomJS, TabPanel, Tabs
 from bokeh.resources import INLINE
 from bokeh.plotting import ColumnDataSource
+from bokeh.embed import file_html
 
 
+TITLE = 'OPAL: Open-community Profiling Assessment tooL'
 SUM_OF_SCORES = 'Sum of scores'
+
+TEMPLATE = Template('''
+{% from macros import embed %}
+<!DOCTYPE html>
+<html lang="en">
+  {% block head %}
+  <head>
+  {% block inner_head %}
+    <meta charset="utf-8">
+    <title>{% block title %}{{ title | e if title else "Bokeh Plot" }}{% endblock %}</title>
+  {%  block preamble -%}{%- endblock %}
+  {%  block resources %}
+    <style>
+      html, body {
+        box-sizing: border-box;
+        height: 100%;
+        margin: 8px;
+        padding: 0;
+      }
+      .bk-fit-content {width: fit-content; width: -moz-fit-content;}
+      .bk-display-block {display: block !important;}
+      .bk-float-left {float: left;}
+      .bk-tabs-margin{margin-top: 20px !important;}
+      .bk-tabs-margin-lr{margin-left: 10px; margin-right: 10px}
+      .bk-root {display: flex; justify-content: center;}
+      .bk-padding-top {padding-top: 10px;}
+      .bk-combo-box > div:first-child {
+        width: auto !important;
+        padding-right: 40px;
+      }
+    </style>
+  {%   block css_resources -%}
+    {{- bokeh_css if bokeh_css }}
+  {%-  endblock css_resources %}
+  {%   block js_resources -%}
+    {{  bokeh_js if bokeh_js }}
+  {%-  endblock js_resources %}
+  {%  endblock resources %}
+  {%  block postamble %}{% endblock %}
+  {% endblock inner_head %}
+  </head>
+  {% endblock head%}
+  {% block body %}
+  <body>
+  {%  block inner_body %}
+  {%    block contents %}
+  {%      for doc in docs %}
+  {{        embed(doc) if doc.elementid }}
+  {%-       for root in doc.roots %}
+  {%          block root scoped %}
+  {{            embed(root) }}
+  {%          endblock %}
+  {%        endfor %}
+  {%      endfor %}
+  {%    endblock contents %}
+  {{ plot_script | indent(4) }}
+  {%  endblock inner_body %}
+  </body>
+  {% endblock body%}
+</html>
+''')
+
+
+TOOLTIPS = """
+    <style>
+        tr:hover {outline: 1px solid black;}
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dashed lightgray;
+            cursor: help;
+        }
+        .tooltip-sem {
+            border-bottom: 1px dotted black;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 260px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+        }
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    <style>
+    """
 
 
 def create_heatmap_bar(output_dir):
@@ -52,7 +159,13 @@ def create_heatmap_bar(output_dir):
 
 
 def create_title_div(id, name, info):
-    div = Div(text="""<div style="text-align:left;font-size: 20pt;font-weight: bold;">{1}<span style="float: right;font-size: 10pt;font-weight:normal;">{2}</span>""".format(id, name, info), css_classes=['bk-width-auto']) # width=DIV_WIDTH, height=DIV_HEIGHT)
+    div = Div(text="""<div style="text-align:left;font-size: 20pt;font-weight: bold;">{1}<span style="float: right;font-size: 10pt;font-weight:normal;">{2}</span>""".format(id, name, info), styles={'width': 'auto'})
+    div.stylesheets = ["""
+    .bk-clearfix {
+      width: -webkit-fill-available;
+      width: -moz-available;
+    }
+    """]
     return div
 
 
@@ -141,37 +254,41 @@ def create_rankings_html(pd_rankings, ranks_scored, labels):
                                         unifrac=pd_plot['position', c.UNIFRAC]))
 
     callback = CustomJS(args=dict(source=source), code="""
-        var data = source.data;
-        var wrecall = weight_recall.value;
-        var wprecision = weight_precision.value;
-        var wl1norm = weight_l1norm.value;
-        var wunifrac = weight_unifrac.value;
-        topx = data['top'];
-        recall = data['recall'];
-        precision = data['precision'];
-        l1norm = data['l1norm'];
-        unifrac = data['unifrac'];
+        const data = source.data;
+        const wrecall = weight_recall.value;
+        const wprecision = weight_precision.value;
+        const wl1norm = weight_l1norm.value;
+        const wunifrac = weight_unifrac.value;
+        const topx = data['top'];
+        const recall = data['recall'];
+        const precision = data['precision'];
+        const l1norm = data['l1norm'];
+        const unifrac = data['unifrac'];
         
-        for (i = 0; i < topx.length; i++) {
+        for (let i = 0; i < topx.length; i++) {
             topx[i] = recall[i] * wrecall + precision[i] * wprecision + l1norm[i] * wl1norm + unifrac[i] * wunifrac;
         }
         
         source.change.emit();
     """)
 
-    weight_recall = Slider(start=0, end=10, value=1, step=.1, title=c.RECALL + " weight", callback=callback)
+    weight_recall = Slider(start=0, end=10, value=1, step=.1, title=c.RECALL + " weight")
     callback.args["weight_recall"] = weight_recall
+    weight_recall.js_on_change('value', callback)
 
-    weight_precision = Slider(start=0, end=10, value=1, step=.1, title=c.PRECISION + " weight", callback=callback)
+    weight_precision = Slider(start=0, end=10, value=1, step=.1, title=c.PRECISION + " weight")
     callback.args["weight_precision"] = weight_precision
+    weight_precision.js_on_change('value', callback)
 
-    weight_l1norm = Slider(start=0, end=10, value=1, step=.1, title=c.L1NORM + " weight", callback=callback)
+    weight_l1norm = Slider(start=0, end=10, value=1, step=.1, title=c.L1NORM + " weight")
     callback.args["weight_l1norm"] = weight_l1norm
+    weight_l1norm.js_on_change('value', callback)
 
-    weight_unifrac = Slider(start=0, end=10, value=1, step=.1, title=c.UNIFRAC + " weight", callback=callback)
+    weight_unifrac = Slider(start=0, end=10, value=1, step=.1, title=c.UNIFRAC + " weight")
     callback.args["weight_unifrac"] = weight_unifrac
+    weight_unifrac.js_on_change('value', callback)
 
-    p = figure(x_range=pd_plot.index.to_list(), plot_width=1200, plot_height=400, title=SUM_OF_SCORES + " - lower is better")
+    p = figure(x_range=pd_plot.index.to_list(), width=1200, height=400, title=SUM_OF_SCORES + " - lower is better")
     p.vbar(x='x', top='top', source=source, width=0.5, bottom=0, color="firebrick")
 
     table_source = ColumnDataSource(pd_show)
@@ -188,13 +305,13 @@ def create_rankings_html(pd_rankings, ranks_scored, labels):
         TableColumn(field='score' + c.UNIFRAC, title='', width=50),
     ]
     data_table = DataTable(source=table_source, columns=columns, width=800, height=25 + len(pd_show) * 25)
-    col_rankings = column([Div(text="<font color='navy'><u>Hint 1:</u> click on the columns of scores for sorting.</font>", style={"width": "600px", "margin-bottom": "0px"}),
-                           Div(text="Taxonomic ranks scored: " + ", ".join(ranks_scored), style={"width": "600px", "margin-bottom": "0px"}),
+    col_rankings = column([Div(text="<u>Hint 1:</u> click on the columns of scores for sorting.", styles={"width": "600px", "margin-bottom": "0px"}),
+                           Div(text="Taxonomic ranks scored: " + ", ".join(ranks_scored), styles={"width": "600px", "margin-bottom": "0px"}),
                            data_table,
-                           Div(text="<font color='navy'><u>Hint 2:</u> slide the bars to change the weight of the metrics.</font>", style={"width": "500px", "margin-top": "18px"}),
+                           Div(text="<u>Hint 2:</u> slide the bars to change the weight of the metrics.", styles={"width": "500px", "margin-top": "18px"}),
                            row(weight_recall, weight_precision),
                            row(weight_l1norm, weight_unifrac),
-                           p], css_classes=['bk-padding-top'])
+                           p])
     return col_rankings
 
 
@@ -363,13 +480,13 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
                 continue
             mydf = rank_to_sample_pd[rank][sample_id]
             mydf.index.name = None
-            html = ''
+            html = io.StringIO()
             first_metrics = True
             for metrics, metrics_label in zip(all_metrics, all_metrics_labels):
                 if rank == 'rank independent':
                     metrics = rank_independent_metrics
                     metrics_label = estimates_metrics_label
-                html += '<p style="margin-bottom: auto"><b>{}</b></p>'.format(metrics_label)
+                html.write('<p style="margin-bottom: auto"><b>{}</b></p>'.format(metrics_label))
                 mydf_metrics = mydf.loc[metrics]
 
                 sorted_columns = [x for x in labels if x in mydf_metrics.columns]
@@ -383,20 +500,20 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
                 else:
                     this_style = styles_hidden_thead
                 if metrics_label == presence_metrics_label or metrics_label == estimates_metrics_label:
-                    html += mydf_metrics.style.apply(get_heatmap_colors, df_metrics=mydf_metrics, axis=1).format(precision=3).set_table_styles(this_style).render()
+                    html.write(mydf_metrics.style.apply(get_heatmap_colors, df_metrics=mydf_metrics, axis=1).format(precision=3).set_table_styles(this_style).to_html())
                 else:
-                    html += mydf_metrics.style.format(precision=3).set_table_styles(this_style).render()
+                    html.write(mydf_metrics.style.format(precision=3).set_table_styles(this_style).to_html())
                 if rank == 'rank independent':
                     break
                 first_metrics = False
-            html = pattern.sub(translate, html)
-            rank_to_sample_to_html[rank].append(html)
+            html = pattern.sub(translate, html.getvalue())
+            rank_to_sample_to_html[rank].append('{}<div style="margin-bottom:10pt;">{}</div>'.format(TOOLTIPS, html))
 
-    mytable1 = Div(text="""<div>{}</div>""".format(rank_to_sample_to_html[c.ALL_RANKS[0]][0]), css_classes=['bk-width-auto'])
+    mytable1 = Div(text="""<div>{}</div>""".format(rank_to_sample_to_html[c.ALL_RANKS[0]][0]))
 
-    select_rank = Select(title="Taxonomic rank:", value=c.ALL_RANKS[0], options=c.ALL_RANKS + ['rank independent'], css_classes=['bk-fit-content'])
+    select_rank = Select(title="Taxonomic rank:", value=c.ALL_RANKS[0], options=c.ALL_RANKS + ['rank independent'])
 
-    select_sample = Select(title="Sample:", value='0', options=list(zip(map(str, range(len(all_sample_ids))), all_sample_ids)), css_classes=['bk-fit-content'])
+    select_sample = Select(title="Sample:", value='0', options=list(zip(map(str, range(len(all_sample_ids))), all_sample_ids)))
 
     source = ColumnDataSource(data=rank_to_sample_to_html)
 
@@ -410,17 +527,17 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
     select_rank_sample_callback.args["mytable1"] = mytable1
 
     heatmap_legend = '<img src="heatmap_bar.png" /><div style="text-align:left;font-size: 11px;">Worst<span style="float:right;">Best</span><span style="margin-right: 36px;float:right;">Median</span></div>'
-    heatmap_legend_div = Div(text=heatmap_legend, style={"width": "155px", "margin-bottom": "-10px"})
+    heatmap_legend_div = Div(text=heatmap_legend, styles={"width": "155px"})
     # <input type="checkbox" id="expand-toggle" /><label for="expand-toggle" id="expand-btn">Toggle</label>
     return select_sample, select_rank, heatmap_legend_div, mytable1
 
 
 def create_alpha_diversity_tab():
     imgs_shannon = '<img src="plot_shannon.png"/><img src="plot_shannon_diff.png"/>'
-    div_plots_shannon = Div(text=imgs_shannon, css_classes=['bk-width-auto'])
-    shannon_column = column(div_plots_shannon, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-width-auto-main'])
-    shannon_panel = Panel(child=shannon_column, title='Shannon')
-    tabs_plots = Tabs(tabs=[shannon_panel], css_classes=['bk-tabs-margin', 'bk-tabs-margin-lr'])
+    div_plots_shannon = Div(text=imgs_shannon)
+    shannon_column = column(div_plots_shannon, sizing_mode='scale_width')
+    shannon_panel = TabPanel(child=shannon_column, title='Shannon')
+    tabs_plots = Tabs(tabs=[shannon_panel])
     return tabs_plots
 
 
@@ -428,12 +545,12 @@ def create_plots_html(plots_list):
     message_no_spdplot = 'Spider plots of performance require at least 3 profiles.'
 
     text = '<img src="spider_plot_relative.png" />' if 'spider_plot_relative' in plots_list else message_no_spdplot
-    plot1 = Panel(child=Div(text=text), title='Relative performance', width=780)
+    plot1 = TabPanel(child=Div(text=text), title='Relative performance')
 
     text = '<img src="spider_plot_absolute.png" />' if 'spider_plot_absolute' in plots_list else message_no_spdplot
-    plot2 = Panel(child=Div(text=text), title='Absolute performance')
+    plot2 = TabPanel(child=Div(text=text), title='Absolute performance')
 
-    tabs_plots = Tabs(tabs=[plot1, plot2], width=780, css_classes=['bk-tabs-margin'])
+    tabs_plots = Tabs(tabs=[plot1, plot2], width=780)
     return tabs_plots
 
 
@@ -444,7 +561,7 @@ def create_beta_diversity_tab(labels, plots_list):
             file = os.path.join("by_tool", label.replace(' ', '_'), 'beta_diversity_bc_' + rank)
             if file in plots_list:
                 rank_to_img[rank][0] = rank_to_img[rank][0] + '<img src=' + '"' + file + '.png' + '"' + '/>'
-    div_plots = Div(text=rank_to_img[c.SPECIES][0], css_classes=['bk-width-auto'])
+    div_plots = Div(text=rank_to_img[c.SPECIES][0])
 
     source = ColumnDataSource(data=rank_to_img)
 
@@ -452,41 +569,41 @@ def create_beta_diversity_tab(labels, plots_list):
         div_plots.text = source.data[select2_rank.value][0];
     """)
 
-    select2_rank = Select(title="Taxonomic rank:", value=c.SPECIES, options=c.ALL_RANKS, css_classes=['bk-fit-content'])
+    select2_rank = Select(title="Taxonomic rank:", value=c.SPECIES, options=c.ALL_RANKS)
     select2_rank.js_on_change('value', select2_rank_sample_callback)
     select2_rank_sample_callback.args["select2_rank"] = select2_rank
     select2_rank_sample_callback.args["div_plots"] = div_plots
 
-    beta_div_column = column(select2_rank, div_plots, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-width-auto-main'])
+    beta_div_column = column(select2_rank, div_plots, sizing_mode='scale_width')
     return beta_div_column
 
 
 def create_gs_tab(plots_list, tabs_list):
     # Rarefaction curves panel
     imgs = '<img src="gold_standard/rarefaction_curves.png"/><img src="gold_standard/rarefaction_curves_log_scale.png"/>'
-    div_plots_rarefaction = Div(text=imgs, css_classes=['bk-width-auto'])
-    div_plots_text = Div(text="<div style='margin-top:18px; margin-bottom:0px;'><font color='navy'><ul style='list-style-type:square;margin-bottom:0;margin-top:0;'><li>OPAL always assumes that the samples are from the same environment.</li><li>Dotted lines are accumulation curves.</li></ul></font></div>", css_classes=['bk-width-auto'])
-    gs_column_rarefaction = column(div_plots_text, div_plots_rarefaction, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-width-auto-main'])
-    rarefaction_panel = Panel(child=gs_column_rarefaction, title="Rarefaction curves")
+    div_plots_rarefaction = Div(text=imgs)
+    div_plots_text = Div(text="<div style='margin-top:18px; margin-bottom:0px;'><ul style='list-style-type:square;margin-bottom:0;margin-top:0;'><li>OPAL always assumes that the samples are from the same environment.</li><li>Dotted lines are accumulation curves.</li></ul></div>")
+    gs_column_rarefaction = column(div_plots_text, div_plots_rarefaction, sizing_mode='scale_width')
+    rarefaction_panel = TabPanel(child=gs_column_rarefaction, title="Rarefaction curves")
 
     # Proportions panel
     imgs_proportions = ''
     for rank in c.ALL_RANKS:
         if os.path.join('gold_standard', rank) in plots_list:
             fig_name = 'gold_standard/' + rank
-            imgs_proportions = imgs_proportions + '<img src="' + fig_name + '.png" onclick="showlegend(this, \'' + rank + '_legend\')" class="proportions"/>'
-            imgs_proportions = imgs_proportions + '<img src="' + fig_name + '_legend.png" style="visibility:hidden;display:none;" id="' + rank + '_legend" class="legend">'
+            imgs_proportions = imgs_proportions + '<img src="' + fig_name + '.png"/>'
+            imgs_proportions = imgs_proportions + '<img src="' + fig_name + '_legend.png">'
     if len(imgs_proportions) > 0:
-        imgs_proportions = "<div style='margin-top:18px; margin-bottom:16px;'><font color='navy'><u>Hint:</u> click on a plot for its legend and drag it around the screen as necessary. Click on the same plot again to hide the legend.</font></div>" + imgs_proportions
-        div_plots = Div(text=imgs_proportions, css_classes=['bk-width-auto'])
-        gs_column_prop = column(div_plots, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-width-auto-main'])
-        proportions_panel = Panel(child=gs_column_prop, title="Proportions")
+        div_plots = Div(text=imgs_proportions)
 
-        tabs_plots = Tabs(tabs=[proportions_panel, rarefaction_panel], css_classes=['bk-tabs-margin', 'bk-tabs-margin-lr'])
-        tabs_list.append(Panel(child=tabs_plots, title="Gold standard"))
+        gs_column_prop = column(div_plots, sizing_mode='scale_width')
+        proportions_panel = TabPanel(child=gs_column_prop, title="Proportions")
+
+        tabs_plots = Tabs(tabs=[proportions_panel, rarefaction_panel])
+        tabs_list.append(TabPanel(child=tabs_plots, title="Gold standard"))
     else:
-        tabs_plots = Tabs(tabs=[rarefaction_panel], css_classes=['bk-tabs-margin', 'bk-tabs-margin-lr'])
-        tabs_list.append(Panel(child=tabs_plots, title="Gold standard"))
+        tabs_plots = Tabs(tabs=[rarefaction_panel])
+        tabs_list.append(TabPanel(child=tabs_plots, title="Gold standard"))
 
 
 def create_computing_efficiency_tab(pd_metrics, plots_list, tabs_list):
@@ -502,11 +619,11 @@ def create_computing_efficiency_tab(pd_metrics, plots_list, tabs_list):
     df.rename(index=str, columns={'tool': 'Tool', 'time': 'Time (hours)', 'memory': 'Memory (GB)'}, inplace=True)
 
     html = df.style.set_table_styles(styles).hide_index().render()
-    div_html = Div(text=html, css_classes=['bk-width-auto', 'bk-inline-block'])
+    div_html = Div(text=html)
 
-    div_time_memory = Div(text='<img src="time_memory.png"/>', css_classes=['bk-width-auto', 'bk-inline-block'])
-    column_time_memory = row(div_html, div_time_memory, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-width-auto-main', 'bk-inline-block'])
-    tabs_list.append(Panel(child=column_time_memory, title="Computing efficiency"))
+    div_time_memory = Div(text='<img src="time_memory.png"/>')
+    column_time_memory = row(div_html, div_time_memory, sizing_mode='scale_width')
+    tabs_list.append(TabPanel(child=column_time_memory, title="Computing efficiency"))
 
 
 def create_html(pd_rankings, ranks_scored, pd_metrics, labels, sample_ids_list, plots_list, output_dir, desc_text):
@@ -518,157 +635,32 @@ def create_html(pd_rankings, ranks_scored, pd_metrics, labels, sample_ids_list, 
 
     tabs_plots = create_plots_html(plots_list)
 
-    metrics_row = row(column(row(select_sample, select_rank, css_classes=['bk-width-auto', 'bk-combo-box']), heatmap_legend_div, mytable1, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-height-auto', 'bk-inline-block']), column(tabs_plots, sizing_mode='scale_width', css_classes=['bk-width-auto', 'bk-inline-block']), css_classes=['bk-width-auto', 'bk-inline-block'], sizing_mode='scale_width')
+    metrics_row = column(column(row(select_sample, select_rank), heatmap_legend_div, mytable1, sizing_mode='scale_width'),
+                         column(tabs_plots, sizing_mode='scale_width'), sizing_mode='scale_width')
 
     beta_div_column = create_beta_diversity_tab(labels, plots_list)
 
-    tabs_list = [Panel(child=metrics_row, title="Metrics"),
-                 Panel(child=col_rankings, title="Rankings"),
-                 Panel(child=create_alpha_diversity_tab(), title="Alpha diversity"),
-                 Panel(child=beta_div_column, title="Beta diversity")]
+    tabs_list = [TabPanel(child=metrics_row, title="Metrics"),
+                 TabPanel(child=col_rankings, title="Rankings"),
+                 TabPanel(child=create_alpha_diversity_tab(), title="Alpha diversity"),
+                 TabPanel(child=beta_div_column, title="Beta diversity")]
 
     create_computing_efficiency_tab(pd_metrics, plots_list, tabs_list)
 
     create_gs_tab(plots_list, tabs_list)
 
-    tabs = Tabs(tabs=tabs_list, css_classes=['bk-tabs-margin'])
+    tabs = Tabs(tabs=tabs_list)
 
-    title = create_title_div("main", "OPAL: Open-community Profiling Assessment tooL", " produced on {0} with OPAL version {1} ".format(
+    title = create_title_div("main", TITLE, " produced on {0} with OPAL version {1} ".format(
             datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), __version__))
 
-    template = Template('''<!DOCTYPE html>
-        <html lang="en">
-            <head>
-                <meta charset="utf-8">
-                <title>OPAL: Open-community Profiling Assessment tooL</title>
-                {{ js_resources }}
-                {{ css_resources }}
-                <style>.bk-fit-content {width: fit-content; width: -moz-fit-content;}
-                .bk-width-auto {width: auto !important;}
-                .bk-height-auto {height: auto !important;}
-                .bk-inline-block {display: inline-block !important; float: left;}
-                .bk-width-auto-main>div {width: -webkit-fill-available !important;}
-                div.bk-width-auto-main {width: -webkit-fill-available !important;}
-                .bk-tabs-margin{margin-top: 20px !important;}
-                .bk-tabs-margin-lr{margin-left: 10px; margin-right: 10px}
-                .bk-root {display: flex; justify-content: center;}
-                .bk-padding-top {padding-top: 10px;}
-                html {overflow: -moz-scrollbars-vertical; overflow-y: scroll;}
-                tr:hover {outline: 1px solid black;}
-                .tooltip {
-                    position: relative;
-                    display: inline-block;
-                    border-bottom: 1px dashed lightgray;
-                    cursor: help;
-                }
-                .tooltip-sem {
-                    border-bottom: 1px dotted black;
-                }
-                .tooltip .tooltiptext {
-                    visibility: hidden;
-                    width: 260px;
-                    background-color: #555;
-                    color: #fff;
-                    text-align: center;
-                    border-radius: 6px;
-                    padding: 5px 0;
-                    position: absolute;
-                    z-index: 1;
-                    bottom: 125%;
-                    left: 50%;
-                    margin-left: -60px;
-                    opacity: 0;
-                }
-                .tooltip .tooltiptext::after {
-                    content: "";
-                    position: absolute;
-                    top: 100%;
-                    left: 50%;
-                    margin-left: -5px;
-                    border-width: 5px;
-                    border-style: solid;
-                    border-color: #555 transparent transparent transparent;
-                }
-                .tooltip:hover .tooltiptext {
-                    visibility: visible;
-                    opacity: 1;
-                }
-                .proportions {
-                    cursor: pointer;
-                }
-                .legend {
-                    position:absolute;
-                    cursor: move;
-                    z-index: 1;
-                }
-                </style>
-            </head>
-            <body>
-                {{ div }}
-                {{ script }}
-                <script>
-                    showlegend = function(img, elementid){
-                        var x = document.getElementById(elementid);
-                        if (x.style.visibility == 'visible') {
-                            x.style.visibility = 'hidden';
-                            x.style.display = 'none';
-                        } else {
-                            if (!x.style.top) {
-                                x.style.top = img.offsetTop.toString().concat('px');
-                            }
-                            if (!x.style.left) {
-                                x.style.left = img.offsetLeft.toString().concat('px');
-                            }
-                            x.style.visibility = 'visible';
-                            x.style.display = 'initial';
-                        }
-                    }
-                    function startDrag(e) {
-                        if (!e) {
-                            var e = window.event;
-                        }
-                        targ = e.target ? e.target : e.srcElement;
-                        if (targ.className != 'legend') {return};
-                        offsetX = e.clientX;
-                        offsetY = e.clientY;
-                        coordX = parseInt(targ.style.left);
-                        coordY = parseInt(targ.style.top);
-                        drag = true;
-                        document.onmousemove=dragDiv;
-                        return false;
-                    }
-                    function dragDiv(e) {
-                        if (!drag) {return};
-                        if (!e) { var e= window.event};
-                        targ.style.left=coordX+e.clientX-offsetX+'px';
-                        targ.style.top=coordY+e.clientY-offsetY+'px';
-                        return false;
-                    }
-                    function stopDrag() {
-                        drag=false;
-                    }
-                    window.onload = function() {
-                        document.onmousedown = startDrag;
-                        document.onmouseup = stopDrag;
-                    }
-                </script>
-            </body>
-        </html>
-        ''')
-
     if desc_text:
-        data_desc_div = Div(text="""<div style="text-align:left;font-size: 11pt;font-weight: bold;">{}""".format(desc_text), css_classes=['bk-width-auto'])
-        html_columns = column(title, data_desc_div, tabs, sizing_mode='scale_width', css_classes=['bk-width-auto-main'])
+        data_desc_div = Div(text="""<div style="text-align:left;font-size: 11pt;font-weight: bold;">{}""".format(desc_text))
+        html_columns = column(title, data_desc_div, tabs, sizing_mode='scale_width')
     else:
-        html_columns = column(title, tabs, sizing_mode='scale_width', css_classes=['bk-width-auto-main'])
-    script, div = components(html_columns)
-    js_resources = INLINE.render_js()
-    css_resources = INLINE.render_css()
+        html_columns = column(title, tabs, sizing_mode='scale_width')
 
-    html = template.render(js_resources=js_resources,
-            css_resources=css_resources,
-            script=script,
-            div=div)
+    html = file_html(models=html_columns, resources=INLINE, title=TITLE, template=TEMPLATE)
 
     with open(os.path.join(output_dir, "results.html"), 'w') as f:
         f.write(html)
