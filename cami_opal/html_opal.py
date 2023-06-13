@@ -306,7 +306,9 @@ def create_rankings_html(pd_rankings, ranks_scored, labels):
     ]
     data_table = DataTable(source=table_source, columns=columns, width=800, height=25 + len(pd_show) * 25)
     col_rankings = column([Div(text="<u>Hint 1:</u> click on the columns of scores for sorting.", styles={"width": "600px", "margin-bottom": "0px"}),
-                           Div(text="Taxonomic ranks scored: " + ", ".join(ranks_scored), styles={"width": "600px", "margin-bottom": "0px"}),
+                           Div(text="Taxonomic ranks scored: " + ", ".join(
+                               ranks_scored) + ". Scoring is only valid if all assessed tools have results for all the same samples and taxonomic ranks. Lower scores are better.",
+                               styles={"width": "600px", "margin-bottom": "0px"}),
                            data_table,
                            Div(text="<u>Hint 2:</u> slide the bars to change the weight of the metrics.", styles={"width": "500px", "margin-top": "18px"}),
                            row(weight_recall, weight_precision),

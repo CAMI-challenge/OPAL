@@ -40,9 +40,9 @@ Taxonomic metagenome profilers predict the presence and relative abundance of mi
 
 ### Requirements
 
-OPAL requires Python 3.7.
+OPAL 1.0.12 has been tested with Python 3.10 and 3.11.
 
-See [default.txt](requirements/default.txt) for all dependencies.
+See [requirements.txt](requirements.txt) for all dependencies.
 
 ### Steps
 
@@ -63,7 +63,6 @@ sudo apt update
 Then run:
 
 ~~~BASH
-pip3 install numpy==1.16.4
 pip3 install cami-opal
 ~~~
 
@@ -91,10 +90,8 @@ The BIOM format used by OPAL is a sparse matrix stored in a JSON or HDF5 file, w
 
 ## Running _opal.py_
 ~~~BASH
-usage: opal.py -g GOLD_STANDARD_FILE -o OUTPUT_DIR [-n] [-f FILTER] [-p]
-               [-l LABELS] [-t TIME] [-m MEMORY] [-d DESC] [-r RANKS]
-               [--metrics_plot_rel METRICS_PLOT_REL]
-               [--metrics_plot_abs METRICS_PLOT_ABS] [--silent] [-v] [-h]
+usage: opal.py -g GOLD_STANDARD_FILE -o OUTPUT_DIR [-n] [-f FILTER] [-p] [-l LABELS] [-t TIME] [-m MEMORY] [-d DESC] [-r RANKS] [--metrics_plot_rel METRICS_PLOT_REL]
+               [--metrics_plot_abs METRICS_PLOT_ABS] [--silent] [-v] [-h] [-b BRANCH_LENGTH_FUNCTION] [--normalized_unifrac]
                profiles_files [profiles_files ...]
 
 OPAL: Open-community Profiling Assessment tooL
@@ -109,12 +106,9 @@ required arguments:
 optional arguments:
   -n, --normalize       Normalize samples
   -f FILTER, --filter FILTER
-                        Filter out the predictions with the smallest relative
-                        abundances summing up to [FILTER]% within a rank
-                        (affects only precision, default: 0)
+                        Filter out the predictions with the smallest relative abundances summing up to [FILTER]% within a rank
   -p, --plot_abundances
-                        Plot abundances in the gold standard (can take some
-                        minutes)
+                        Plot abundances in the gold standard (can take some minutes)
   -l LABELS, --labels LABELS
                         Comma-separated profiles names
   -t TIME, --time TIME  Comma-separated runtimes in hours
@@ -122,28 +116,25 @@ optional arguments:
                         Comma-separated memory usages in gigabytes
   -d DESC, --desc DESC  Description for HTML page
   -r RANKS, --ranks RANKS
-                        Highest and lowest taxonomic ranks to consider in
-                        performance rankings, comma-separated. Valid ranks:
-                        superkingdom, phylum, class, order, family, genus,
-                        species, strain (default:superkingdom,species)
+                        Highest and lowest taxonomic ranks to consider in performance rankings, comma-separated. Valid ranks: superkingdom, phylum, class, order, family, genus, species,
+                        strain (default:superkingdom,species)
   --metrics_plot_rel METRICS_PLOT_REL
-                        Metrics for spider plot of relative performances,
-                        first character, comma-separated. Valid metrics:
-                        c:completeness, p:purity, l:L1 norm, w:weighted
-                        Unifrac, f:false positives, t:true positives (default:
-                        c,p,l,w)
+                        Metrics for spider plot of relative performances, first character, comma-separated. Valid metrics: w:weighted Unifrac, l:L1 norm, c:completeness, p:purity, f:false
+                        positives, t:true positives (default: w,l,c,p,f)
   --metrics_plot_abs METRICS_PLOT_ABS
-                        Metrics for spider plot of absolute performances,
-                        first character, comma-separated. Valid metrics:
-                        c:completeness, p:purity, b:Bray-Curtis (default:
-                        c,p,b)
+                        Metrics for spider plot of absolute performances, first character, comma-separated. Valid metrics: c:completeness, p:purity, b:Bray-Curtis (default: c,p)
   --silent              Silent mode
   -v, --version         show program's version number and exit
   -h, --help            Show this help message and exit
+
+UniFrac arguments:
+  -b BRANCH_LENGTH_FUNCTION, --branch_length_function BRANCH_LENGTH_FUNCTION
+                        UniFrac tree branch length function (default: "lambda x: 1/x", where x=tree depth)
+  --normalized_unifrac  Compute normalized version of weighted UniFrac by dividing by the theoretical max unweighted UniFrac
 ~~~
 **Example:** To run the example, please download the files given in the [_data_](https://github.com/CAMI-challenge/OPAL/tree/master/data) directory.
 ~~~BASH
-python3 opal.py -g data/goldstandard_low_1.bin \
+./opal.py -g data/goldstandard_low_1.bin \
 data/cranky_wozniak_13 \
 data/grave_wright_13 \
 data/furious_elion_13 \
@@ -166,7 +157,7 @@ docker build -t opal:latest .
 _opal.py_ can then be run with the `docker run` command. Example:
 
 ~~~BASH
-docker run -v /path/to/OPAL:/host opal:latest \
+docker run -v $(pwd):/host opal \
 opal.py -g /host/data/goldstandard_low_1.bin \
 /host/data/cranky_wozniak_13 \
 /host/data/grave_wright_13 \
@@ -233,7 +224,11 @@ tox
 
 # Citation
 Please cite:
-* Fernando Meyer, Andreas Bremges, Peter Belmann, Stefan Janssen, Alice Carolyn McHardy, and David Koslicki (2019). **Assessing taxonomic metagenome profilers with OPAL.** *Genome Biology*, 20:51. doi:[10.1186/s13059-019-1646-y](https://doi.org/10.1186/s13059-019-1646-y)
+* Meyer, F., Bremges, A., Belmann, P., Janssen, S., McHardy, A.C., and Koslicki, D. **Assessing taxonomic metagenome profilers with OPAL.** *Genome Biology*, 20, 51 (2019). [https://doi.org/10.1186/s13059-019-1646-y](https://doi.org/10.1186/s13059-019-1646-y)
 
 Part of OPAL's functionality was described in the CAMI manuscript. Thus please also cite:
-* Alexander Sczyrba, Peter Hofmann, Peter Belmann, et al. (2017). **Critical Assessment of Metagenome Interpretation—a benchmark of metagenomics software.** *Nature Methods*, 14, 11:1063–1071. doi:[10.1038/nmeth.4458](https://doi.org/10.1038/nmeth.4458)
+* Sczyrba, A., Hofmann, P., Belmann, P. et al. **Critical Assessment of Metagenome Interpretation—a benchmark of metagenomics software.** Nat Methods 14, 1063–1071 (2017). [https://doi.org/10.1038/nmeth.4458](https://doi.org/10.1038/nmeth.4458)
+
+or
+
+* Meyer, F., Fritz, A., Deng, ZL. et al. **Critical Assessment of Metagenome Interpretation: the second round of challenges.** Nat Methods 19, 429–440 (2022). [https://doi.org/10.1038/s41592-022-01431-4](https://doi.org/10.1038/s41592-022-01431-4)
