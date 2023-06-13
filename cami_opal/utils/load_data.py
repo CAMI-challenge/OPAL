@@ -226,6 +226,20 @@ def open_profile(file_path, normalize):
     # return samples_list
 
 
+def load_profiles(gold_standard_file, profiles_files, normalize):
+    gs_samples_list = open_profile(gold_standard_file, normalize)
+    sample_ids_list = []
+    for sample in gs_samples_list:
+        sample_id, sample_metadata, profile = sample
+        sample_ids_list.append(sample_id)
+
+    profiles_list_to_samples_list = []
+    for profile_file in profiles_files:
+        profiles_list_to_samples_list.append(open_profile(profile_file, normalize))
+
+    return sample_ids_list, gs_samples_list, profiles_list_to_samples_list
+
+
 def get_taxa_names(profile):
     tax_id_to_name = {}
     for prediction in profile:

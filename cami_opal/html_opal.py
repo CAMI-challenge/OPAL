@@ -134,7 +134,7 @@ TOOLTIPS = """
             visibility: visible;
             opacity: 1;
         }
-    <style>
+    </style>
     """
 
 
