@@ -192,12 +192,13 @@ def main():
         logger.info('done')
 
     logger.info('Computing metrics...')
-    pd_metrics = evaluate.evaluate_main(gs_samples_list,
+    pd_metrics, pd_confusion = evaluate.evaluate_main(gs_samples_list,
                                         profiles_list_to_samples_list,
                                         labels,
                                         args.filter,
                                         args.branch_length_function,
                                         args.normalized_unifrac)
+
     time_list, memory_list = get_time_memory(args.time, args.memory, args.profiles_files)
     if time_list or memory_list:
         pd_metrics = concat_time_memory(labels, time_list, memory_list, pd_metrics)
@@ -205,6 +206,7 @@ def main():
 
     logger.info('Saving computed metrics...')
     pd_metrics[['tool', 'rank', 'metric', 'sample', 'value']].fillna('na').to_csv(os.path.join(output_dir, 'results.tsv'), sep='\t', index=False)
+    pd_confusion.to_csv(os.path.join(output_dir, 'confusion.tsv'), sep='\t', index=False)
     print_by_tool(output_dir, pd_metrics)
     print_by_rank(output_dir, labels, pd_metrics)
     logger.info('done')
