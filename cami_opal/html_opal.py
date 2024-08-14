@@ -203,21 +203,20 @@ def get_rank_to_sample_pd(pd_metrics):
     pd_mean_over_samples_str['sample'] = '(average over samples)'
     pd_mean_over_samples_str = pd_mean_over_samples_str.reset_index().set_index(['rank', 'tool', 'sample'])
 
-    pd_grouped = pd.concat([pd_grouped, pd_mean_over_samples_str])
+    pd_grouped = pd.concat([pd_grouped, pd_mean_over_samples_str]).sort_index()
 
     # copy unifrac values to every taxonomic rank
-    pd_grouped_copy = pd_grouped.copy()
-    for index, row in pd_grouped_copy.iterrows():
-        pd_grouped.loc[index][c.UNIFRAC] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC]
-        pd_grouped.loc[index][c.UNW_UNIFRAC] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC]
-        pd_grouped.loc[index][c.UNIFRAC_CAMI] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC_CAMI]
-        pd_grouped.loc[index][c.UNW_UNIFRAC_CAMI] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC_CAMI]
+    for index, row in pd_grouped.iterrows():
+        pd_grouped.loc[index, c.UNIFRAC] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC]
+        pd_grouped.loc[index, c.UNW_UNIFRAC] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC]
+        pd_grouped.loc[index, c.UNIFRAC_CAMI] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC_CAMI]
+        pd_grouped.loc[index, c.UNW_UNIFRAC_CAMI] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC_CAMI]
     if c.UNIFRAC + c.UNFILTERED_SUF in pd_grouped.columns:
-        for index, row in pd_grouped_copy.iterrows():
-            pd_grouped.loc[index][c.UNIFRAC + c.UNFILTERED_SUF] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC + c.UNFILTERED_SUF]
-            pd_grouped.loc[index][c.UNW_UNIFRAC + c.UNFILTERED_SUF] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC + c.UNFILTERED_SUF]
-            pd_grouped.loc[index][c.UNIFRAC_CAMI + c.UNFILTERED_SUF] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC_CAMI + c.UNFILTERED_SUF]
-            pd_grouped.loc[index][c.UNW_UNIFRAC_CAMI + c.UNFILTERED_SUF] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC_CAMI + c.UNFILTERED_SUF]
+        for index, row in pd_grouped.iterrows():
+            pd_grouped.loc[index, c.UNIFRAC + c.UNFILTERED_SUF] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC + c.UNFILTERED_SUF]
+            pd_grouped.loc[index, c.UNW_UNIFRAC + c.UNFILTERED_SUF] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC + c.UNFILTERED_SUF]
+            pd_grouped.loc[index, c.UNIFRAC_CAMI + c.UNFILTERED_SUF] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNIFRAC_CAMI + c.UNFILTERED_SUF]
+            pd_grouped.loc[index, c.UNW_UNIFRAC_CAMI + c.UNFILTERED_SUF] = pd_grouped.loc[('rank independent', index[1], index[2])][c.UNW_UNIFRAC_CAMI + c.UNFILTERED_SUF]
 
     for (rank, sample), g in pd_grouped.groupby(['rank', 'sample']):
         rank_to_sample_pd[rank][sample] = g.reset_index().rename(columns={'tool': 'Tool'}).drop(['rank', 'sample'], axis=1).set_index('Tool').T

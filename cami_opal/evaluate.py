@@ -91,7 +91,7 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
     # convert Shannon
     pd_shannon = pd.DataFrame([shannon[rank].get_pretty_dict() for rank in shannon.keys()]).set_index(
         'rank').stack().reset_index().rename(columns={'level_1': 'metric', 0: 'value'})
-    pd_shannon['metric'].replace(['diversity', 'equitability'], [c.SHANNON_DIVERSITY, c.SHANNON_EQUIT], inplace=True)
+    pd_shannon['metric'] = pd_shannon['metric'].replace(['diversity', 'equitability'], [c.SHANNON_DIVERSITY, c.SHANNON_EQUIT])
     pd_shannon['sample'] = sample_id
     pd_shannon['tool'] = label
 
@@ -105,9 +105,9 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
     pd_binary_metrics = pd.DataFrame(
         [binary_metrics[rank].get_pretty_dict() for rank in binary_metrics.keys()]).set_index(
         'rank').stack().reset_index().rename(columns={'level_1': 'metric', 0: 'value'})
-    pd_binary_metrics['metric'].replace(['fp', 'tp', 'fn', 'jaccard', 'precision', 'recall', 'f1'],
-                                        [c.FP, c.TP, c.FN, c.JACCARD, c.PRECISION, c.RECALL, c.F1_SCORE],
-                                        inplace=True)
+    pd_binary_metrics['metric'] = pd_binary_metrics['metric'].replace(
+        ['fp', 'tp', 'fn', 'jaccard', 'precision', 'recall', 'f1'],
+        [c.FP, c.TP, c.FN, c.JACCARD, c.PRECISION, c.RECALL, c.F1_SCORE])
     pd_binary_metrics['sample'] = sample_id
     pd_binary_metrics['tool'] = label
 
@@ -139,8 +139,7 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
 
     if rename_as_unfiltered:
         metrics_list = pd_formatted['metric'].unique().tolist()
-        pd_formatted['metric'].replace(metrics_list, [metric + c.UNFILTERED_SUF for metric in metrics_list],
-                                       inplace=True)
+        pd_formatted['metric'] = pd_formatted['metric'].replace(metrics_list, [metric + c.UNFILTERED_SUF for metric in metrics_list])
 
     return pd_formatted
 
