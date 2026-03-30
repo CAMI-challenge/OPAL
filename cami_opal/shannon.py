@@ -44,9 +44,7 @@ class Shannon:
 # The higher the index, the more equally distributed the taxa are
 def compute_shannon_index(rank_to_taxid_to_percentage):
     rank_to_shannon = OrderedDict()
-    for rank in c.ALL_RANKS:
-        if rank not in rank_to_taxid_to_percentage:
-            continue
+    for rank in rank_to_taxid_to_percentage:
         rank_to_shannon[rank] = Shannon(rank)
         rank_to_shannon[rank].diversity = .0
         rank_to_shannon[rank].equitability = .0

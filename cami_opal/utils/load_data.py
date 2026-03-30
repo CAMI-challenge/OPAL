@@ -7,6 +7,9 @@ import tarfile
 import zipfile
 from collections import defaultdict
 
+from cami_opal.utils.constants import RANK_GROUPS
+from cami_opal.utils.constants import GS
+
 
 class Prediction:
     def __init__(self):
@@ -115,7 +118,7 @@ def open_generic(file):
         return open(file, 'rt')
 
 
-def open_profile_from_tsv(file_path, normalize):
+def open_profile_from_tsv(file_path, normalize, collapse=False):
     header = {}
     column_name_to_index = {}
     profile = []
@@ -173,10 +176,15 @@ def open_profile_from_tsv(file_path, normalize):
             else:
                 if float(row_data[index_percentage]) == .0:
                     continue
+                if row_data[index_rank].lower() not in RANK_GROUPS:
+                    logging.getLogger('opal').warning(f"Invalid rank: {row_data[index_rank]}.")
                 prediction = Prediction()
                 predictions_dict[taxid] = prediction
                 prediction.taxid = row_data[index_taxid]
-                prediction.rank = row_data[index_rank]
+                if collapse:
+                    prediction.rank = RANK_GROUPS[row_data[index_rank].lower()]
+                else:
+                    prediction.rank = row_data[index_rank].lower()
                 prediction.percentage = float(row_data[index_percentage])
                 prediction.taxpath = row_data[index_taxpath]
                 if isinstance(index_taxpathsn, int):
@@ -199,12 +207,12 @@ def open_profile_from_tsv(file_path, normalize):
     return samples_list
 
 
-def open_profile(file_path, normalize):
+def open_profile(file_path, normalize, collapse=False):
     if not os.path.exists(file_path):
         logging.getLogger('opal').critical("Input file {} does not exist.".format(file_path))
         exit(1)
     try:
-        return open_profile_from_tsv(file_path, normalize)
+        return open_profile_from_tsv(file_path, normalize, collapse)
     except:
         logging.getLogger('opal').critical("Input file could not be read.")
         exit(1)
@@ -247,8 +255,8 @@ def open_profile(file_path, normalize):
     # return samples_list
 
 
-def load_profiles(gold_standard_file, profiles_files, normalize):
-    gs_samples_list = open_profile(gold_standard_file, normalize)
+def load_profiles(gold_standard_file, profiles_files, normalize, collapse=False):
+    gs_samples_list = open_profile(gold_standard_file, normalize, collapse)
     sample_ids_list = []
     for sample in gs_samples_list:
         sample_id, sample_metadata, profile = sample
@@ -256,7 +264,7 @@ def load_profiles(gold_standard_file, profiles_files, normalize):
 
     profiles_list_to_samples_list = []
     for profile_file in profiles_files:
-        profiles_list_to_samples_list.append(open_profile(profile_file, normalize))
+        profiles_list_to_samples_list.append(open_profile(profile_file, normalize, collapse))
 
     return sample_ids_list, gs_samples_list, profiles_list_to_samples_list
 

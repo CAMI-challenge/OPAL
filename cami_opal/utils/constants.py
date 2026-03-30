@@ -8,7 +8,21 @@ GENUS = 'genus'
 SPECIES = 'species'
 STRAIN = 'strain'
 PHYLUM_SPECIES = [PHYLUM, CLASS, ORDER, FAMILY, GENUS, SPECIES]
-ALL_RANKS = [SUPERKINGDOM, PHYLUM, CLASS, ORDER, FAMILY, GENUS, SPECIES, STRAIN]
+
+RANK_GROUPS = {'cellular root': 'cellular root/acellular root/other entries',
+               'acellular root': 'cellular root/acellular root/other entries',
+               'other entries': 'cellular root/acellular root/other entries',
+               'superkingdom': 'domain/realm',
+               'domain': 'domain/realm',
+               'realm': 'domain/realm',
+               'kingdom': 'kingdom',
+               'phylum': 'phylum',
+               'class': 'class',
+               'order': 'order',
+               'family': 'family',
+               'genus': 'genus',
+               'species': 'species',
+               'strain': 'strain'}
 
 UNIFRAC = 'Weighted UniFrac error'
 UNW_UNIFRAC = 'Unweighted UniFrac error'

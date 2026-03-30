@@ -10,7 +10,7 @@ import shutil
 from opal import get_labels
 from opal import make_sure_path_exists
 from opal_stats import get_image_dir_name
-from version import __version__
+from cami_opal.version import __version__
 
 
 def get_sorted_list_of_profiles_files(path):
