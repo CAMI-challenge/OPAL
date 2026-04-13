@@ -6,7 +6,7 @@ import argparse
 import os
 import sys
 from opal import make_sure_path_exists
-from version import __version__
+from cami_opal.version import __version__
 
 
 def get_image_dir_name(image):

@@ -15,7 +15,7 @@ from cami_opal import html_opal as html
 from cami_opal import plots as pl
 from cami_opal.utils import load_data
 from cami_opal.utils import constants as c
-from version import __version__
+from cami_opal.version import __version__
 
 
 def make_sure_path_exists(path):
@@ -24,6 +24,13 @@ def make_sure_path_exists(path):
     except OSError as exception:
         if exception.errno != errno.EEXIST:
             raise
+
+
+def safe_filename(stem):
+    s = str(stem).strip()
+    s = "-".join(s.split())  # collapses any whitespace runs into single '-'
+    s = s.replace("/", "_")
+    return s
 
 
 def get_labels(labels, profiles_files):
@@ -63,7 +70,8 @@ def print_by_rank(output_dir, labels, pd_metrics):
     order_columns = [c.SUM_ABUNDANCES, c.UNIFRAC, c.UNW_UNIFRAC, c.L1NORM, c.RECALL, c.PRECISION, c.F1_SCORE, c.TP, c.FP, c.FN, c.OTUS, c.JACCARD, c.SHANNON_DIVERSITY, c.SHANNON_EQUIT, c.BRAY_CURTIS]
     if c.FP + c.UNFILTERED_SUF in pd_metrics['metric'].values:
         order_columns += [metric + c.UNFILTERED_SUF for metric in order_columns]
-    for rank in c.ALL_RANKS:
+    ranks_in_metrics = pd_metrics['rank'].dropna().unique().tolist()
+    for rank in ranks_in_metrics:
         order_columns_rank = order_columns
         # subset to information that either belongs to the given rank or is rank independent, i.e. are unifrac values
         table = pd_metrics[(pd_metrics['rank'] == rank) | (pd_metrics['metric'].isin([c.UNIFRAC, c.UNW_UNIFRAC, c.UNIFRAC + c.UNFILTERED_SUF, c.UNW_UNIFRAC + c.UNFILTERED_SUF]))]
@@ -79,7 +87,7 @@ def print_by_rank(output_dir, labels, pd_metrics):
         table = table.sort_values('tool_cat')
         table = table.loc[:, order_columns_rank]
         # replace np.NaN with string "na" and write resulting table into a file
-        table.fillna('na').to_csv(os.path.join(output_dir, "by_rank", rank + ".tsv"), sep='\t')
+        table.fillna('na').to_csv(os.path.join(output_dir, "by_rank", safe_filename(rank) + ".tsv"), sep='\t')
 
 
 def print_by_tool(output_dir, pd_metrics):
@@ -90,6 +98,7 @@ def print_by_tool(output_dir, pd_metrics):
     if c.FP + c.UNFILTERED_SUF in pd_metrics['metric'].values:
         order_columns += [metric + c.UNFILTERED_SUF for metric in order_columns]
         unifrac_list += [c.UNIFRAC + c.UNFILTERED_SUF, c.UNW_UNIFRAC + c.UNFILTERED_SUF]
+    ranks_in_metrics = pd_metrics['rank'].dropna().unique().tolist()
     for toolname, pd_metrics_tool in pd_metrics.groupby('tool'):
         if toolname == c.GS:
             continue
@@ -98,7 +107,7 @@ def print_by_tool(output_dir, pd_metrics):
         for unifrac_col in unifrac_list:
             table[unifrac_col] = pd_metrics_tool[pd_metrics_tool['metric'] == unifrac_col]['value'].values[0]
         # order table
-        table['rank_cat'] = pd.Categorical(table.index.get_level_values('rank'), categories=c.ALL_RANKS, ordered=True)
+        table['rank_cat'] = pd.Categorical(table.index.get_level_values('rank'), categories=ranks_in_metrics, ordered=True)
         table = table.sort_values('rank_cat')
         table = table.loc[:, order_columns]
         # replace np.NaN with string "na" and write resulting table into a file
@@ -159,7 +168,8 @@ def main():
     group2.add_argument('-t', '--time', help='Comma-separated runtimes in hours', required=False)
     group2.add_argument('-m', '--memory', help='Comma-separated memory usages in gigabytes', required=False)
     group2.add_argument('-d', '--desc', help='Description for HTML page', required=False)
-    group2.add_argument('-r', '--ranks', help='Highest and lowest taxonomic ranks to consider in performance rankings, comma-separated. Valid ranks: superkingdom, phylum, class, order, family, genus, species, strain (default:superkingdom,species)', required=False)
+    group2.add_argument('-r', '--ranks', help='Highest and lowest taxonomic ranks to consider in performance rankings, comma-separated. Valid ranks without the collapse option: cellular root, acellular root, other entries, superkingdom, domain, realm, kingdom, phylum, class, order, family, genus, species, strain', required=False)
+    group2.add_argument('-c', '--collapse', help='Treat multiple root-level groups (e.g., cellular root/acellular root/other entries) as one rank', action='store_true')
     group2.add_argument('--metrics_plot_rel', help='Metrics for spider plot of relative performances, first character, comma-separated. Valid metrics: w:weighted Unifrac, l:L1 norm, c:completeness, p:purity, f:false positives, t:true positives (default: w,l,c,p,f)', required=False)
     group2.add_argument('--metrics_plot_abs', help='Metrics for spider plot of absolute performances, first character, comma-separated. Valid metrics: c:completeness, p:purity, b:Bray-Curtis (default: c,p)', required=False)
     group2.add_argument('--silent', help='Silent mode', action='store_true')
@@ -179,63 +189,54 @@ def main():
 
     logger = get_logger(args.output_dir, args.silent)
 
-    logger.info('Loading profiles...')
+    logger.info('Loading profiles')
     sample_ids_list, gs_samples_list, profiles_list_to_samples_list = load_data.load_profiles(args.gold_standard_file,
                                                                                     args.profiles_files,
-                                                                                    args.normalize)
-    logger.info('done')
+                                                                                    args.normalize,
+                                                                                    collapse=args.collapse)
+
+    logger.info('Computing metrics')
+    pd_metrics, pd_confusion = evaluate.evaluate_main(gs_samples_list,
+                                                      profiles_list_to_samples_list,
+                                                      labels,
+                                                      args.filter,
+                                                      args.branch_length_function,
+                                                      args.normalized_unifrac)
 
     plots_list = []
     if args.plot_abundances:
         logger.info('Plotting gold standard abundances...')
-        plots_list += pl.plot_samples_hist(gs_samples_list, sample_ids_list, output_dir)
-        logger.info('done')
-
-    logger.info('Computing metrics...')
-    pd_metrics, pd_confusion = evaluate.evaluate_main(gs_samples_list,
-                                        profiles_list_to_samples_list,
-                                        labels,
-                                        args.filter,
-                                        args.branch_length_function,
-                                        args.normalized_unifrac)
+        plots_list += pl.plot_samples_hist(gs_samples_list, sample_ids_list, output_dir, collapse=args.collapse)
 
     time_list, memory_list = get_time_memory(args.time, args.memory, args.profiles_files)
     if time_list or memory_list:
         pd_metrics = concat_time_memory(labels, time_list, memory_list, pd_metrics)
-    logger.info('done')
 
-    logger.info('Saving computed metrics...')
+    logger.info('Saving computed metrics')
     pd_metrics[['tool', 'rank', 'metric', 'sample', 'value']].fillna('na').to_csv(os.path.join(output_dir, 'results.tsv'), sep='\t', index=False)
     pd_confusion.to_csv(os.path.join(output_dir, 'confusion.tsv'), sep='\t', index=False)
     print_by_tool(output_dir, pd_metrics)
     print_by_rank(output_dir, labels, pd_metrics)
-    logger.info('done')
 
-    logger.info('Creating beta diversity plots...')
+    logger.info('Creating beta diversity plots')
     plots_list += pl.plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_ids_list, labels, output_dir)
-    logger.info('done')
 
-    logger.info('Creating rarefaction curves...')
-    plots_list += pl.plot_rarefaction_curves(gs_samples_list, output_dir)
-    plots_list += pl.plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=True)
-    logger.info('done')
+    logger.info('Creating rarefaction curves')
+    plots_list += pl.plot_rarefaction_curves(gs_samples_list, output_dir, collapse=args.collapse)
+    plots_list += pl.plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=True, collapse=args.collapse)
 
-    logger.info('Creating more plots...')
-    plots_list += pl.plot_all(pd_metrics, labels, output_dir, args.metrics_plot_rel, args.metrics_plot_abs)
-    logger.info('done')
+    logger.info('Creating more plots')
+    plots_list += pl.plot_all(pd_metrics, labels, output_dir, args.metrics_plot_rel, args.metrics_plot_abs, collapse=args.collapse)
 
-    logger.info('Computing rankings...')
-    pd_rankings, ranks_scored = rk.highscore_table(pd_metrics, args.ranks)
-    logger.info('done')
+    logger.info('Computing rankings')
+    pd_rankings, ranks_scored = rk.highscore_table(pd_metrics, args.ranks, collapse=args.collapse)
 
     if time_list or memory_list:
-        logger.info('Plotting computing efficiency...')
+        logger.info('Plotting computing efficiency')
         plots_list += pl.plot_time_memory(time_list, memory_list, labels, output_dir)
-        logger.info('done')
 
-    logger.info('Creating HTML page...')
-    html.create_html(pd_rankings, ranks_scored, pd_metrics, labels, sample_ids_list, plots_list, output_dir, args.desc)
-    logger.info('done')
+    logger.info('Creating HTML page')
+    html.create_html(pd_rankings, ranks_scored, pd_metrics, labels, sample_ids_list, plots_list, output_dir, args.desc, collapse=args.collapse)
 
     logger.info('OPAL finished successfully. All results have been saved to {}'.format(output_dir))
 

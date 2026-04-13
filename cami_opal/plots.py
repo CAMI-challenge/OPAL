@@ -20,6 +20,7 @@ from cami_opal import braycurtis as bc
 from cami_opal.utils import spider_plot_functions as spl
 from cami_opal.utils import constants as c
 from cami_opal.utils import load_data
+from cami_opal.utils.constants import RANK_GROUPS
 import scipy.special
 import seaborn as sns
 
@@ -79,20 +80,20 @@ def plot_time_memory(time, memory, labels, output_dir):
     return [fig_name]
 
 
-def create_legend_rarefaction(output_dir):
-    colors_iter = iter(create_colors_list())
-    circles = []
-    for x in c.ALL_RANKS:
-        nextcolor = next(colors_iter)
-        circles.append(Line2D([], [], markeredgewidth=2.0, linestyle="None", marker=0, markersize=15, markeredgecolor=nextcolor, markerfacecolor=nextcolor))
+# def create_legend_rarefaction(output_dir):
+#     colors_iter = iter(create_colors_list())
+#     circles = []
+#     for x in c.ALL_RANKS:
+#         nextcolor = next(colors_iter)
+#         circles.append(Line2D([], [], markeredgewidth=2.0, linestyle="None", marker=0, markersize=15, markeredgecolor=nextcolor, markerfacecolor=nextcolor))
+#
+#     fig = plt.figure(figsize=(0.5, 0.5))
+#     fig.legend(circles, c.ALL_RANKS, loc='center', frameon=False, ncol=8, handletextpad=-0.5, columnspacing=2.0)
+#     fig.savefig(os.path.join(output_dir, 'gold_standard', 'legend.eps'), dpi=100, format='eps', bbox_inches='tight')
+#     plt.close(fig)
 
-    fig = plt.figure(figsize=(0.5, 0.5))
-    fig.legend(circles, c.ALL_RANKS, loc='center', frameon=False, ncol=8, handletextpad=-0.5, columnspacing=2.0)
-    fig.savefig(os.path.join(output_dir, 'gold_standard', 'legend.eps'), dpi=100, format='eps', bbox_inches='tight')
-    plt.close(fig)
 
-
-def plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=False):
+def plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=False, collapse=False):
     colors_list = create_colors_list()
     fig, axs = plt.subplots(figsize=(6, 5))
 
@@ -108,10 +109,14 @@ def plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=False):
         axs.set_ylabel('Number of taxa')
 
     x = list(range(1, len(gs_samples_list) + 1))
-    y_rank_to_rar = OrderedDict((rank, []) for rank in c.ALL_RANKS)
-    y_rank_to_acc = OrderedDict((rank, []) for rank in c.ALL_RANKS)
+    if collapse:
+        all_ranks = list(dict.fromkeys(RANK_GROUPS.values()))
+    else:
+        all_ranks = list(RANK_GROUPS.keys())
+    y_rank_to_rar = OrderedDict((rank, []) for rank in all_ranks)
+    y_rank_to_acc = OrderedDict((rank, []) for rank in all_ranks)
 
-    for i, rank in enumerate(c.ALL_RANKS):
+    for i, rank in enumerate(all_ranks):
         tax_id_to_num_occurrences = {}
 
         # compute accumulation curves
@@ -142,9 +147,9 @@ def plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=False):
             else:
                 y_rank_to_acc[rank].append(num_ids - (scipy.special.binom(num_samples, j) ** (-1) * sum_over_taxa))
 
-    for i, rank in enumerate(c.ALL_RANKS):
+    for i, rank in enumerate(all_ranks):
         axs.plot(x, y_rank_to_acc[rank], color=colors_list[i])
-    for i, rank in enumerate(c.ALL_RANKS):
+    for i, rank in enumerate(all_ranks):
         axs.plot(x, y_rank_to_rar[rank], linestyle=':', color=colors_list[i])
 
     if log_scale:
@@ -154,16 +159,20 @@ def plot_rarefaction_curves(gs_samples_list, output_dir, log_scale=False):
 
     # fig.savefig(os.path.join(output_dir, 'gold_standard', file_name + '_wolegend.pdf'), dpi=100, format='pdf', bbox_inches='tight')
 
-    lgd = plt.legend(c.ALL_RANKS, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handlelength=2, frameon=False)
+    lgd = plt.legend(all_ranks, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., handlelength=2, frameon=False)
     fig.savefig(os.path.join(output_dir, 'gold_standard', file_name + '.pdf'), dpi=100, format='pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')
     fig.savefig(os.path.join(output_dir, 'gold_standard', file_name + '.png'), dpi=100, format='png', bbox_extra_artists=(lgd,), bbox_inches='tight')
     plt.close(fig)
     return [file_name]
 
 
-def plot_samples_hist(gs_samples_list, sample_ids_list, output_dir):
+def plot_samples_hist(gs_samples_list, sample_ids_list, output_dir, collapse=False):
     plots_list = []
-    for rank in c.ALL_RANKS:
+    if collapse:
+        all_ranks = list(dict.fromkeys(RANK_GROUPS.values()))
+    else:
+        all_ranks = list(RANK_GROUPS.keys())
+    for rank in all_ranks:
         df_gs = pd.DataFrame()
         for sample in gs_samples_list:
             sample_id, sample_metadata, profile = sample
@@ -243,7 +252,7 @@ def do_scatter_plot(profile_values, gs_values, output_dir, rank, label):
     return [fig_name]
 
 
-def plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_ids_list, labels, output_dir):
+def plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_ids_list, labels, output_dir, collapse=False):
     if len(sample_ids_list) < 2:
         return []
 
@@ -266,6 +275,11 @@ def plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_i
 
     plots_list = []
 
+    if collapse:
+        all_ranks = list(dict.fromkeys(RANK_GROUPS.values()))
+    else:
+        all_ranks = list(RANK_GROUPS.keys())
+
     # Assessed profiles
     profile_sampleid_to_rank_to_taxid_to_percentage = {}
     for profile, label in zip(profiles_list_to_samples_list, labels):
@@ -287,7 +301,7 @@ def plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_i
             for rank, value in rank_to_braycurtis.items():
                 profile_rank_to_sample12_to_braycurtis[rank][sample12] = value
 
-        for rank in c.ALL_RANKS:
+        for rank in all_ranks:
             gs_values = []
             profile_values = []
             if rank in gs_rank_to_sample12_to_braycurtis and rank in profile_rank_to_sample12_to_braycurtis:
@@ -298,22 +312,26 @@ def plot_beta_diversity(gs_samples_list, profiles_list_to_samples_list, sample_i
     return plots_list
 
 
-def create_legend_shannon(labels, output_dir):
-    colors_iter = iter(create_colors_list())
-    labels = ['Gold standard'] + labels
-    circles = []
-    for x in c.ALL_RANKS:
-        nextcolor = next(colors_iter)
-        circles.append(Line2D([], [], markeredgewidth=2.0, linestyle="None", marker="o", markersize=6, markeredgecolor=nextcolor, markerfacecolor=nextcolor))
+# def create_legend_shannon(labels, output_dir):
+#     colors_iter = iter(create_colors_list())
+#     labels = ['Gold standard'] + labels
+#     circles = []
+#     for x in c.ALL_RANKS:
+#         nextcolor = next(colors_iter)
+#         circles.append(Line2D([], [], markeredgewidth=2.0, linestyle="None", marker="o", markersize=6, markeredgecolor=nextcolor, markerfacecolor=nextcolor))
+#
+#     fig = plt.figure(figsize=(0.5, 0.5))
+#     fig.legend(circles, labels, loc='center', frameon=False, ncol=8, handletextpad=0, columnspacing=1.0)
+#     fig.savefig(os.path.join(output_dir, 'legend_shannon.eps'), dpi=100, format='eps', bbox_inches='tight')
+#     plt.close(fig)
 
-    fig = plt.figure(figsize=(0.5, 0.5))
-    fig.legend(circles, labels, loc='center', frameon=False, ncol=8, handletextpad=0, columnspacing=1.0)
-    fig.savefig(os.path.join(output_dir, 'legend_shannon.eps'), dpi=100, format='eps', bbox_inches='tight')
-    plt.close(fig)
 
-
-def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir, file_name):
+def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir, file_name, collapse=False):
     colors_list = create_colors_list()
+    if collapse:
+        all_ranks = list(dict.fromkeys(RANK_GROUPS.values()))
+    else:
+        all_ranks = list(RANK_GROUPS.keys())
 
     if rank_to_shannon_gs is None:
         # skip color of gold standard, if not present
@@ -334,13 +352,13 @@ def plot_shannon(rank_to_shannon_list, rank_to_shannon_gs, labels, output_dir, f
     for i, rank_to_shannon in enumerate(rank_to_shannon_gs + rank_to_shannon_list if rank_to_shannon_gs is not None else rank_to_shannon_list):
         x = []
         y = []
-        for j, rank in enumerate(c.ALL_RANKS, start=1):
+        for j, rank in enumerate(all_ranks, start=1):
             if rank in rank_to_shannon:
                 x.append(j)
                 y.append(rank_to_shannon[rank])
         axs.plot(x, y, color=colors_list[i], marker='o', markersize=10)
 
-    vals = [''] + c.ALL_RANKS
+    vals = [''] + all_ranks
     axs.xaxis.set_major_locator(ticker.FixedLocator(range(len(vals))))
     axs.set_xticklabels(vals, fontsize=9, rotation=25)
 
@@ -483,21 +501,28 @@ def get_metrics_for_spider_plot(metrics_plot, absolute):
     return metrics_list
 
 
-def plot_purity_completeness_per_tool_and_rank(pd_grouped, pd_mean, output_dir):
-    ranks = c.ALL_RANKS[0:-1]
-    ranks_range = range(len(ranks))
-    rank_to_index = dict(zip(ranks, list(ranks_range)))
+def plot_purity_completeness_per_tool_and_rank(pd_grouped, pd_mean, output_dir, collapse=False):
+    ranks_present = set(pd_grouped.index.get_level_values("rank").unique())
+    if collapse:
+        all_ranks = list(dict.fromkeys(RANK_GROUPS.values()))[:-1]
+    else:
+        all_ranks = list(RANK_GROUPS.keys())[:-1]
+
+    present_ranks_in_order = [r for r in all_ranks if r in ranks_present]
+    rank_to_index = {r: i for i, r in enumerate(present_ranks_in_order)}
+    num_ranks = len(present_ranks_in_order)
+    ranks_range = range(num_ranks)
 
     pd_std_over_samples = pd_grouped.groupby(['rank', 'tool'], sort=False).std()
     pd_mean = pd_mean.drop(c.GS, level='tool').drop(['strain', 'rank independent'], level='rank', errors='ignore')
 
     for tool, tool_group in pd_mean.groupby('tool'):
-        precision_list = [0] * len(ranks)
-        precision_sem_list = [0] * len(ranks)
-        recall_list = [0] * len(ranks)
-        recall_sem_list = [0] * len(ranks)
-        braycurtis_list = [0] * len(ranks)
-        braycurtis_sem_list = [0] * len(ranks)
+        precision_list = [0] * num_ranks
+        precision_sem_list = [0] * num_ranks
+        recall_list = [0] * num_ranks
+        recall_sem_list = [0] * num_ranks
+        braycurtis_list = [0] * num_ranks
+        braycurtis_sem_list = [0] * num_ranks
         for rank, rank_group in tool_group.groupby('rank'):
             index = rank_to_index[rank]
             precision_list[index] = rank_group[c.PRECISION].values[0]
@@ -513,7 +538,7 @@ def plot_purity_completeness_per_tool_and_rank(pd_grouped, pd_mean, output_dir):
 
         # force axis to be from 0 to 100%
         axs.set_ylim([0.0, 1.0])
-        axs.set_xlim([0, 6])
+        axs.set_xlim([0, num_ranks])
 
         plot1a = axs.plot(ranks_range, recall_list, color=plt.cm.tab10(2))
         plot2a = axs.plot(ranks_range, precision_list, color=plt.cm.tab10(0))
@@ -523,7 +548,7 @@ def plot_purity_completeness_per_tool_and_rank(pd_grouped, pd_mean, output_dir):
         plot3b = axs.fill_between(ranks_range, np.subtract(braycurtis_list, braycurtis_sem_list), np.add(braycurtis_list, braycurtis_sem_list), facecolor=plt.cm.tab10(3), alpha=0.3, edgecolor=None)
 
         axs.xaxis.set_major_locator(ticker.FixedLocator(ranks_range))
-        axs.set_xticklabels(ranks, horizontalalignment='right')
+        axs.set_xticklabels(present_ranks_in_order, horizontalalignment='right')
         axs.tick_params(axis='x', labelrotation=45)
 
         yticks = axs.get_yticks()
@@ -597,7 +622,7 @@ def spider_plot_preprocess_metrics(pd_mean, labels):
     return tool_to_rank_to_metric_to_value
 
 
-def plot_all(pd_metrics, labels, output_dir, metrics_plot_rel, metrics_plot_abs):
+def plot_all(pd_metrics, labels, output_dir, metrics_plot_rel, metrics_plot_abs, collapse=False):
     rank_to_metric_to_toolvalues = defaultdict(lambda : defaultdict(list))
 
     pd_copy = pd_metrics.copy()
@@ -609,7 +634,7 @@ def plot_all(pd_metrics, labels, output_dir, metrics_plot_rel, metrics_plot_abs)
     cols = pd_grouped.columns
     pd_mean = pd_grouped.groupby(['rank', 'tool'], sort=False)[cols].mean()
 
-    plot_purity_completeness_per_tool_and_rank(pd_grouped, pd_mean, output_dir)
+    plot_purity_completeness_per_tool_and_rank(pd_grouped, pd_mean, output_dir, collapse=collapse)
 
     tool_to_rank_to_metric_to_value = spider_plot_preprocess_metrics(pd_mean, labels)
 
@@ -671,8 +696,8 @@ def plot_all(pd_metrics, labels, output_dir, metrics_plot_rel, metrics_plot_abs)
     tool_to_rank_to_shannon = [tool_to_rank_to_shannon[label] for label in labels]
     tool_to_rank_to_shannon_difference = [tool_to_rank_to_shannon_difference[label] for label in labels]
 
-    plot_shannon(tool_to_rank_to_shannon, rank_to_shannon_gs, labels, output_dir, 'plot_shannon')
-    plot_shannon(tool_to_rank_to_shannon_difference, None, labels, output_dir, 'plot_shannon_diff')
+    plot_shannon(tool_to_rank_to_shannon, rank_to_shannon_gs, labels, output_dir, 'plot_shannon', collapse=collapse)
+    plot_shannon(tool_to_rank_to_shannon_difference, None, labels, output_dir, 'plot_shannon_diff', collapse=collapse)
 
     # pl.plot_braycurtis_l1norm(braycurtis_list, l1norm_list, labels, output_dir)
     return plots_list

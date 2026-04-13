@@ -7,18 +7,19 @@ import logging
 
 def get_user_ranks_list(ranks):
     rank_high_low = [x.strip() for x in ranks.split(',')]
-    if len(rank_high_low) != 2 or rank_high_low[0] not in c.ALL_RANKS or rank_high_low[1] not in c.ALL_RANKS:
+    if len(rank_high_low) != 2 or rank_high_low[0] not in c.RANK_GROUPS or rank_high_low[1] not in c.RANK_GROUPS:
         logging.getLogger('opal').warning('Invalid ranks provided with option --ranks. Default will be used.')
-        return c.ALL_RANKS[:7]
-    index1 = c.ALL_RANKS.index(rank_high_low[0])
-    index2 = c.ALL_RANKS.index(rank_high_low[1])
+        return list(c.RANK_GROUPS.keys())[:-1]
+    all_ranks = list(c.RANK_GROUPS.keys())
+    index1 = all_ranks.index(rank_high_low[0])
+    index2 = all_ranks.index(rank_high_low[1])
     if index1 < index2:
-        return c.ALL_RANKS[index1:index2 + 1]
+        return all_ranks[index1:index2 + 1]
     else:
-        return c.ALL_RANKS[index2:index1 + 1]
+        return all_ranks[index2:index1 + 1]
 
 
-def highscore_table(metrics, ranks):
+def highscore_table(metrics, ranks, collapse=False):
     """Compile a ranking table like Figure 3c of CAMI publication.
     
     Note that Figure 3c took into account mean scores for all samples of one of the three
@@ -43,7 +44,7 @@ def highscore_table(metrics, ranks):
     if ranks:
         useranks = get_user_ranks_list(ranks)
     else:
-        useranks = c.ALL_RANKS[:7]
+        useranks = list(dict.fromkeys(c.RANK_GROUPS.values()))[:-1] if collapse else list(c.RANK_GROUPS.keys())[:-1]
 
     pd_metrics = metrics.copy()
     pd_metrics.loc[pd_metrics[pd.isnull(pd_metrics['rank'])].index, 'rank'] = 'rank independent'

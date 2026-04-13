@@ -11,13 +11,16 @@ from jinja2 import Template
 from statistics import median
 
 import matplotlib
+
+from cami_opal.utils.constants import RANK_GROUPS
+
 matplotlib.use('Agg')
 import seaborn as sns
 import matplotlib.pyplot as pltx
 from matplotlib.colors import rgb2hex
 from matplotlib.colors import Normalize
 
-from version import __version__
+from cami_opal.version import __version__
 
 from bokeh.plotting import figure
 from bokeh.layouts import column, row
@@ -407,7 +410,7 @@ def get_heatmap_colors(pd_series, **args):
         return return_colors
 
 
-def create_metrics_table(pd_metrics, labels, sample_ids_list):
+def create_metrics_table(pd_metrics, labels, sample_ids_list, collapse=False):
     rank_to_sample_pd = get_rank_to_sample_pd(pd_metrics)
 
     all_sample_ids = sample_ids_list[:]
@@ -510,9 +513,17 @@ def create_metrics_table(pd_metrics, labels, sample_ids_list):
             html = pattern.sub(translate, html.getvalue())
             rank_to_sample_to_html[rank].append('{}<div style="margin-bottom:10pt;">{}</div>'.format(TOOLTIPS, html))
 
-    mytable1 = Div(text="""<div>{}</div>""".format(rank_to_sample_to_html[c.ALL_RANKS[0]][0]))
 
-    select_rank = Select(title="Taxonomic rank:", value=c.ALL_RANKS[0], options=c.ALL_RANKS + ['rank independent'])
+    if collapse:
+        all_ranks = list(dict.fromkeys(RANK_GROUPS.values()))
+    else:
+        all_ranks = list(RANK_GROUPS.keys())
+
+    present_ranks = [r for r in all_ranks if r in rank_to_sample_to_html]
+
+    mytable1 = Div(text="""<div>{}</div>""".format(rank_to_sample_to_html[present_ranks[0]][0]))
+
+    select_rank = Select(title="Taxonomic rank:", value=present_ranks[0], options=present_ranks + ['rank independent'])
 
     select_sample = Select(title="Sample:", value='0', options=list(zip(map(str, range(len(all_sample_ids))), all_sample_ids)))
 
@@ -555,9 +566,13 @@ def create_plots_html(plots_list):
     return tabs_plots
 
 
-def create_beta_diversity_tab(labels, plots_list):
-    rank_to_img = {rank: [''] for rank in c.ALL_RANKS}
-    for rank in c.ALL_RANKS:
+def create_beta_diversity_tab(labels, plots_list, collapse=False):
+    if collapse:
+        all_ranks = list(dict.fromkeys(RANK_GROUPS.values()))
+    else:
+        all_ranks = list(RANK_GROUPS.keys())
+    rank_to_img = {rank: [''] for rank in all_ranks}
+    for rank in all_ranks:
         for label in labels:
             file = os.path.join("by_tool", label.replace(' ', '_'), 'beta_diversity_bc_' + rank)
             if file in plots_list:
@@ -570,7 +585,7 @@ def create_beta_diversity_tab(labels, plots_list):
         div_plots.text = source.data[select2_rank.value][0];
     """)
 
-    select2_rank = Select(title="Taxonomic rank:", value=c.SPECIES, options=c.ALL_RANKS)
+    select2_rank = Select(title="Taxonomic rank:", value=c.SPECIES, options=all_ranks)
     select2_rank.js_on_change('value', select2_rank_sample_callback)
     select2_rank_sample_callback.args["select2_rank"] = select2_rank
     select2_rank_sample_callback.args["div_plots"] = div_plots
@@ -579,7 +594,7 @@ def create_beta_diversity_tab(labels, plots_list):
     return beta_div_column
 
 
-def create_gs_tab(plots_list, tabs_list):
+def create_gs_tab(plots_list, tabs_list, collapse=False):
     # Rarefaction curves panel
     imgs = '<img src="gold_standard/rarefaction_curves.png"/><img src="gold_standard/rarefaction_curves_log_scale.png"/>'
     div_plots_rarefaction = Div(text=imgs)
@@ -587,9 +602,14 @@ def create_gs_tab(plots_list, tabs_list):
     gs_column_rarefaction = column(div_plots_text, div_plots_rarefaction, sizing_mode='scale_width')
     rarefaction_panel = TabPanel(child=gs_column_rarefaction, title="Rarefaction curves")
 
+    if collapse:
+        all_ranks = list(dict.fromkeys(RANK_GROUPS.values()))
+    else:
+        all_ranks = list(RANK_GROUPS.keys())
+
     # Proportions panel
     imgs_proportions = ''
-    for rank in c.ALL_RANKS:
+    for rank in all_ranks:
         if os.path.join('gold_standard', rank) in plots_list:
             fig_name = 'gold_standard/' + rank
             imgs_proportions = imgs_proportions + '<img src="' + fig_name + '.png"/>'
@@ -627,19 +647,19 @@ def create_computing_efficiency_tab(pd_metrics, plots_list, tabs_list):
     tabs_list.append(TabPanel(child=column_time_memory, title="Computing efficiency"))
 
 
-def create_html(pd_rankings, ranks_scored, pd_metrics, labels, sample_ids_list, plots_list, output_dir, desc_text):
+def create_html(pd_rankings, ranks_scored, pd_metrics, labels, sample_ids_list, plots_list, output_dir, desc_text, collapse=False):
     col_rankings = create_rankings_html(pd_rankings, ranks_scored, labels)
 
     create_heatmap_bar(output_dir)
 
-    select_sample, select_rank, heatmap_legend_div, mytable1 = create_metrics_table(pd_metrics, labels, sample_ids_list)
+    select_sample, select_rank, heatmap_legend_div, mytable1 = create_metrics_table(pd_metrics, labels, sample_ids_list, collapse=collapse)
 
     tabs_plots = create_plots_html(plots_list)
 
     metrics_row = column(column(row(select_sample, select_rank), heatmap_legend_div, mytable1, sizing_mode='scale_width'),
                          column(tabs_plots, sizing_mode='scale_width'), sizing_mode='scale_width')
 
-    beta_div_column = create_beta_diversity_tab(labels, plots_list)
+    beta_div_column = create_beta_diversity_tab(labels, plots_list, collapse=collapse)
 
     tabs_list = [TabPanel(child=metrics_row, title="Metrics"),
                  TabPanel(child=col_rankings, title="Rankings"),
@@ -648,7 +668,7 @@ def create_html(pd_rankings, ranks_scored, pd_metrics, labels, sample_ids_list, 
 
     create_computing_efficiency_tab(pd_metrics, plots_list, tabs_list)
 
-    create_gs_tab(plots_list, tabs_list)
+    create_gs_tab(plots_list, tabs_list, collapse=collapse)
 
     tabs = Tabs(tabs=tabs_list)
 

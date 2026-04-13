@@ -11,6 +11,7 @@ from cami_opal.utils import load_data
 import pandas as pd
 import numpy as np
 import logging
+import math
 
 
 def compute_binary_metrics(query_profile, query_truth):
@@ -46,7 +47,7 @@ def compute_metrics(sample_metadata, profile, gs_pf_profile, profile_cami, gs_pf
     rank_to_sum = {}
     rank_to_ntaxa = {}
     for rank in rank_to_taxid_to_percentage:
-        rank_to_sum[rank] = sum(rank_to_taxid_to_percentage[rank].values())
+        rank_to_sum[rank] = math.fsum(rank_to_taxid_to_percentage[rank].values())
         rank_to_ntaxa[rank] = len(rank_to_taxid_to_percentage[rank])
 
     return unifrac, unifrac_cami, shannon, l1norm, binary_metrics, braycurtis, rank_to_sum, rank_to_ntaxa
@@ -122,7 +123,6 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
     pd_sum.columns = ['sample', 'rank', 'value']
     pd_sum['tool'] = label
     pd_sum['metric'] = c.SUM_ABUNDANCES
-    pd_sum = pd_sum[pd_sum['rank'].isin(c.ALL_RANKS)]
     pd_sum['value'] = pd_sum['value'] / 100.0
 
     # convert Taxon counts
@@ -130,7 +130,6 @@ def reformat_pandas(sample_id, label, braycurtis, shannon, binary_metrics, l1nor
     pd_ntaxa.columns = ['sample', 'rank', 'value']
     pd_ntaxa['tool'] = label
     pd_ntaxa['metric'] = c.OTUS
-    pd_ntaxa = pd_ntaxa[pd_ntaxa['rank'].isin(c.ALL_RANKS)]
     pd_ntaxa['value'] = pd_ntaxa['value']
 
     pd_formatted = pd.concat(
