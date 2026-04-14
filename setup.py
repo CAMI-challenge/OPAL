@@ -8,7 +8,7 @@ def dependencies():
         return f.read().splitlines()
 
 setup(
-    name             = 'cami-opal',
+    name             = 'cami_opal',
     version          = __version__,
     description      = 'OPAL: Open-community Profiling Assessment tooL',
     author           = 'CAMI',
